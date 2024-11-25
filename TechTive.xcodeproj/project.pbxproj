@@ -14,6 +14,18 @@
 		2978DF812CF4366D00013C36 /* TechTiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF802CF4366D00013C36 /* TechTiveTests.swift */; };
 		2978DF8B2CF4366D00013C36 /* TechTiveUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */; };
 		2978DF8D2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */; };
+		2978DFA12CF5165E00013C36 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFA02CF5165E00013C36 /* AuthViewModel.swift */; };
+		2978DFA32CF5167C00013C36 /* AuthenticationFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFA22CF5167C00013C36 /* AuthenticationFlow.swift */; };
+		2978DFA52CF516B200013C36 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFA42CF516B200013C36 /* MainView.swift */; };
+		2978DFA72CF516BC00013C36 /* AddNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFA62CF516BC00013C36 /* AddNoteView.swift */; };
+		2978DFA92CF516C400013C36 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFA82CF516C400013C36 /* ProfileView.swift */; };
+		2978DFAB2CF516D200013C36 /* WeeklyOverviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFAA2CF516D200013C36 /* WeeklyOverviewSection.swift */; };
+		2978DFAD2CF516DF00013C36 /* NotesFeedSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFAC2CF516DF00013C36 /* NotesFeedSection.swift */; };
+		2978DFAF2CF516E800013C36 /* NoteCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFAE2CF516E800013C36 /* NoteCard.swift */; };
+		2978DFB12CF516F500013C36 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB02CF516F500013C36 /* LoginViewModel.swift */; };
+		2978DFB32CF5170200013C36 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB22CF5170200013C36 /* SignUpViewModel.swift */; };
+		2978DFB52CF5170C00013C36 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB42CF5170C00013C36 /* LoginView.swift */; };
+		2978DFB72CF5171A00013C36 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB62CF5171A00013C36 /* SignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +56,18 @@
 		2978DF862CF4366D00013C36 /* TechTiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechTiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveUITests.swift; sourceTree = "<group>"; };
 		2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2978DFA02CF5165E00013C36 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		2978DFA22CF5167C00013C36 /* AuthenticationFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFlow.swift; sourceTree = "<group>"; };
+		2978DFA42CF516B200013C36 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2978DFA62CF516BC00013C36 /* AddNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteView.swift; sourceTree = "<group>"; };
+		2978DFA82CF516C400013C36 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		2978DFAA2CF516D200013C36 /* WeeklyOverviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyOverviewSection.swift; sourceTree = "<group>"; };
+		2978DFAC2CF516DF00013C36 /* NotesFeedSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesFeedSection.swift; sourceTree = "<group>"; };
+		2978DFAE2CF516E800013C36 /* NoteCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCard.swift; sourceTree = "<group>"; };
+		2978DFB02CF516F500013C36 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		2978DFB22CF5170200013C36 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		2978DFB42CF5170C00013C36 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		2978DFB62CF5171A00013C36 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +118,10 @@
 		2978DF6E2CF4366C00013C36 /* TechTive */ = {
 			isa = PBXGroup;
 			children = (
+				2978DF9D2CF515D300013C36 /* Main */,
+				2978DF9A2CF515B300013C36 /* Authentication */,
+				2978DF992CF5159D00013C36 /* App */,
 				2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */,
-				2978DF712CF4366C00013C36 /* ContentView.swift */,
 				2978DF732CF4366D00013C36 /* Assets.xcassets */,
 				2978DF752CF4366D00013C36 /* Preview Content */,
 			);
@@ -125,6 +151,72 @@
 				2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */,
 			);
 			path = TechTiveUITests;
+			sourceTree = "<group>";
+		};
+		2978DF992CF5159D00013C36 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF712CF4366C00013C36 /* ContentView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		2978DF9A2CF515B300013C36 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF9C2CF515C500013C36 /* Views */,
+				2978DF9B2CF515BD00013C36 /* ViewModels */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		2978DF9B2CF515BD00013C36 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				2978DFA02CF5165E00013C36 /* AuthViewModel.swift */,
+				2978DFB02CF516F500013C36 /* LoginViewModel.swift */,
+				2978DFB22CF5170200013C36 /* SignUpViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		2978DF9C2CF515C500013C36 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2978DFA22CF5167C00013C36 /* AuthenticationFlow.swift */,
+				2978DFB42CF5170C00013C36 /* LoginView.swift */,
+				2978DFB62CF5171A00013C36 /* SignUpView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2978DF9D2CF515D300013C36 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF9F2CF515E100013C36 /* Views */,
+				2978DF9E2CF515DA00013C36 /* Components */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		2978DF9E2CF515DA00013C36 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2978DFAA2CF516D200013C36 /* WeeklyOverviewSection.swift */,
+				2978DFAC2CF516DF00013C36 /* NotesFeedSection.swift */,
+				2978DFAE2CF516E800013C36 /* NoteCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		2978DF9F2CF515E100013C36 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2978DFA42CF516B200013C36 /* MainView.swift */,
+				2978DFA62CF516BC00013C36 /* AddNoteView.swift */,
+				2978DFA82CF516C400013C36 /* ProfileView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,8 +349,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2978DFA72CF516BC00013C36 /* AddNoteView.swift in Sources */,
 				2978DF722CF4366C00013C36 /* ContentView.swift in Sources */,
+				2978DFB12CF516F500013C36 /* LoginViewModel.swift in Sources */,
 				2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */,
+				2978DFAB2CF516D200013C36 /* WeeklyOverviewSection.swift in Sources */,
+				2978DFAD2CF516DF00013C36 /* NotesFeedSection.swift in Sources */,
+				2978DFA12CF5165E00013C36 /* AuthViewModel.swift in Sources */,
+				2978DFA52CF516B200013C36 /* MainView.swift in Sources */,
+				2978DFAF2CF516E800013C36 /* NoteCard.swift in Sources */,
+				2978DFA92CF516C400013C36 /* ProfileView.swift in Sources */,
+				2978DFB72CF5171A00013C36 /* SignUpView.swift in Sources */,
+				2978DFB52CF5170C00013C36 /* LoginView.swift in Sources */,
+				2978DFB32CF5170200013C36 /* SignUpViewModel.swift in Sources */,
+				2978DFA32CF5167C00013C36 /* AuthenticationFlow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
