@@ -1,0 +1,587 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
+		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
+		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
+		2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF762CF4366D00013C36 /* Preview Assets.xcassets */; };
+		2978DF812CF4366D00013C36 /* TechTiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF802CF4366D00013C36 /* TechTiveTests.swift */; };
+		2978DF8B2CF4366D00013C36 /* TechTiveUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */; };
+		2978DF8D2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2978DF7D2CF4366D00013C36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2978DF642CF4366C00013C36 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2978DF6B2CF4366C00013C36;
+			remoteInfo = TechTive;
+		};
+		2978DF872CF4366D00013C36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2978DF642CF4366C00013C36 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2978DF6B2CF4366C00013C36;
+			remoteInfo = TechTive;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
+		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		2978DF732CF4366D00013C36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2978DF762CF4366D00013C36 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2978DF7C2CF4366D00013C36 /* TechTiveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechTiveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2978DF802CF4366D00013C36 /* TechTiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveTests.swift; sourceTree = "<group>"; };
+		2978DF862CF4366D00013C36 /* TechTiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechTiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveUITests.swift; sourceTree = "<group>"; };
+		2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2978DF692CF4366C00013C36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF792CF4366D00013C36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF832CF4366D00013C36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2978DF632CF4366C00013C36 = {
+			isa = PBXGroup;
+			children = (
+				2978DF6E2CF4366C00013C36 /* TechTive */,
+				2978DF7F2CF4366D00013C36 /* TechTiveTests */,
+				2978DF892CF4366D00013C36 /* TechTiveUITests */,
+				2978DF6D2CF4366C00013C36 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2978DF6D2CF4366C00013C36 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF6C2CF4366C00013C36 /* TechTive.app */,
+				2978DF7C2CF4366D00013C36 /* TechTiveTests.xctest */,
+				2978DF862CF4366D00013C36 /* TechTiveUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2978DF6E2CF4366C00013C36 /* TechTive */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */,
+				2978DF712CF4366C00013C36 /* ContentView.swift */,
+				2978DF732CF4366D00013C36 /* Assets.xcassets */,
+				2978DF752CF4366D00013C36 /* Preview Content */,
+			);
+			path = TechTive;
+			sourceTree = "<group>";
+		};
+		2978DF752CF4366D00013C36 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF762CF4366D00013C36 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		2978DF7F2CF4366D00013C36 /* TechTiveTests */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF802CF4366D00013C36 /* TechTiveTests.swift */,
+			);
+			path = TechTiveTests;
+			sourceTree = "<group>";
+		};
+		2978DF892CF4366D00013C36 /* TechTiveUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */,
+				2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */,
+			);
+			path = TechTiveUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2978DF6B2CF4366C00013C36 /* TechTive */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2978DF902CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTive" */;
+			buildPhases = (
+				2978DF682CF4366C00013C36 /* Sources */,
+				2978DF692CF4366C00013C36 /* Frameworks */,
+				2978DF6A2CF4366C00013C36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TechTive;
+			productName = TechTive;
+			productReference = 2978DF6C2CF4366C00013C36 /* TechTive.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2978DF7B2CF4366D00013C36 /* TechTiveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2978DF932CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTiveTests" */;
+			buildPhases = (
+				2978DF782CF4366D00013C36 /* Sources */,
+				2978DF792CF4366D00013C36 /* Frameworks */,
+				2978DF7A2CF4366D00013C36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2978DF7E2CF4366D00013C36 /* PBXTargetDependency */,
+			);
+			name = TechTiveTests;
+			productName = TechTiveTests;
+			productReference = 2978DF7C2CF4366D00013C36 /* TechTiveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2978DF852CF4366D00013C36 /* TechTiveUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2978DF962CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTiveUITests" */;
+			buildPhases = (
+				2978DF822CF4366D00013C36 /* Sources */,
+				2978DF832CF4366D00013C36 /* Frameworks */,
+				2978DF842CF4366D00013C36 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2978DF882CF4366D00013C36 /* PBXTargetDependency */,
+			);
+			name = TechTiveUITests;
+			productName = TechTiveUITests;
+			productReference = 2978DF862CF4366D00013C36 /* TechTiveUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2978DF642CF4366C00013C36 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					2978DF6B2CF4366C00013C36 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					2978DF7B2CF4366D00013C36 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 2978DF6B2CF4366C00013C36;
+					};
+					2978DF852CF4366D00013C36 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 2978DF6B2CF4366C00013C36;
+					};
+				};
+			};
+			buildConfigurationList = 2978DF672CF4366C00013C36 /* Build configuration list for PBXProject "TechTive" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2978DF632CF4366C00013C36;
+			productRefGroup = 2978DF6D2CF4366C00013C36 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2978DF6B2CF4366C00013C36 /* TechTive */,
+				2978DF7B2CF4366D00013C36 /* TechTiveTests */,
+				2978DF852CF4366D00013C36 /* TechTiveUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2978DF6A2CF4366C00013C36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */,
+				2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF7A2CF4366D00013C36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF842CF4366D00013C36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2978DF682CF4366C00013C36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2978DF722CF4366C00013C36 /* ContentView.swift in Sources */,
+				2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF782CF4366D00013C36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2978DF812CF4366D00013C36 /* TechTiveTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2978DF822CF4366D00013C36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2978DF8D2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift in Sources */,
+				2978DF8B2CF4366D00013C36 /* TechTiveUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2978DF7E2CF4366D00013C36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2978DF6B2CF4366C00013C36 /* TechTive */;
+			targetProxy = 2978DF7D2CF4366D00013C36 /* PBXContainerItemProxy */;
+		};
+		2978DF882CF4366D00013C36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2978DF6B2CF4366C00013C36 /* TechTive */;
+			targetProxy = 2978DF872CF4366D00013C36 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2978DF8E2CF4366D00013C36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2978DF8F2CF4366D00013C36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2978DF912CF4366D00013C36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTive;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2978DF922CF4366D00013C36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTive;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		2978DF942CF4366D00013C36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTiveTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TechTive.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TechTive";
+			};
+			name = Debug;
+		};
+		2978DF952CF4366D00013C36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTiveTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TechTive.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TechTive";
+			};
+			name = Release;
+		};
+		2978DF972CF4366D00013C36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTiveUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TechTive;
+			};
+			name = Debug;
+		};
+		2978DF982CF4366D00013C36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTiveUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TechTive;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2978DF672CF4366C00013C36 /* Build configuration list for PBXProject "TechTive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2978DF8E2CF4366D00013C36 /* Debug */,
+				2978DF8F2CF4366D00013C36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2978DF902CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTive" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2978DF912CF4366D00013C36 /* Debug */,
+				2978DF922CF4366D00013C36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2978DF932CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTiveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2978DF942CF4366D00013C36 /* Debug */,
+				2978DF952CF4366D00013C36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2978DF962CF4366D00013C36 /* Build configuration list for PBXNativeTarget "TechTiveUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2978DF972CF4366D00013C36 /* Debug */,
+				2978DF982CF4366D00013C36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2978DF642CF4366C00013C36 /* Project object */;
+}
