@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct NotesFeedSection: View {
+    @ObservedObject var viewModel: NotesViewModel
     let isLimitedAccess: Bool
-    let notes = ["Note 1", "Note 2", "Note 3"] // Replace with data model
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -20,7 +20,7 @@ struct NotesFeedSection: View {
             if isLimitedAccess {
                 // Show limited preview for non-authenticated users
                 VStack(spacing: 16) {
-                    NoteCard(note: "Preview Note")
+                    NoteCard(note: Note(content: "Preview Note", userId: "preview"))
                         .opacity(0.7)
                     
                     Text("Sign in to see more notes and create your own")
@@ -30,7 +30,7 @@ struct NotesFeedSection: View {
                 }
             } else {
                 // Show full notes feed for authenticated users
-                ForEach(notes, id: \.self) { note in
+                ForEach(viewModel.notes) { note in
                     NoteCard(note: note)
                 }
             }
@@ -39,5 +39,5 @@ struct NotesFeedSection: View {
 }
 
 #Preview {
-    NotesFeedSection(isLimitedAccess: false)
+    NotesFeedSection(viewModel: NotesViewModel(), isLimitedAccess: false)
 }

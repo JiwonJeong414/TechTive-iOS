@@ -55,5 +55,5 @@ struct LimitedAccessPreview: View {
 }
 
 #Preview {
-    WeeklyOverviewSection(isLimitedAccess: true)
+    WeeklyOverviewSection(isLimitedAccess: false)
 }

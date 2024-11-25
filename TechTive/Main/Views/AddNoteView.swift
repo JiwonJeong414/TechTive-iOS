@@ -11,6 +11,9 @@ import SwiftUI
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
     @State private var noteText = ""
+    @ObservedObject var viewModel: NotesViewModel
+    let userId: String
+    
     
     var body: some View {
         NavigationView {
@@ -32,7 +35,7 @@ struct AddNoteView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
-                        // Add save logic here
+                        viewModel.addNote(content: noteText, userId: userId)
                         dismiss()
                     }
                 }
@@ -42,5 +45,5 @@ struct AddNoteView: View {
 }
 
 #Preview {
-    AddNoteView()
+    AddNoteView(viewModel: NotesViewModel(), userId: "123")
 }

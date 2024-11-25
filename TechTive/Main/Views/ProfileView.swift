@@ -37,6 +37,10 @@ struct ProfileView: View {
                 Button("Log Out", role: .destructive) {
                     // Add logout action
                 }
+                Image(systemName: "rectangle").fixedSize()
+                Button("calendar instances"){
+                    
+                }
             }
         }
         .navigationTitle("Profile")

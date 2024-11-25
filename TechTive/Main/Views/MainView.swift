@@ -9,6 +9,7 @@ import SwiftUI
 
 // MARK: - Main View After Authentication
 struct MainView: View {
+    @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     let isLimitedAccess: Bool
     
@@ -20,7 +21,7 @@ struct MainView: View {
                     WeeklyOverviewSection(isLimitedAccess: isLimitedAccess)
                     
                     // Notes Feed
-                    NotesFeedSection(isLimitedAccess: isLimitedAccess)
+                    NotesFeedSection(viewModel: notesViewModel, isLimitedAccess: isLimitedAccess)
                 }
                 .padding()
             }
@@ -59,7 +60,7 @@ struct MainView: View {
                 }
             )
             .sheet(isPresented: $showAddNote) {
-                AddNoteView()
+                AddNoteView(viewModel: notesViewModel, userId: "123")
             }
         }
     }

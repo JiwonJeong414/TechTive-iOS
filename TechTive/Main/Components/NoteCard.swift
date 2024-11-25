@@ -8,24 +8,22 @@
 import SwiftUI
 
 struct NoteCard: View {
-    let note: String
+    let note: Note
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(note)
-                .font(.body)
+        VStack(alignment: .leading, spacing: 8) {
+            Text(note.content)
+                .lineLimit(3)
             
-            HStack {
-                Text("Date")
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                Spacer()
-                // Add any interaction buttons here
-            }
+            Text(note.timestamp, style: .date)
+                .font(.caption)
+                .foregroundColor(.gray)
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white)
         .cornerRadius(12)
         .shadow(radius: 2)
     }
 }
+
