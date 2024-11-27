@@ -9,8 +9,8 @@ import SwiftUI
 
 // MARK: - Main View After Authentication
 struct MainView: View {
-    @StateObject private var notesViewModel = NotesViewModel()
-    @State private var showAddNote = false
+    @StateObject private var notesViewModel = NotesViewModel() // State objects are more for reference types like classes
+    @State private var showAddNote = false // states are for more primitive types
     let isLimitedAccess: Bool
     
     var body: some View {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 class NotesViewModel: ObservableObject {
-    @Published var notes: [Note] = []
+    @Published var notes: [Note] = [] // auto re-render 
     
     func addNote(content: String, userId: String) {
         let newNote = Note(content: content, userId: userId)
