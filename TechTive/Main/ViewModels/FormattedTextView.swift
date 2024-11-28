@@ -1,78 +1,53 @@
+//
+//  FormattedTextView.swift
+//  TechTive
+//
+//  Created by jiwon jeong on 11/27/24.
+//
+
 import SwiftUI
 import UIKit
 
 struct FormattedTextView: UIViewRepresentable {
-    @Binding var text: String
+    @Binding var attributedText: NSAttributedString
+    @Binding var selectedRange: NSRange
     
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         textView.delegate = context.coordinator
-        textView.font = .systemFont(ofSize: 17)
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 15, left: 10, bottom: 15, right: 10)
         return textView
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
-        let attributedString = NSMutableAttributedString()
-        let lines = text.components(separatedBy: .newlines)
-        
-        for (index, line) in lines.enumerated() {
-            var attributes: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: 17)
-            ]
-            
-            if line.hasPrefix("#") {
-                // Hide the # by making it transparent
-                let hashMark = NSAttributedString(
-                    string: "#",
-                    attributes: [
-                        .font: UIFont.systemFont(ofSize: 30, weight: .bold),
-                        .foregroundColor: UIColor.clear
-                    ]
-                )
-                attributedString.append(hashMark)
-                
-                // Show the rest of the line in large bold font
-                let restOfLine = NSAttributedString(
-                    string: String(line.dropFirst()),
-                    attributes: [
-                        .font: UIFont.systemFont(ofSize: 30, weight: .bold),
-                        .foregroundColor: UIColor.label
-                    ]
-                )
-                attributedString.append(restOfLine)
-            } else {
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.lineSpacing = 8
-                attributes[.paragraphStyle] = paragraphStyle
-                
-                attributedString.append(NSAttributedString(string: line, attributes: attributes))
-            }
-            
-            if index < lines.count - 1 {
-                attributedString.append(NSAttributedString(string: "\n"))
-            }
+        if uiView.attributedText != attributedText {
+            uiView.attributedText = attributedText
         }
-        
-        let selectedRange = uiView.selectedRange
-        uiView.attributedText = attributedString
-        uiView.selectedRange = selectedRange
+        if uiView.selectedRange != selectedRange {
+            uiView.selectedRange = selectedRange
+        }
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text)
+        Coordinator(attributedText: $attributedText, selectedRange: $selectedRange)
     }
     
     class Coordinator: NSObject, UITextViewDelegate {
-        var text: Binding<String>
+        var attributedText: Binding<NSAttributedString>
+        var selectedRange: Binding<NSRange>
         
-        init(text: Binding<String>) {
-            self.text = text
+        init(attributedText: Binding<NSAttributedString>, selectedRange: Binding<NSRange>) {
+            self.attributedText = attributedText
+            self.selectedRange = selectedRange
         }
         
         func textViewDidChange(_ textView: UITextView) {
-            text.wrappedValue = textView.text
+            attributedText.wrappedValue = textView.attributedText
+        }
+        
+        func textViewDidChangeSelection(_ textView: UITextView) {
+            selectedRange.wrappedValue = textView.selectedRange
         }
     }
 }

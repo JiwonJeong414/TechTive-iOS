@@ -1,15 +1,11 @@
-//
-//  NotesFeedSection.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/25/24.
-//
-
 import SwiftUI
 
 struct NotesFeedSection: View {
     @ObservedObject var viewModel: NotesViewModel
     let isLimitedAccess: Bool
+    
+    @State private var selectedNote: Note? = nil
+    @State private var showingEditor = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -32,8 +28,19 @@ struct NotesFeedSection: View {
                 // Show full notes feed for authenticated users
                 ForEach(viewModel.notes) { note in
                     NoteCard(note: note)
+                        .onTapGesture {
+                            selectedNote = note
+                            showingEditor = true
+                        }
                 }
             }
+        }
+        .sheet(item: $selectedNote) { note in
+            AddNoteView(
+                viewModel: viewModel,
+                userId: note.userId,
+                note: note  // Pass the entire note object
+            )
         }
     }
 }
