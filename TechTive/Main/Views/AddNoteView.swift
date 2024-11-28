@@ -14,6 +14,7 @@ struct AddNoteView: View {
     @ObservedObject var viewModel: NotesViewModel
     let userId: String
     let isEditing: Bool
+    private let originalNote: Note?
 
     init(viewModel: NotesViewModel, userId: String, note: Note? = nil) {
         print("Initializing AddNoteView")
@@ -21,8 +22,8 @@ struct AddNoteView: View {
         self.viewModel = viewModel
         self.userId = userId
         self.isEditing = note != nil
-        print("hello")
-        // Initialize attributedText based on whether we're editing or creating
+        self.originalNote = note // Store the original note
+
         if let note = note {
             _attributedText = State(initialValue: note.toAttributedString())
         } else {
@@ -76,9 +77,19 @@ struct AddNoteView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
-                        // Convert attributed text to plain text for storage
-                        let plainText = attributedText.string
-                        viewModel.addNote(content: plainText, userId: userId)
+                        if isEditing, let original = originalNote {
+                            let updatedNote = Note(
+                                attributedString: attributedText,
+                                userId: userId,
+                                id: original.id  // Pass the original ID for updates
+                            )
+                            viewModel.updateNote(updatedNote)
+                        } else {
+                            viewModel.addNote(
+                                attributedString: attributedText,
+                                userId: userId
+                            )
+                        }
                         dismiss()
                     }
                 }

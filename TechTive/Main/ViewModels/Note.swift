@@ -40,49 +40,53 @@ struct Note: Identifiable, Codable {
 }
 
 extension Note {
-    init(attributedString: NSAttributedString, userId: String) {
-        let plainText = attributedString.string
-        var formatting: [TextFormatting] = []
-        
-        attributedString.enumerateAttributes(in: NSRange(location: 0, length: attributedString.length)) { attributes, range, _ in
-            if let font = attributes[.font] as? UIFont {
-                // Check for header
-                if font.pointSize >= 24 {
-                    formatting.append(TextFormatting(
-                        type: .header,
-                        range: TextFormatting.Range(
-                            location: range.location,
-                            length: range.length
-                        )
-                    ))
-                }
-                
-                // Check for bold
-                if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
-                    formatting.append(TextFormatting(
-                        type: .bold,
-                        range: TextFormatting.Range(
-                            location: range.location,
-                            length: range.length
-                        )
-                    ))
-                }
-                
-                // Check for italic
-                if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
-                    formatting.append(TextFormatting(
-                        type: .italic,
-                        range: TextFormatting.Range(
-                            location: range.location,
-                            length: range.length
-                        )
-                    ))
-                }
-            }
-        }
-        
-        self.init(content: plainText, userId: userId, formatting: formatting)
-    }
+    init(attributedString: NSAttributedString, userId: String, id: UUID = UUID()) {
+           let plainText = attributedString.string
+           var formatting: [TextFormatting] = []
+           
+           attributedString.enumerateAttributes(in: NSRange(location: 0, length: attributedString.length)) { attributes, range, _ in
+               if let font = attributes[.font] as? UIFont {
+                   // Check for header
+                   if font.pointSize >= 24 {
+                       formatting.append(TextFormatting(
+                           type: .header,
+                           range: TextFormatting.Range(
+                               location: range.location,
+                               length: range.length
+                           )
+                       ))
+                   }
+                   
+                   // Check for bold
+                   if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
+                       formatting.append(TextFormatting(
+                           type: .bold,
+                           range: TextFormatting.Range(
+                               location: range.location,
+                               length: range.length
+                           )
+                       ))
+                   }
+                   
+                   // Check for italic
+                   if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
+                       formatting.append(TextFormatting(
+                           type: .italic,
+                           range: TextFormatting.Range(
+                               location: range.location,
+                               length: range.length
+                           )
+                       ))
+                   }
+               }
+           }
+           
+           self.id = id
+           self.content = plainText
+           self.timestamp = Date()
+           self.userId = userId
+           self.formatting = formatting
+       }
     
     func toAttributedString() -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: content)

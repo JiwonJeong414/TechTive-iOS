@@ -8,17 +8,25 @@
 import SwiftUI
 
 class NotesViewModel: ObservableObject {
-    @Published var notes: [Note] = [] // auto re-render 
+    @Published var notes: [Note] = []
     
-    func addNote(content: String, userId: String) {
-        let newNote = Note(content: content, userId: userId)
-        notes.insert(newNote, at: 0)  // Add to beginning of list
+    // Update addNote to handle formatted text
+    func addNote(attributedString: NSAttributedString, userId: String) {
+        let newNote = Note(attributedString: attributedString, userId: userId)
+        notes.insert(newNote, at: 0)
         saveNotes()
     }
     
     func deleteNote(_ note: Note) {
         if let index = notes.firstIndex(where: { $0.id == note.id }) {
             notes.remove(at: index)
+            saveNotes()
+        }
+    }
+
+    func updateNote(_ updatedNote: Note) {
+        if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
+            notes[index] = updatedNote
             saveNotes()
         }
     }
