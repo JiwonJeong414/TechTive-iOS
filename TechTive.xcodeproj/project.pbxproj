@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		29520C132CFA74BA00E0047E /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C122CFA74BA00E0047E /* UIColor.swift */; };
+		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
+		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
+		29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -49,6 +53,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		29520C122CFA74BA00E0047E /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		29520C162CFA797400E0047E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		29520C172CFA797400E0047E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
+		29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CourierPrime-Regular.ttf"; sourceTree = "<group>"; };
+		29520C1C2CFA7A0200E0047E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -101,6 +110,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		29520C0E2CFA73CE00E0047E /* Font+Colors */ = {
+			isa = PBXGroup;
+			children = (
+				29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */,
+				29520C172CFA797400E0047E /* Poppins-Medium.ttf */,
+				29520C162CFA797400E0047E /* Poppins-Regular.ttf */,
+				29520C122CFA74BA00E0047E /* UIColor.swift */,
+			);
+			path = "Font+Colors";
+			sourceTree = "<group>";
+		};
 		2978DF632CF4366C00013C36 = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +144,8 @@
 		2978DF6E2CF4366C00013C36 /* TechTive */ = {
 			isa = PBXGroup;
 			children = (
+				29520C1C2CFA7A0200E0047E /* Info.plist */,
+				29520C0E2CFA73CE00E0047E /* Font+Colors */,
 				2978DF9D2CF515D300013C36 /* Main */,
 				2978DF9A2CF515B300013C36 /* Authentication */,
 				2978DF992CF5159D00013C36 /* App */,
@@ -340,7 +362,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */,
+				29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */,
 				2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */,
+				29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */,
 				2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,6 +404,7 @@
 				2978DFB72CF5171A00013C36 /* SignUpView.swift in Sources */,
 				2978DFBC2CF5214800013C36 /* Note.swift in Sources */,
 				2978DFBA2CF5213500013C36 /* NotesViewModel.swift in Sources */,
+				29520C132CFA74BA00E0047E /* UIColor.swift in Sources */,
 				2978DFC22CF7C75E00013C36 /* FormattedTextView.swift in Sources */,
 				2978DFB52CF5170C00013C36 /* LoginView.swift in Sources */,
 				2978DFB32CF5170200013C36 /* SignUpViewModel.swift in Sources */,
@@ -548,6 +574,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechTive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -576,6 +603,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechTive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -4,59 +4,82 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-
 import SwiftUI
 
-// MARK: - Main View After Authentication
 struct MainView: View {
-    @StateObject private var notesViewModel = NotesViewModel() // State objects are more for reference types like classes
-    @State private var showAddNote = false // states are for more primitive types
+    @StateObject private var notesViewModel = NotesViewModel()
+    @State private var showAddNote = false
     let isLimitedAccess: Bool
     
     var body: some View {
         NavigationView {
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
+                    // Header Section
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("HELLO, EMILY!")
+                            .font(.custom("CourierPrime-Regular", size: 24))
+                            .foregroundColor(Color(UIColor.color.darkPurple))
+                        Text("Lorem ipsum dolor sit am")
+                            .font(.custom("Poppins-Regular", size: 16))
+                            .foregroundColor(Color(UIColor.color.orange))
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.top)
+                    
                     // Weekly Overview Section
                     WeeklyOverviewSection(isLimitedAccess: isLimitedAccess)
+                        .background(Color(UIColor.color.lightYellow))
+                        .cornerRadius(12)
+                    
+                    // Notes Section Title
+                    Text("MY NOTES")
+                        .font(.custom("CourierPrime-Regular", size: 24))
+                        .foregroundColor(Color(UIColor.color.darkPurple))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
                     // Notes Feed
                     NotesFeedSection(viewModel: notesViewModel, isLimitedAccess: isLimitedAccess)
                 }
                 .padding()
             }
-            .navigationTitle("Your Feed")
+            .background(Color(UIColor.color.backgroundColor))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if !isLimitedAccess {
                         NavigationLink(destination: ProfileView()) {
                             Image(systemName: "person.circle")
                                 .font(.title2)
+                                .foregroundColor(Color(UIColor.color.darkPurple))
                         }
                     } else {
-                        
-                        // Show login button for limited access users
                         NavigationLink(destination: AuthenticationFlow()) {
                             Text("Login")
-                                .bold()
+                                .font(.custom("Poppins-Medium", size: 16))
+                                .foregroundColor(Color(UIColor.color.orange))
                         }
                     }
                 }
             }
-            // Floating Action Button for adding notes (only for authenticated users)
             .overlay(
                 Group {
                     if !isLimitedAccess {
                         Button(action: {
                             showAddNote = true
                         }) {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 56))
-                                .foregroundColor(.blue)
-                                .shadow(radius: 3)
+                            Image(systemName: "plus")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(.white)
+                                .frame(width: 56, height: 56)
+                                .background(Color(UIColor.color.orange))
+                                .clipShape(Circle())
+                                .shadow(color: Color(UIColor.color.orange).opacity(0.3),
+                                       radius: 4, y: 2)
                         }
                         .padding()
-                        .offset(x: UIScreen.main.bounds.width/2 - 60, y: UIScreen.main.bounds.height/2 - 120)
+                        .offset(x: UIScreen.main.bounds.width/2 - 60,
+                               y: UIScreen.main.bounds.height/2 - 120)
                     }
                 }
             )
