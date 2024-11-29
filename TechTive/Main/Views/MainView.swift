@@ -34,6 +34,7 @@ struct MainView: View {
                                 .font(.title2)
                         }
                     } else {
+                        
                         // Show login button for limited access users
                         NavigationLink(destination: AuthenticationFlow()) {
                             Text("Login")

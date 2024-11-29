@@ -28,6 +28,7 @@
 		2978DFB72CF5171A00013C36 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB62CF5171A00013C36 /* SignUpView.swift */; };
 		2978DFBA2CF5213500013C36 /* NotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFB92CF5213500013C36 /* NotesViewModel.swift */; };
 		2978DFBC2CF5214800013C36 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFBB2CF5214800013C36 /* Note.swift */; };
+		2978DFC22CF7C75E00013C36 /* FormattedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		2978DFB62CF5171A00013C36 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		2978DFB92CF5213500013C36 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		2978DFBB2CF5214800013C36 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,7 @@
 			children = (
 				2978DFB92CF5213500013C36 /* NotesViewModel.swift */,
 				2978DFBB2CF5214800013C36 /* Note.swift */,
+				2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -376,6 +379,7 @@
 				2978DFB72CF5171A00013C36 /* SignUpView.swift in Sources */,
 				2978DFBC2CF5214800013C36 /* Note.swift in Sources */,
 				2978DFBA2CF5213500013C36 /* NotesViewModel.swift in Sources */,
+				2978DFC22CF7C75E00013C36 /* FormattedTextView.swift in Sources */,
 				2978DFB52CF5170C00013C36 /* LoginView.swift in Sources */,
 				2978DFB32CF5170200013C36 /* SignUpViewModel.swift in Sources */,
 				2978DFA32CF5167C00013C36 /* AuthenticationFlow.swift in Sources */,

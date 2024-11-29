@@ -18,11 +18,13 @@ struct Note: Identifiable, Codable {
         let type: FormattingType
         let range: Range
         
+        // Defines a specific range in the text
         struct Range: Codable {
-            let location: Int
-            let length: Int
+            let location: Int // Starting position of the range
+            let length: Int // Length of the range
         }
         
+        // Enum defining possible formatting types
         enum FormattingType: String, Codable {
             case header
             case bold
@@ -33,61 +35,64 @@ struct Note: Identifiable, Codable {
     init(id: UUID = UUID(), content: String, userId: String, formatting: [TextFormatting] = []) {
         self.id = id
         self.content = content
-        self.timestamp = Date()
+        self.timestamp = Date() // Automatically sets the creation timestamp
         self.userId = userId
         self.formatting = formatting
     }
 }
 
+// Extension for additional functionality related to NSAttributedString
 extension Note {
     init(attributedString: NSAttributedString, userId: String, id: UUID = UUID()) {
-           let plainText = attributedString.string
-           var formatting: [TextFormatting] = []
-           
-           attributedString.enumerateAttributes(in: NSRange(location: 0, length: attributedString.length)) { attributes, range, _ in
-               if let font = attributes[.font] as? UIFont {
-                   // Check for header
-                   if font.pointSize >= 24 {
-                       formatting.append(TextFormatting(
-                           type: .header,
-                           range: TextFormatting.Range(
-                               location: range.location,
-                               length: range.length
-                           )
-                       ))
-                   }
-                   
-                   // Check for bold
-                   if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
-                       formatting.append(TextFormatting(
-                           type: .bold,
-                           range: TextFormatting.Range(
-                               location: range.location,
-                               length: range.length
-                           )
-                       ))
-                   }
-                   
-                   // Check for italic
-                   if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
-                       formatting.append(TextFormatting(
-                           type: .italic,
-                           range: TextFormatting.Range(
-                               location: range.location,
-                               length: range.length
-                           )
-                       ))
-                   }
-               }
-           }
-           
-           self.id = id
-           self.content = plainText
-           self.timestamp = Date()
-           self.userId = userId
-           self.formatting = formatting
-       }
+        let plainText = attributedString.string
+        var formatting: [TextFormatting] = []
+        
+        // Enumerate through all attributes in the attributed string
+        attributedString.enumerateAttributes(in: NSRange(location: 0, length: attributedString.length)) { attributes, range, _ in
+            if let font = attributes[.font] as? UIFont {
+                // Check for header
+                if font.pointSize >= 24 {
+                    formatting.append(TextFormatting(
+                        type: .header,
+                        range: TextFormatting.Range(
+                            location: range.location,
+                            length: range.length
+                        )
+                    ))
+                }
+                // this should else if because header is already bold
+                else if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
+                    formatting.append(TextFormatting(
+                        type: .bold,
+                        range: TextFormatting.Range(
+                            location: range.location,
+                            length: range.length
+                        )
+                    ))
+                }
+                
+                // Check for italic
+                if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
+                    formatting.append(TextFormatting(
+                        type: .italic,
+                        range: TextFormatting.Range(
+                            location: range.location,
+                            length: range.length
+                        )
+                    ))
+                }
+            }
+        }
+        
+        // Set properties for the new `Note` object
+        self.id = id
+        self.content = plainText
+        self.timestamp = Date()
+        self.userId = userId
+        self.formatting = formatting
+    }
     
+    // Convert the `Note` back into an `NSAttributedString` with formatting applied
     func toAttributedString() -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: content)
         

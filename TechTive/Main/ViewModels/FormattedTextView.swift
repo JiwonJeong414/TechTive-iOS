@@ -4,7 +4,12 @@
 //
 //  Created by jiwon jeong on 11/27/24.
 //
-
+//
+//  FormattedTextView.swift
+//  TechTive
+//
+//  Created by jiwon jeong on 11/27/24.
+//
 import SwiftUI
 import UIKit
 
