@@ -12,6 +12,17 @@ struct NoteCard: View {
     let index: Int
     @State private var trapezoidPosition: CGFloat = 0
     
+    // Add animation speed control
+    private let animationSpeed: CGFloat = 2.0 // Increase this value for faster animation
+    // Add starting position offset
+    private let startingOffset: CGFloat = 0 // Adjust this value to change starting position
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/d/yyyy"
+        return formatter
+    }()
+    
     var body: some View {
         GeometryReader { mainGeo in
             HStack(spacing: 0) {
@@ -40,9 +51,9 @@ struct NoteCard: View {
                             .foregroundColor(Color(UIColor.color.orange))
                     }
                     
-                    Text(note.timestamp, style: .date)
+                    Text(dateFormatter.string(from: note.timestamp))
                         .font(.custom("Poppins-Regular", size: 14))
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color(UIColor.color.darkPurple))
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -55,11 +66,14 @@ struct NoteCard: View {
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
         let screenHeight = UIScreen.main.bounds.height
-        let scrollProgress = min(max(trapezoidPosition / screenHeight, 0), 1)
         
-        // Move right to left as we scroll
-        let maxMovement: CGFloat = 100 // Maximum distance to move left
-        return baseOffset - ((1 - scrollProgress) * maxMovement)
+        // Adjust scroll progress calculation with animation speed
+        let adjustedPosition = trapezoidPosition * animationSpeed
+        let scrollProgress = min(max(adjustedPosition / screenHeight, 0), 1)
+        
+        // Add starting offset to base position
+        let maxMovement: CGFloat = 400
+        return (baseOffset + startingOffset) - ((1 - scrollProgress) * maxMovement)
     }
     
     private func backgroundForIndex(_ index: Int) -> Color {
