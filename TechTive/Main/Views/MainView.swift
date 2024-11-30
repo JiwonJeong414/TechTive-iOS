@@ -9,6 +9,7 @@ import SwiftUI
 struct MainView: View {
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
+    @StateObject private var viewModel = QuoteViewModel()
     let isLimitedAccess: Bool
     
     var body: some View {
@@ -33,13 +34,16 @@ struct MainView: View {
                                 NavigationLink(destination: AuthenticationFlow()) {
                                     Text("Login")
                                         .font(.custom("Poppins-Medium", size: 16))
-                                        .foregroundColor(Color(UIColor.color.orange))
+                                        .foregroundColor(Color(UIColor.color.orange	))
                                 }
                             }
                         }
-                        Text("Lorem ipsum dolor sit am")
+                        Text(viewModel.quote)
                             .font(.custom("Poppins-Regular", size: 16))
                             .foregroundColor(Color(UIColor.color.orange))
+                            .onAppear {
+                                viewModel.fetchQuote()
+                            }
                         
                     }
                     .padding()

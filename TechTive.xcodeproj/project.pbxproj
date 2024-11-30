@@ -12,6 +12,8 @@
 		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
 		29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */; };
 		29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */; };
+		29520C202CFADC5300E0047E /* QuoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C1F2CFADC5300E0047E /* QuoteViewModel.swift */; };
+		29520C232CFADE6B00E0047E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 29520C222CFADE6B00E0047E /* Alamofire */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -60,6 +62,7 @@
 		29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CourierPrime-Regular.ttf"; sourceTree = "<group>"; };
 		29520C1C2CFA7A0200E0047E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
+		29520C1F2CFADC5300E0047E /* QuoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteViewModel.swift; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29520C232CFADE6B00E0047E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +261,7 @@
 				2978DFB92CF5213500013C36 /* NotesViewModel.swift */,
 				2978DFBB2CF5214800013C36 /* Note.swift */,
 				2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */,
+				29520C1F2CFADC5300E0047E /* QuoteViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -277,6 +282,9 @@
 			dependencies = (
 			);
 			name = TechTive;
+			packageProductDependencies = (
+				29520C222CFADE6B00E0047E /* Alamofire */,
+			);
 			productName = TechTive;
 			productReference = 2978DF6C2CF4366C00013C36 /* TechTive.app */;
 			productType = "com.apple.product-type.application";
@@ -349,6 +357,9 @@
 				Base,
 			);
 			mainGroup = 2978DF632CF4366C00013C36;
+			packageReferences = (
+				29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 2978DF6D2CF4366C00013C36 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -410,6 +421,7 @@
 				2978DFBA2CF5213500013C36 /* NotesViewModel.swift in Sources */,
 				29520C132CFA74BA00E0047E /* UIColor.swift in Sources */,
 				2978DFC22CF7C75E00013C36 /* FormattedTextView.swift in Sources */,
+				29520C202CFADC5300E0047E /* QuoteViewModel.swift in Sources */,
 				2978DFB52CF5170C00013C36 /* LoginView.swift in Sources */,
 				2978DFB32CF5170200013C36 /* SignUpViewModel.swift in Sources */,
 				2978DFA32CF5167C00013C36 /* AuthenticationFlow.swift in Sources */,
@@ -738,6 +750,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		29520C222CFADE6B00E0047E /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2978DF642CF4366C00013C36 /* Project object */;
 }

@@ -13,8 +13,8 @@ struct WeeklyOverviewSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Weekly Overview")
-                .font(.title2)
-                .bold()
+                .font(.custom("Poppins-Regular", size: 21))
+                .foregroundColor(Color(UIColor.color.orange))
             
             if isLimitedAccess {
                 // Limited preview for non-authenticated users

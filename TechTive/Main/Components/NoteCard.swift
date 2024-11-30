@@ -24,7 +24,6 @@ struct NoteCard: View {
                             Color.clear
                                 .onChange(of: geometry.frame(in: .global).minY) { oldValue, newValue in
                                     trapezoidPosition = newValue
-                                    print("Trapezoid \(index) Y position: \(newValue)")
                                 }
                         }
                     )
@@ -33,7 +32,7 @@ struct NoteCard: View {
                 // Main content
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text("Title of File")
+                        Text(note.content)
                             .font(.custom("CourierPrime-Regular", size: 18))
                             .foregroundColor(Color(UIColor.color.orange))
                         Spacer()
