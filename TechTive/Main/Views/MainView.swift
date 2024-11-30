@@ -17,8 +17,8 @@ struct MainView: View {
                 VStack(spacing: 20) {
                     // Header Section
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("HELLO, EMILY!")
-                            .font(.custom("CourierPrime-Regular", size: 24))
+                        Text("HELLO, PERSON!")
+                            .font(.custom("Poppins-SemiBold", size: 24))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                         Text("Lorem ipsum dolor sit am")
                             .font(.custom("Poppins-Regular", size: 16))
@@ -34,7 +34,7 @@ struct MainView: View {
                     
                     // Notes Section Title
                     Text("MY NOTES")
-                        .font(.custom("CourierPrime-Regular", size: 24))
+                        .font(.custom("Poppins-SemiBold", size: 24))
                         .foregroundColor(Color(UIColor.color.darkPurple))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     

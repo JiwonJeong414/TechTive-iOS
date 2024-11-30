@@ -8,43 +8,46 @@ struct NotesFeedSection: View {
     @State private var showingEditor = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Your Notes")
-                .font(.title2)
-                .bold()
-            
+        VStack(alignment: .leading, spacing: 0) {
             if isLimitedAccess {
-                // Show limited preview for non-authenticated users
+                // Limited preview version
                 VStack(spacing: 16) {
-                    NoteCard(note: Note(content: "Preview Note", userId: "preview"))
+                    NoteCard(note: Note(content: "Preview Note", userId: "preview"), index: 1)
                         .opacity(0.7)
                     
                     Text("Sign in to see more notes and create your own")
+                        .font(.custom("Poppins-Regular", size: 14))
                         .foregroundColor(.gray)
                         .multilineTextAlignment(.center)
                         .padding()
                 }
             } else {
-                // Show full notes feed for authenticated users
-                ForEach(viewModel.notes) { note in
-                    NoteCard(note: note)
-                        .onTapGesture {
-                            selectedNote = note
-                            showingEditor = true
-                        }
+                // Show full notes feed with alternating colors
+                ZStack {
+                    ForEach(Array(viewModel.notes.enumerated()), id: \.element.id) { index, note in
+                        NoteCard(note: note, index: index)
+                            .offset(y: CGFloat(index) * 70) // Adjust card position based on index
+                            .zIndex(Double(index)) // Higher index cards render on top
+                            .onTapGesture {
+                                selectedNote = note
+                                showingEditor = true
+                            }
+                    }
                 }
+                .frame(maxWidth: .infinity)
             }
         }
+        .padding(.vertical, 10)
         .sheet(item: $selectedNote) { note in
             AddNoteView(
                 viewModel: viewModel,
                 userId: note.userId,
-                note: note  // Pass the entire note object
+                note: note
             )
         }
     }
 }
 
 #Preview {
-    NotesFeedSection(viewModel: NotesViewModel(), isLimitedAccess: false)
+    MainView(isLimitedAccess: false)
 }

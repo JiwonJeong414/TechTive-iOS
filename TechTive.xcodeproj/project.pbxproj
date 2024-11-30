@@ -11,6 +11,7 @@
 		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
 		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
 		29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */; };
+		29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -58,6 +59,7 @@
 		29520C172CFA797400E0047E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CourierPrime-Regular.ttf"; sourceTree = "<group>"; };
 		29520C1C2CFA7A0200E0047E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 		29520C0E2CFA73CE00E0047E /* Font+Colors */ = {
 			isa = PBXGroup;
 			children = (
+				29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */,
 				29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */,
 				29520C172CFA797400E0047E /* Poppins-Medium.ttf */,
 				29520C162CFA797400E0047E /* Poppins-Regular.ttf */,
@@ -365,6 +368,7 @@
 				29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */,
 				29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */,
 				2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */,
+				29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */,
 				29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */,
 				2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */,
 			);

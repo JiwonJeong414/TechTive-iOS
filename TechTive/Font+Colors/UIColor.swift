@@ -18,14 +18,7 @@ extension UIColor {
         let purple = UIColor(red: 243/255, green: 231/255, blue: 241/255, alpha: 1)
         let orange = UIColor(red: 236/255, green: 93/255, blue: 58/255, alpha: 1)
         let darkPurple = UIColor(red: 27/255, green: 24/255, blue: 31/255, alpha: 1)
+        let lightOrange = UIColor(red: 255/255, green: 182/255, blue: 123/255, alpha: 1)
     }
 
-}
-
-extension Color {
-    static let background = Color(UIColor.color.backgroundColor)
-    static let lightYellow = Color(UIColor.color.lightYellow)
-    static let purple = Color(UIColor.color.purple)
-    static let orange = Color(UIColor.color.orange)
-    static let darkPurple = Color(UIColor.color.darkPurple)
 }
