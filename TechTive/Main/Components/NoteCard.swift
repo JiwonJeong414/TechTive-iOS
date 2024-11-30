@@ -61,7 +61,7 @@ struct NoteCard: View {
             .frame(height: 105)
             .background(backgroundForIndex(index))
         }
-    }
+    } 
     
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
@@ -111,5 +111,5 @@ struct TrapezoidShape: Shape {
 }
 
 #Preview {
-    MainView(isLimitedAccess: false)
+    MainView()
 }

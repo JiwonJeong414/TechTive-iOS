@@ -15,10 +15,9 @@ struct ContentView: View {
     var body: some View {
         Group {
             if authViewModel.isAuthenticated {
-                MainView(isLimitedAccess: false)
-            } else if authViewModel.isLimitedAccess {
-                MainView(isLimitedAccess: true)
-            } else {
+                MainView()
+            }
+            else {
                 AuthenticationFlow()
             }
         }

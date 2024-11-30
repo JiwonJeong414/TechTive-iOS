@@ -10,9 +10,7 @@ struct MainView: View {
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     @StateObject private var viewModel = QuoteViewModel()
-    let isLimitedAccess: Bool
-    
-    // Add animation states
+    //animation states
     @State private var showHeader = false
     @State private var showQuote = false
     @State private var showWeekly = false
@@ -20,7 +18,7 @@ struct MainView: View {
     @State private var showAddButton = false
     
     var body: some View {
-        NavigationView {
+        NavigationView { 
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
                     // Header Section
@@ -30,19 +28,12 @@ struct MainView: View {
                                 .font(.custom("Poppins-SemiBold", size: 32))
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
-                            if !isLimitedAccess {
                                 NavigationLink(destination: ProfileView()) {
                                     Image(systemName: "person.circle")
                                         .font(.title2)
                                         .foregroundColor(Color(UIColor.color.darkPurple))
                                 }
-                            } else {
-                                NavigationLink(destination: AuthenticationFlow()) {
-                                    Text("Login")
-                                        .font(.custom("Poppins-Medium", size: 16))
-                                        .foregroundColor(Color(UIColor.color.orange))
-                                }
-                            }
+                           
                         }
                         .opacity(showHeader ? 1 : 0)
                         
@@ -58,7 +49,7 @@ struct MainView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
                     // Weekly Overview Section
-                    WeeklyOverviewSection(isLimitedAccess: isLimitedAccess)
+                    WeeklyOverviewSection()
                         .background(Color(UIColor.color.lightYellow))
                         .cornerRadius(12)
                         .padding()
@@ -72,7 +63,7 @@ struct MainView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                         
-                        NotesFeedSection(viewModel: notesViewModel, isLimitedAccess: isLimitedAccess)
+                        NotesFeedSection(viewModel: notesViewModel)
                     }
                     .opacity(showNotes ? 1 : 0)
                 }
@@ -82,7 +73,7 @@ struct MainView: View {
             .overlay(
                 GeometryReader { geometry in
                     Group {
-                        if !isLimitedAccess {
+                       
                             Button(action: {
                                 showAddNote = true
                             }) {
@@ -101,10 +92,10 @@ struct MainView: View {
                             )
                             .scaleEffect(showAddButton ? 1 : 0, anchor: .center)
                             .animation(
-                                .spring(response: 0.6, dampingFraction: 0.9, blendDuration: 0.5).delay(1.2),
+                                .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
                                 value: showAddButton
                             )
-                        }
+                        
                     }
                 }
             )
@@ -138,5 +129,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(isLimitedAccess: false)
+    MainView()
 }

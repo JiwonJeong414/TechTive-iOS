@@ -34,6 +34,7 @@ struct SignUpView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)  // Hide the back button
     }
 }
 
