@@ -26,11 +26,12 @@ struct LoginView: View {
                 
                 VStack(spacing: 30) {
                     // Logo
+                    Spacer(minLength: 200)
                     Image("hat") // Make sure to add this asset
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 232.62, height: 152)
-                    
+                    Spacer(minLength: 70)
                     // Login Card
                     VStack(spacing: 24) {
                         // Title
@@ -71,11 +72,17 @@ struct LoginView: View {
                         }
                         .font(.system(size: 14))
                     }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 450, alignment: .top)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 32)
                     .background(cardBackground)
                     .cornerRadius(30)
+                    
+                   
                 }
+                
+                
             }
         }
         .navigationBarBackButtonHidden(true)  // Hide the back button

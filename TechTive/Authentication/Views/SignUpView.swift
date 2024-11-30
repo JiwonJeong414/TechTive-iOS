@@ -23,11 +23,12 @@ struct SignUpView: View {
                 backgroundColor.ignoresSafeArea()
                 
                 VStack(spacing: 30) {
+                    Spacer(minLength: 70)
                     Image("magnifyingTwo")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 232.62, height: 152)
-                    
+                    Spacer(minLength: 30)
                     // Sign Up Card
                     VStack(spacing: 24) {
                         // Title
@@ -74,6 +75,8 @@ struct SignUpView: View {
                         }
                         .font(.system(size: 14))
                     }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 450, alignment: .top)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 32)
                     .background(cardBackground)
