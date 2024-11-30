@@ -6,6 +6,7 @@
 //
 import SwiftUI
 
+
 struct NoteCard: View {
     let note: Note
     let index: Int
@@ -21,9 +22,9 @@ struct NoteCard: View {
                     .overlay(
                         GeometryReader { geometry in
                             Color.clear
-                                .onChange(of: geometry.frame(in: .global).minY) { position in
-                                    trapezoidPosition = position
-                                    print("Trapezoid \(index) Y position: \(position)")
+                                .onChange(of: geometry.frame(in: .global).minY) { oldValue, newValue in
+                                    trapezoidPosition = newValue
+                                    print("Trapezoid \(index) Y position: \(newValue)")
                                 }
                         }
                     )
@@ -55,12 +56,11 @@ struct NoteCard: View {
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
         let screenHeight = UIScreen.main.bounds.height
-        let scrollProgress = trapezoidPosition / screenHeight
+        let scrollProgress = min(max(trapezoidPosition / screenHeight, 0), 1)
         
-        // Move left as the card moves up the screen
-        // Adjust these values to control the movement
-        let maxMovement: CGFloat = 100
-        return baseOffset - (scrollProgress * maxMovement)
+        // Move right to left as we scroll
+        let maxMovement: CGFloat = 100 // Maximum distance to move left
+        return baseOffset - ((1 - scrollProgress) * maxMovement)
     }
     
     private func backgroundForIndex(_ index: Int) -> Color {

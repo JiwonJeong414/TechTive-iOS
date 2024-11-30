@@ -13,55 +13,57 @@ struct MainView: View {
     
     var body: some View {
         NavigationView {
+            
             ScrollView(.vertical, showsIndicators: true) {
+                
                 VStack(spacing: 20) {
                     // Header Section
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("HELLO, PERSON!")
-                            .font(.custom("Poppins-SemiBold", size: 24))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                        HStack(spacing: 140){
+                            Text("HELLO, PERSON!")
+                                .font(.custom("Poppins-SemiBold", size: 24))
+                                .foregroundColor(Color(UIColor.color.darkPurple))
+                            if !isLimitedAccess {
+                                NavigationLink(destination: ProfileView()) {
+                                    Image(systemName: "person.circle")
+                                        .font(.title2)
+                                        .foregroundColor(Color(UIColor.color.darkPurple))
+                                }
+                            } else {
+                                NavigationLink(destination: AuthenticationFlow()) {
+                                    Text("Login")
+                                        .font(.custom("Poppins-Medium", size: 16))
+                                        .foregroundColor(Color(UIColor.color.orange))
+                                }
+                            }
+                        }
                         Text("Lorem ipsum dolor sit am")
                             .font(.custom("Poppins-Regular", size: 16))
                             .foregroundColor(Color(UIColor.color.orange))
+                        
                     }
+                    .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top)
-                    
                     // Weekly Overview Section
                     WeeklyOverviewSection(isLimitedAccess: isLimitedAccess)
                         .background(Color(UIColor.color.lightYellow))
                         .cornerRadius(12)
+                        .padding()
+                
                     
                     // Notes Section Title
                     Text("MY NOTES")
                         .font(.custom("Poppins-SemiBold", size: 24))
                         .foregroundColor(Color(UIColor.color.darkPurple))
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding()
                     
                     // Notes Feed
                     NotesFeedSection(viewModel: notesViewModel, isLimitedAccess: isLimitedAccess)
                 }
-                .padding()
             }
             .background(Color(UIColor.color.backgroundColor))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if !isLimitedAccess {
-                        NavigationLink(destination: ProfileView()) {
-                            Image(systemName: "person.circle")
-                                .font(.title2)
-                                .foregroundColor(Color(UIColor.color.darkPurple))
-                        }
-                    } else {
-                        NavigationLink(destination: AuthenticationFlow()) {
-                            Text("Login")
-                                .font(.custom("Poppins-Medium", size: 16))
-                                .foregroundColor(Color(UIColor.color.orange))
-                        }
-                    }
-                }
-            }
             .overlay(
                 Group {
                     if !isLimitedAccess {
