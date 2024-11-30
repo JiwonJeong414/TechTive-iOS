@@ -23,10 +23,10 @@ struct NotesFeedSection: View {
                 }
             } else {
                 // Show full notes feed with alternating colors
-                ZStack {
+                ZStack(alignment: .top){
                     ForEach(Array(viewModel.notes.enumerated()), id: \.element.id) { index, note in
                         NoteCard(note: note, index: index)
-                            .offset(y: CGFloat(index) * 70) // Adjust card position based on index
+                            .padding(.top, CGFloat(index) * 100) // Use padding instead of offset
                             .zIndex(Double(index)) // Higher index cards render on top
                             .onTapGesture {
                                 selectedNote = note
