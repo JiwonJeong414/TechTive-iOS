@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2924B3272CFC4086009337FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2924B3262CFC4086009337FE /* GoogleService-Info.plist */; };
 		29520C132CFA74BA00E0047E /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C122CFA74BA00E0047E /* UIColor.swift */; };
 		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
 		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
@@ -40,7 +41,6 @@
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
 		29E214F12CFC268300ABD3B9 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214F02CFC268300ABD3B9 /* FirebaseCore */; };
-		29E214F32CFC33C900ABD3B9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29E214F22CFC33C900ABD3B9 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2924B3262CFC4086009337FE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		29520C122CFA74BA00E0047E /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		29520C162CFA797400E0047E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		29520C172CFA797400E0047E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -93,7 +94,6 @@
 		2978DFB92CF5213500013C36 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		2978DFBB2CF5214800013C36 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedTextView.swift; sourceTree = "<group>"; };
-		29E214F22CFC33C900ABD3B9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../.Trash/GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,7 +161,7 @@
 		2978DF6E2CF4366C00013C36 /* TechTive */ = {
 			isa = PBXGroup;
 			children = (
-				29E214F22CFC33C900ABD3B9 /* GoogleService-Info.plist */,
+				2924B3262CFC4086009337FE /* GoogleService-Info.plist */,
 				29520C1C2CFA7A0200E0047E /* Info.plist */,
 				29520C0E2CFA73CE00E0047E /* Font+Colors */,
 				2978DF9D2CF515D300013C36 /* Main */,
@@ -374,7 +374,7 @@
 			mainGroup = 2978DF632CF4366C00013C36;
 			packageReferences = (
 				29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */,
-				29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */
+				29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 2978DF6D2CF4366C00013C36 /* Products */;
 			projectDirPath = "";
@@ -393,12 +393,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */,
-				29E214F32CFC33C900ABD3B9 /* GoogleService-Info.plist in Resources */,
 				29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */,
 				2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */,
 				29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */,
 				29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */,
 				2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */,
+				2924B3272CFC4086009337FE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
