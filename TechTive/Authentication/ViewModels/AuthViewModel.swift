@@ -13,6 +13,7 @@ import FirebaseCore
 
 class AuthViewModel: ObservableObject {
     @Published var isAuthenticated = false
+    @Published var isSecondState = false
     @Published var errorMessage: String = ""
     @Published var showError: Bool = false
     @Published var isLoading: Bool = false
@@ -110,6 +111,7 @@ class AuthViewModel: ObservableObject {
         do {
             try auth.signOut()
             isAuthenticated = false
+            isSecondState = true
         } catch {
             errorMessage = "Error signing out"
             showError = true

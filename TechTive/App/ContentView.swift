@@ -16,6 +16,8 @@ struct ContentView: View {
         Group {
             if authViewModel.isAuthenticated {
                 MainView()
+            } else if authViewModel.isSecondState{
+                LoginView()
             }
             else {
                 AuthenticationFlow()
