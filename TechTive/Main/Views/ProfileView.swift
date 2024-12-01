@@ -9,39 +9,114 @@ import SwiftUI
 
 // MARK: - Profile View
 struct ProfileView: View {
+    private let buttonColor = Color(UIColor.color.lightYellow)
+    
     var body: some View {
-        VStack {
+        VStack(spacing: 0) { // Use zero spacing between the VStack elements
             // Profile Header
-            VStack(spacing: 16) {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 80))
-                
-                Text("User Name")
-                    .font(.title2)
-                
-                Text("user@email.com")
-                    .foregroundColor(.gray)
+            ZStack{
+                Color.purple.opacity(0.1)
+                    .frame(maxWidth: .infinity, maxHeight: 500)
+                    .ignoresSafeArea()
+
+                VStack {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .frame(width: 80, height: 80)
+                        .foregroundColor(.gray)
+
+                    Text("USERNAME")
+                        .font(.headline)
+                        .foregroundColor(.black)
+
+                    Text("user@email.com")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding()
             }
-            .padding()
-            
+
             // Profile Settings/Options
-            List {
-                Button("Edit Profile") {
-                    // Add edit profile action
+            ZStack{
+                Color(UIColor.color.lightYellow).opacity(0.3)
+                    .frame(maxWidth: .infinity, maxHeight: 550)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 0) { // Remove spacing between the buttons
+                    Button(action: {
+                        // Add edit profile action
+                    }) {
+                        HStack {
+                            Text("Edit Profile")
+                                .foregroundColor(.black)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.orange)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(buttonColor)
+                    }
+
+                    Divider() // Divider between buttons
+                        .background(Color.orange)
+
+                    Button(action: {
+                        // Add settings action
+                    }) {
+                        HStack {
+                            Text("Settings")
+                                .foregroundColor(.black)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.orange)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(buttonColor)
+                    }
+
+                    Divider() // Divider between buttons
+                        .background(Color.orange)
+
+                    Button(action: {
+                        // Add logout action
+                    }) {
+                        HStack {
+                            Text("Logout")
+                                .foregroundColor(.red)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.orange)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(buttonColor)
+                    }
                 }
-                
-                Button("Settings") {
-                    // Add settings action
-                }
-                
-                Button("Log Out", role: .destructive) {
-                    // Add logout action
-                }
-                Image(systemName: "rectangle").fixedSize()
-                Button("calendar instances"){
-                    
-                }
+                .padding(.horizontal)
+                .background(buttonColor)
+                .cornerRadius(8)
+                .frame(width: 380)
             }
+
+            // Stats Section
+            VStack(alignment: .leading) {
+                Text("MY STATS")
+                    .font(.headline)
+                    .padding(.leading)
+
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 16) {
+                    ForEach(0..<4) { _ in
+                        Rectangle()
+                            .fill(Color.yellow.opacity(0.4))
+                            .frame(height: 100)
+                            .cornerRadius(12)
+                    }
+                }
+                .padding()
+            }
+            .background(Color(UIColor.color.lightYellow).opacity(0.3))
         }
         .navigationTitle("Profile")
     }
