@@ -374,8 +374,7 @@
 			mainGroup = 2978DF632CF4366C00013C36;
 			packageReferences = (
 				29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */,
-				29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				29E214EB2CFC25B800ABD3B9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */
 			);
 			productRefGroup = 2978DF6D2CF4366C00013C36 /* Products */;
 			projectDirPath = "";
@@ -786,14 +785,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 11.5.0;
-			};
-		};
-		29E214EB2CFC25B800ABD3B9 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
