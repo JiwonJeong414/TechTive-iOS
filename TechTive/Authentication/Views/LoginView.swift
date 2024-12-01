@@ -82,31 +82,6 @@ struct LoginView: View {
                             .background(accentColor)
                             .cornerRadius(25)
                         }
-                        Button(action: {
-                            if !authViewModel.isLoading {
-                                Task {
-                                    await authViewModel.signInWithGoogle()
-                                }
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: "g.circle.fill")
-                                    .resizable()
-                                    .frame(width: 20, height: 20)
-                                    .foregroundColor(.blue)
-                                Text("Sign in with Google")
-                                    .font(.system(size: 17, weight: .semibold))
-                            }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(Color.white)
-                            .cornerRadius(25)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 25)
-                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                        .disabled(authViewModel.isLoading)
                         
                         HStack(spacing: 4) {
                             Text("Don't have an account?")

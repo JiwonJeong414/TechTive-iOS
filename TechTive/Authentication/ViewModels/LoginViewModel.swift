@@ -15,17 +15,27 @@ class LoginViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var navigateToHome: Bool = false
     @Published var showError: Bool = false
+    private var authStateListener: AuthStateDidChangeListenerHandle?
     
     private let auth = Auth.auth()
     
     // Check if user is already logged in
     func checkAuthState() {
-        auth.addStateDidChangeListener { [weak self] _, user in
+        // Retain the listener handle to avoid the unused result warning
+        authStateListener = auth.addStateDidChangeListener { [weak self] _, user in
             DispatchQueue.main.async {
                 if user != nil {
                     self?.navigateToHome = true
+                } else {
+                    self?.navigateToHome = false
                 }
             }
+        }
+    }
+    
+    deinit {
+        if let listener = authStateListener {
+            auth.removeStateDidChangeListener(listener)
         }
     }
     

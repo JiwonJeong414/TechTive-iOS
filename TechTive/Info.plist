@@ -9,24 +9,5 @@
 		<string>Poppins-Regular.ttf</string>
 		<string>Poppins-SemiBold.ttf</string>
 	</array>
-    <key>GIDClientID</key>
-    <string>562148876818-46mhi6nlnofmme7qjm9li3bktle5vc7c.apps.googleusercontent.com</string>
-
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.562148876818-46mhi6nlnofmme7qjm9li3bktle5vc7c</string>
-            </array>
-        </dict>
-    </array>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>google</string>
-        <string>comgoogleoauth2</string>
-        <string>com.googleusercontent</string>
-    </array>
-
 </dict>
 </plist>

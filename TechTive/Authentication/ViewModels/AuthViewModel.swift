@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-import GoogleSignIn
 import FirebaseCore
 
 
@@ -117,63 +116,4 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    
-    func signInWithGoogle() async {
-            isLoading = true
-            
-            do {
-                // Get client ID and configure Google Sign In
-                guard let clientID = FirebaseApp.app()?.options.clientID else {
-                    throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to get client ID"])
-                }
-                let config = GIDConfiguration(clientID: clientID)
-                GIDSignIn.sharedInstance.configuration = config
-                
-                // Get root view controller
-                guard let windowScene = await UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let window = await windowScene.windows.first,
-                      let rootViewController = await window.rootViewController else {
-                    throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to get root view controller"])
-                }
-                
-                // Sign in with Google
-                let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
-                
-                guard let idToken = result.user.idToken?.tokenString else {
-                    throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to get ID token"])
-                }
-                
-                // Create Firebase credential
-                let credential = GoogleAuthProvider.credential(
-                    withIDToken: idToken,
-                    accessToken: result.user.accessToken.tokenString
-                )
-                
-                // Sign in to Firebase
-                let authResult = try await Auth.auth().signIn(with: credential)
-                
-                // Save user data to Firestore
-                let userData: [String: Any] = [
-                    "name": result.user.profile?.name ?? "",
-                    "email": result.user.profile?.email ?? "",
-                    "userId": authResult.user.uid,
-                    "createdAt": Date()
-                ]
-                
-                try await db.collection("users").document(authResult.user.uid).setData(userData)
-                
-                // Set authenticated state
-                await MainActor.run {
-                    self.isAuthenticated = true
-                }
-                
-            } catch {
-                print("Google Sign In error: \(error.localizedDescription)")
-                self.errorMessage = error.localizedDescription
-                self.showError = true
-            }
-            
-            isLoading = false
-        }
-
 }
