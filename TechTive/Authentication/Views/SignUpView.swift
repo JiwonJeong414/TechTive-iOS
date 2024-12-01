@@ -4,12 +4,20 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-
 import SwiftUI
+import FirebaseAuth
+import SwiftUI
+import FirebaseAuth
 
 struct SignUpView: View {
-    @StateObject private var viewModel = SignUpViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.dismiss) var dismiss
+    
+    // State variables for form fields
+    @State private var name = ""
+    @State private var email = ""
+    @State private var password = ""
+    @State private var confirmPassword = ""
     
     // Custom colors (to maintain consistency)
     private let backgroundColor = Color(UIColor.color.darkPurple)
@@ -29,6 +37,7 @@ struct SignUpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 232.62, height: 152)
                     Spacer(minLength: 10)
+                    
                     // Sign Up Card
                     VStack(spacing: 24) {
                         // Title
@@ -38,31 +47,56 @@ struct SignUpView: View {
                         
                         // Input fields
                         VStack(spacing: 16) {
-                            TextField("Name", text: $viewModel.name)
+                            TextField("Name", text: $name)
+                                .textFieldStyle(CustomTextFieldStyle())
+                                .autocapitalization(.none)
+                            
+                            TextField("Email", text: $email)
+                                .textFieldStyle(CustomTextFieldStyle())
+                                .autocapitalization(.none)
+                                .keyboardType(.emailAddress)
+                            
+                            SecureField("Password", text: $password)
                                 .textFieldStyle(CustomTextFieldStyle())
                             
-                            TextField("Email", text: $viewModel.email)
-                                .textFieldStyle(CustomTextFieldStyle())
-                            
-                            SecureField("Password", text: $viewModel.password)
-                                .textFieldStyle(CustomTextFieldStyle())
-                            
-                            SecureField("Confirm Password", text: $viewModel.confirmPassword)
+                            SecureField("Confirm Password", text: $confirmPassword)
                                 .textFieldStyle(CustomTextFieldStyle())
                         }
                         
-                        // Sign Up button
-                        Button(action: {
-                            viewModel.signUp()
-                        }) {
-                            Text("Sign Up")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(accentColor)
-                                .cornerRadius(25)
+                        // Error Message (if any)
+                        if !authViewModel.errorMessage.isEmpty {
+                            Text(authViewModel.errorMessage)
+                                .foregroundColor(.red)
+                                .font(.system(size: 14))
+                                .multilineTextAlignment(.center)
                         }
+                        
+                        // Sign Up button with loading state
+                        Button(action: {
+                            if password == confirmPassword {
+                                authViewModel.signUp(email: email, password: password, name: name)
+                            } else {
+                                authViewModel.errorMessage = "Passwords don't match"
+                                authViewModel.showError = true
+                            }
+                        }) {
+                            ZStack {
+                                Text("Sign Up")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .opacity(authViewModel.isLoading ? 0 : 1)
+                                
+                                if authViewModel.isLoading {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(accentColor)
+                            .cornerRadius(25)
+                        }
+                        .disabled(authViewModel.isLoading)
                         
                         HStack(spacing: 4) {
                             Text("Already have an account?")
@@ -84,11 +118,16 @@ struct SignUpView: View {
                 }
             }
         }
-        .navigationBarBackButtonHidden(true)  // Hide the back button
+        .alert("Error", isPresented: $authViewModel.showError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(authViewModel.errorMessage)
+        }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
     SignUpView()
+        .environmentObject(AuthViewModel())
 }
-

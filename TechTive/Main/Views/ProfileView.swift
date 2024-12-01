@@ -9,6 +9,8 @@ import SwiftUI
 
 // MARK: - Profile View
 struct ProfileView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     private let buttonColor = Color(UIColor.color.lightYellow)
     
     var body: some View {
@@ -80,7 +82,7 @@ struct ProfileView: View {
                         .background(Color.orange)
 
                     Button(action: {
-                        // Add logout action
+                        authViewModel.signOut()
                     }) {
                         HStack {
                             Text("Logout")
@@ -124,4 +126,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .environmentObject(AuthViewModel())
 }

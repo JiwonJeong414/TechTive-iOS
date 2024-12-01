@@ -4,14 +4,17 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-
 import SwiftUI
+import FirebaseAuth
+import SwiftUI
+import FirebaseAuth
 
 struct LoginView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var username = ""
+    
+    // State variables for form fields
+    @State private var email = ""
     @State private var password = ""
-    @State private var navigateToSignUp = false
     
     // Custom colors
     private let backgroundColor = Color(UIColor.color.darkPurple)
@@ -19,7 +22,7 @@ struct LoginView: View {
     private let accentColor = Color(UIColor.color.orange)
     
     var body: some View {
-        NavigationView{
+        NavigationView {
             ZStack {
                 // Background
                 backgroundColor.ignoresSafeArea()
@@ -27,11 +30,12 @@ struct LoginView: View {
                 VStack(spacing: 30) {
                     // Logo
                     Spacer(minLength: 200)
-                    Image("hat") // Make sure to add this asset
+                    Image("hat")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 232.62, height: 152)
                     Spacer(minLength: 70)
+                    
                     // Login Card
                     VStack(spacing: 24) {
                         // Title
@@ -41,26 +45,68 @@ struct LoginView: View {
                         
                         // Input fields
                         VStack(spacing: 16) {
-                            TextField("Username", text: $username)
+                            TextField("Email", text: $email)
                                 .textFieldStyle(CustomTextFieldStyle())
+                                .autocapitalization(.none)
+                                .keyboardType(.emailAddress)
                             
                             SecureField("Password", text: $password)
                                 .textFieldStyle(CustomTextFieldStyle())
                         }
                         
-                        // Login button
-                        Button(action: {
-                            authViewModel.login(username: username, password: password)
-                        }) {
-                            Text("Login")
-                                .font(.system(size: 17, weight: .semibold))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                                .background(accentColor)
-                                .cornerRadius(25)
+                        // Error Message
+                        if !authViewModel.errorMessage.isEmpty {
+                            Text(authViewModel.errorMessage)
+                                .foregroundColor(.red)
+                                .font(.system(size: 14))
+                                .multilineTextAlignment(.center)
                         }
-                        .disabled(username.isEmpty || password.isEmpty)
+                        
+                        // Login button with loading state
+                        Button(action: {
+                            authViewModel.login(email: email, password: password)
+                        }) {
+                            ZStack {
+                                Text("Login")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .opacity(authViewModel.isLoading ? 0 : 1)
+                                
+                                if authViewModel.isLoading {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                }
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(accentColor)
+                            .cornerRadius(25)
+                        }
+                        Button(action: {
+                            if !authViewModel.isLoading {
+                                Task {
+                                    await authViewModel.signInWithGoogle()
+                                }
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "g.circle.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundColor(.blue)
+                                Text("Sign in with Google")
+                                    .font(.system(size: 17, weight: .semibold))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(Color.white)
+                            .cornerRadius(25)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .disabled(authViewModel.isLoading)
                         
                         HStack(spacing: 4) {
                             Text("Don't have an account?")
@@ -79,16 +125,18 @@ struct LoginView: View {
                     .padding(.vertical, 50)
                     .background(cardBackground)
                     .cornerRadius(30)
-                    
                 }
-                
             }
         }
-        .navigationBarBackButtonHidden(true)  // Hide the back button
+        .alert("Error", isPresented: $authViewModel.showError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(authViewModel.errorMessage)
+        }            
+        .navigationBarBackButtonHidden(true)
     }
 }
 
-// Custom text field style
 struct CustomTextFieldStyle: TextFieldStyle {
     func _body(configuration: TextField<Self._Label>) -> some View {
         configuration

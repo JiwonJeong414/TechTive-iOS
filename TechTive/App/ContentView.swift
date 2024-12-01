@@ -23,8 +23,8 @@ struct ContentView: View {
         }
         .environmentObject(authViewModel)
     }
-}
-
+} 
+  
 #Preview {
     ContentView()
 }
