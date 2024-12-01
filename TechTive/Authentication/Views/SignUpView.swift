@@ -28,7 +28,7 @@ struct SignUpView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 232.62, height: 152)
-                    Spacer(minLength: 30)
+                    Spacer(minLength: 10)
                     // Sign Up Card
                     VStack(spacing: 24) {
                         // Title
@@ -66,7 +66,7 @@ struct SignUpView: View {
                         
                         HStack(spacing: 4) {
                             Text("Already have an account?")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.black)
                             
                             NavigationLink(destination: LoginView()) {
                                 Text("Log in")
@@ -76,7 +76,7 @@ struct SignUpView: View {
                         .font(.system(size: 14))
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 450, alignment: .top)
+                    .frame(height: 470, alignment: .top)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 32)
                     .background(cardBackground)

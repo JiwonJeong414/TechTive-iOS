@@ -34,39 +34,43 @@ struct AddNoteView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
+                
                 // Formatting toolbar
                 HStack(spacing: 16) {
                     Button(action: {
                         toggleHeader()
                     }) {
                         Image(systemName: "textformat.size.larger")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(UIColor.color.orange))
                     }
                     
                     Button(action: {
                         toggleBold()
                     }) {
                         Image(systemName: "bold")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(UIColor.color.orange))
                     }
                     
                     Button(action: {
                         toggleItalic()
                     }) {
                         Image(systemName: "italic")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color(UIColor.color.orange))
                     }
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
-                .background(Color(UIColor.systemGray6))
+                
+                Divider()
+                    .background(Color.orange)
                 
                 // Text editor
                 FormattedTextView(attributedText: $attributedText, selectedRange: $selectedRange)
-                    .background(Color.gray.opacity(0.1))
+                    .background(Color(UIColor.color.lightYellow))
                     .cornerRadius(12)
                     .padding()
             }
+            .background(Color(UIColor.color.lightYellow).opacity(0.3))
             .navigationTitle("New Note")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -74,6 +78,7 @@ struct AddNoteView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundColor(Color(UIColor.color.orange))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
@@ -92,6 +97,7 @@ struct AddNoteView: View {
                         }
                         dismiss()
                     }
+                    .foregroundColor(Color(UIColor.color.orange))
                 }
             }
         }

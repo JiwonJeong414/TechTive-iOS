@@ -60,10 +60,11 @@ struct LoginView: View {
                                 .background(accentColor)
                                 .cornerRadius(25)
                         }
+                        .disabled(username.isEmpty || password.isEmpty)
                         
                         HStack(spacing: 4) {
                             Text("Don't have an account?")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.black)
                             
                             NavigationLink(destination: SignUpView()) {
                                 Text("Sign up")
@@ -75,13 +76,11 @@ struct LoginView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 450, alignment: .top)
                     .padding(.horizontal, 24)
-                    .padding(.vertical, 32)
+                    .padding(.vertical, 50)
                     .background(cardBackground)
                     .cornerRadius(30)
                     
-                   
                 }
-                
                 
             }
         }
