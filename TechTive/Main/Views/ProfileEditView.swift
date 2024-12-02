@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ProfileEditView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var notesViewModel: NotesViewModel
     @State private var newUsername: String = ""
     @State private var newEmail: String = ""
     @State private var newPassword: String = ""
@@ -81,7 +82,7 @@ struct ProfileEditView: View {
                     Button(action: {
                         resetFields()
                     }) {
-                    NavigationLink(destination: ProfileView()) {
+                        NavigationLink(destination: ProfileView().environmentObject(self.notesViewModel).environmentObject(self.authViewModel)) {
                         Text("Cancel")
                             .frame(maxWidth: .infinity)
                             .padding()

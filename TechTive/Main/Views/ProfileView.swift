@@ -51,7 +51,7 @@ struct ProfileView: View {
                         // Add edit profile action
                     }) {
                         HStack {
-                            NavigationLink(destination: ProfileEditView()){
+                            NavigationLink(destination: ProfileEditView().environmentObject(authViewModel).environmentObject(notesViewModel)){
                             Text("Edit Profile")
                                 .foregroundColor(.black)
                             Spacer()

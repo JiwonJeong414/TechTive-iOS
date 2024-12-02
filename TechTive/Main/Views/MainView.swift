@@ -8,6 +8,7 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+   // @EnvironmentObject var notesViewModel: NotesViewModel
 
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
@@ -30,7 +31,7 @@ struct MainView: View {
                                 .font(.custom("Poppins-SemiBold", size: 32))
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
-                                NavigationLink(destination: ProfileView()) {
+                            NavigationLink(destination: ProfileView().environmentObject(notesViewModel).environmentObject(authViewModel)) {
                                     Image(systemName: "person.circle")
                                         .font(.title2)
                                         .foregroundColor(Color(UIColor.color.darkPurple))
