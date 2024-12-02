@@ -1,0 +1,4 @@
+#Preview {
+    ProfileView()
+        .environmentObject(AuthViewModel())
+}
