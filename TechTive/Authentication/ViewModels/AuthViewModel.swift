@@ -19,16 +19,18 @@ class AuthViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isSignedIn = false
     private var stateListener: AuthStateDidChangeListenerHandle?
-
+    
     
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
     
     init() {
-        // Store the listener handle
         stateListener = auth.addStateDidChangeListener { [weak self] _, user in
             DispatchQueue.main.async {
                 self?.isAuthenticated = user != nil
+                if user != nil {
+                    self?.fetchUserInfo()
+                }
             }
         }
     }
@@ -56,6 +58,7 @@ class AuthViewModel: ObservableObject {
                 
                 // Successfully logged in
                 self.isAuthenticated = true
+                self.fetchUserInfo()
             }
         }
     }
@@ -101,6 +104,7 @@ class AuthViewModel: ObservableObject {
                         
                         // Successfully created user and saved data
                         self.isAuthenticated = true
+                        self.fetchUserInfo()
                     }
                 }
             }
@@ -118,4 +122,25 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    @Published var currentUserName: String = ""
+    @Published var currentUserEmail: String = ""
+    
+    func fetchUserInfo() {
+        guard let userId = auth.currentUser?.uid else { return }
+        
+        db.collection("users").document(userId).getDocument { [weak self] document, error in
+            guard let self = self,
+                  let document = document,
+                  let data = document.data() else { return }
+            
+            DispatchQueue.main.async {
+                self.currentUserName = data["name"] as? String ?? ""
+                self.currentUserEmail = data["email"] as? String ?? ""
+            }
+        }
+    }
+    
+    func getCurrentUserId() -> String? {
+        return auth.currentUser?.uid
+    }
 }

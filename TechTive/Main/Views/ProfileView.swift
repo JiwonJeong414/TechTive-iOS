@@ -27,11 +27,11 @@ struct ProfileView: View {
                         .frame(width: 80, height: 80)
                         .foregroundColor(.gray)
 
-                    Text("USERNAME")
+                    Text(authViewModel.currentUserName)
                         .font(.headline)
                         .foregroundColor(.black)
 
-                    Text("user@email.com")
+                    Text(authViewModel.currentUserEmail)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }

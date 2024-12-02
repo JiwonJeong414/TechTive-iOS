@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     @StateObject private var viewModel = QuoteViewModel()
@@ -24,7 +26,7 @@ struct MainView: View {
                     // Header Section
                     VStack(alignment: .leading, spacing: 8) {
                         HStack{
-                            Text("HELLO!")
+                            Text("HELLO " + authViewModel.currentUserName.uppercased(with: .autoupdatingCurrent) + "!")
                                 .font(.custom("Poppins-SemiBold", size: 32))
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
@@ -130,4 +132,5 @@ struct MainView: View {
 
 #Preview {
     MainView()
+        .environmentObject(AuthViewModel())
 }

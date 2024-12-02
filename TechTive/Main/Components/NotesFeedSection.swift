@@ -12,12 +12,23 @@ struct NotesFeedSection: View {
     @State private var selectedNote: Note? = nil
     @State private var showingEditor = false
     
+    private func bottomColor(_ count: Int) -> Color {
+        guard count > 0 else { return .clear }
+        let lastIndex = count - 1
+        switch lastIndex % 3 {
+            case 0: return Color(UIColor.color.purple)
+            case 1: return Color(UIColor.color.lightOrange)
+            case 2: return Color(UIColor.color.lightYellow)
+            default: return .clear
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Show full notes feed with alternating colors
             ZStack(alignment: .top){
                 ForEach(Array(viewModel.notes.enumerated()), id: \.element.id) { index, note in
-                    NoteCard(note: note, index: index)
+                    NoteCard(note: note, index: index, noteViewModel: viewModel)
                         .padding(.top, CGFloat(index) * 100) // Use padding instead of offset
                         .zIndex(Double(index)) // Higher index cards render on top
                         .onTapGesture {
@@ -28,6 +39,10 @@ struct NotesFeedSection: View {
             }
             .frame(maxWidth: .infinity)
             
+            Rectangle()
+                .fill(bottomColor(viewModel.notes.count))
+                .frame(height: 100)
+                .offset(y:  95)
         }
         .padding(.vertical, 10)
         .sheet(item: $selectedNote) { note in
@@ -42,4 +57,6 @@ struct NotesFeedSection: View {
 
 #Preview {
     MainView()
+        .environmentObject(AuthViewModel())
+
 }

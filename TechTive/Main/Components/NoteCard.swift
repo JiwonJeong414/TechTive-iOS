@@ -11,7 +11,9 @@ struct NoteCard: View {
     let note: Note
     let index: Int
     @State private var trapezoidPosition: CGFloat = 0
-    
+    @ObservedObject var noteViewModel: NotesViewModel
+    @State private var offset: CGFloat = 0
+
     // Add animation speed control
     private let animationSpeed: CGFloat = 2.0 // Increase this value for faster animation
     // Add starting position offset
@@ -26,7 +28,6 @@ struct NoteCard: View {
     var body: some View {
         GeometryReader { mainGeo in
             HStack(spacing: 0) {
-                // Left tab with geometry reader for position tracking
                 TrapezoidShape()
                     .fill(backgroundForIndex(index))
                     .frame(width: 40, height: 10)
@@ -40,7 +41,6 @@ struct NoteCard: View {
                     )
                     .offset(x: calculateOffset(), y: -47)
                 
-                // Main content
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(note.content)
@@ -57,11 +57,30 @@ struct NoteCard: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
+
             }
             .frame(height: 105)
             .background(backgroundForIndex(index))
+            .offset(x: offset)
+            .gesture(
+                DragGesture()
+                    .onChanged { gesture in
+                        if gesture.translation.width < 0 {
+                            offset = gesture.translation.width
+                        }
+                    }
+                    .onEnded { gesture in
+                        withAnimation {
+                            if gesture.translation.width < -100 {
+                                noteViewModel.deleteNote(note)
+                            } else {
+                                offset = 0
+                            }
+                        }
+                    }
+            )
         }
-    } 
+    }
     
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
@@ -112,4 +131,6 @@ struct TrapezoidShape: Shape {
 
 #Preview {
     MainView()
+        .environmentObject(AuthViewModel())
+
 }
