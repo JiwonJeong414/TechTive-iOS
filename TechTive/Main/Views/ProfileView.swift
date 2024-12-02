@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Charts
 
 // MARK: - Profile View
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var notesViewModel: NotesViewModel
 
     private let buttonColor = Color(UIColor.color.lightYellow)
     
@@ -105,22 +107,81 @@ struct ProfileView: View {
             }
 
             // Stats Section
+            // Stats Section
             VStack(alignment: .leading) {
                 Text("MY STATS")
                     .font(.headline)
                     .padding(.leading)
 
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 16) {
-                    ForEach(0..<4) { _ in
-                        Rectangle()
-                            .fill(Color.yellow.opacity(0.4))
-                            .frame(height: 100)
-                            .cornerRadius(12)
+                // Graph Section
+                VStack {
+                    Text("Notes Last 5 Weeks")
+                        .font(.subheadline)
+                        .foregroundColor(.black)
+
+                    Chart {
+                        ForEach(notesViewModel.notesPerWeek(), id: \.week) { data in
+                            BarMark(
+                                x: .value("Week", data.week),
+                                y: .value("Count", data.count)
+                            )
+                            .foregroundStyle(Color.orange)
+                        }
                     }
+                    .frame(height: 200)
+                    .padding(.horizontal, 4)
                 }
-                .padding()
+                .frame(height: 220)
+                .background(Color.yellow.opacity(0.4))
+                .cornerRadius(12)
+                .padding(.horizontal)
+
+                // Stats Buttons Section
+                HStack(spacing: 16) {
+                    // Button 1: Total Notes
+                    VStack {
+                        Text("Total Notes")
+                            .font(.subheadline)
+                            .foregroundColor(.black)
+                        Text("\(notesViewModel.notes.count)")
+                            .font(.title)
+                            .foregroundColor(.orange)
+                    }
+                    .frame(width: 100, height: 100)
+                    .background(Color.yellow.opacity(0.4))
+                    .cornerRadius(12)
+
+                    // Button 2: Average Notes/Week
+                    VStack {
+                        Text("Average Notes/Week")
+                            .font(.subheadline)
+                            .foregroundColor(.black)
+                        let avg = notesViewModel.notes.isEmpty ? 0 : notesViewModel.notes.count / 5
+                        Text("\(avg)")
+                            .font(.title)
+                            .foregroundColor(.orange)
+                    }
+                    .frame(width: 100, height: 100)
+                    .background(Color.yellow.opacity(0.4))
+                    .cornerRadius(12)
+
+                    // Button 3: Longest Streak
+                    VStack {
+                        Text("Longest Streak")
+                            .font(.subheadline)
+                            .foregroundColor(.black)
+                        Text("3 Weeks") // Replace with dynamic logic if needed
+                            .font(.title)
+                            .foregroundColor(.orange)
+                    }
+                    .frame(width: 100, height: 100)
+                    .background(Color.yellow.opacity(0.4))
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal)
             }
             .background(Color(UIColor.color.lightYellow).opacity(0.3))
+
         }
         .navigationTitle("Profile")
     }
@@ -129,4 +190,5 @@ struct ProfileView: View {
 #Preview {
     ProfileView()
         .environmentObject(AuthViewModel())
+        .environmentObject(NotesViewModel())
 }

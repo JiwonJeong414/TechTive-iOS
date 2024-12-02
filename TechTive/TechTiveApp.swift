@@ -23,6 +23,8 @@ struct TechTiveApp: App {
   // register app delegate for Firebase setup
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var notesViewModel = NotesViewModel()
+    
 
   var body: some Scene {
     WindowGroup {
@@ -30,6 +32,7 @@ struct TechTiveApp: App {
         ContentView()
         ProfileView()
                 .environmentObject(authViewModel)
+                .environmentObject(notesViewModel)
       }
     }
   }

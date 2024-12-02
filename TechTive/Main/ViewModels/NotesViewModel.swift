@@ -10,6 +10,22 @@ import SwiftUI
 class NotesViewModel: ObservableObject {
     @Published var notes: [Note] = []
     
+    
+    func notesPerWeek() -> [(week: String, count: Int)] {
+            let calendar = Calendar.current
+            var weeklyCounts: [(week: String, count: Int)] = []
+
+            for i in 0..<5 {
+                let startOfWeek = calendar.date(byAdding: .weekOfYear, value: -i, to: Date())?.startOfWeek ?? Date()
+                let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek) ?? Date()
+                let count = notes.filter { $0.timestamp >= startOfWeek && $0.timestamp <= endOfWeek }.count
+                let weekLabel = DateFormatter.localizedString(from: startOfWeek, dateStyle: .short, timeStyle: .none)
+                weeklyCounts.append((week: weekLabel, count: count))
+            }
+
+            return weeklyCounts.reversed() // Ensure the order is from oldest to newest
+        }
+    
     // Update addNote to handle formatted text
     func addNote(attributedString: NSAttributedString, userId: String) {
         let newNote = Note(attributedString: attributedString, userId: userId)
@@ -47,5 +63,11 @@ class NotesViewModel: ObservableObject {
     
     init() {
         loadNotes()
+    }
+}
+extension Date {
+    var startOfWeek: Date? {
+        let calendar = Calendar.current
+        return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))
     }
 }
