@@ -144,3 +144,68 @@ class AuthViewModel: ObservableObject {
         return auth.currentUser?.uid
     }
 }
+
+extension AuthViewModel {
+    func updateUsername(newUsername: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let userId = auth.currentUser?.uid else {
+            completion(false, "User not authenticated.")
+            return
+        }
+
+        // Update username in Firestore
+        db.collection("users").document(userId).updateData(["name": newUsername]) { [weak self] error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.errorMessage = error.localizedDescription
+                    self?.showError = true
+                    completion(false, error.localizedDescription)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self?.currentUserName = newUsername
+                    completion(true, nil)
+                }
+            }
+        }
+    }
+
+    func updateEmail(newEmail: String) {
+        guard let user = auth.currentUser else { return }
+        user.updateEmail(to: newEmail) { [weak self] error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.errorMessage = error.localizedDescription
+                    self?.showError = true
+                }
+            } else {
+                // Persist new email in Firestore
+                guard let userId = self?.getCurrentUserId() else { return }
+                self?.db.collection("users").document(userId).updateData(["email": newEmail]) { error in
+                    if let error = error {
+                        DispatchQueue.main.async {
+                            self?.errorMessage = error.localizedDescription
+                            self?.showError = true
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.currentUserEmail = newEmail
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func updatePassword(newPassword: String) {
+        guard let user = auth.currentUser else { return }
+        user.updatePassword(to: newPassword) { [weak self] error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.errorMessage = error.localizedDescription
+                    self?.showError = true
+                }
+            }
+        }
+    }
+}
+

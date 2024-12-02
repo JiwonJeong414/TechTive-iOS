@@ -1,3 +1,11 @@
+//
+//  ProfileEditView.swift
+//  TechTive
+//
+//  Created by Keya Aggarwal on 02/12/24.
+//
+
+
 import SwiftUI
 
 struct ProfileEditView: View {
@@ -12,36 +20,38 @@ struct ProfileEditView: View {
     var body: some View {
         VStack {
             Spacer().frame(height: 40)
-            
+
             // Title
             Text("Edit Profile")
-                .font(.title2)
-                .bold()
-                .foregroundColor(.black)
+                .font(.system(size: 24, weight: .bold))
+                .foregroundColor(Color(UIColor.color.darkPurple))
                 .padding(.bottom, 20)
-            
+
             // Form
             VStack(spacing: 20) {
                 // Username Field
-                TextField("New Username", text: $newUsername)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 20)
-
+                TextField("Change Username", text: $newUsername)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
+                    .padding(.horizontal,20)
                 // Email Field
-                TextField("New Email", text: $newEmail)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 20)
+                TextField("Change Email", text: $newEmail)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
                     .keyboardType(.emailAddress)
+                    .padding(.horizontal,20)
 
                 // Password Field
-                SecureField("New Password", text: $newPassword)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 20)
+                SecureField("Change Password", text: $newPassword)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
+                    .padding(.horizontal,20)
 
                 // Confirm Password Field
-                SecureField("Confirm Password", text: $confirmPassword)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal, 20)
+                SecureField("Confirm New Password", text: $confirmPassword)
+                    .textFieldStyle(CustomTextFieldStyle())
+                    .autocapitalization(.none)
+                    .padding(.horizontal,20)
             }
 
             // Error Message
@@ -67,15 +77,18 @@ struct ProfileEditView: View {
                 }
                 
                 // Cancel Button
-                Button(action: {
-                    resetFields()
-                }) {
-                    Text("Cancel")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color(hex: "F3E5F5"))
-                        .foregroundColor(.black)
-                        .cornerRadius(10)
+                
+                    Button(action: {
+                        resetFields()
+                    }) {
+                    NavigationLink(destination: ProfileView()) {
+                        Text("Cancel")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color(hex: "F3E5F5"))
+                            .foregroundColor(.black)
+                            .cornerRadius(10)
+                    }
                 }
             }
             .padding(.horizontal, 20)
@@ -83,7 +96,7 @@ struct ProfileEditView: View {
 
             Spacer()
         }
-        .background(Color(hex: "FFF3E0").ignoresSafeArea())
+        .background(Color(UIColor.color.backgroundColor).ignoresSafeArea())
         .alert(isPresented: $showSuccessMessage) {
             Alert(title: Text("Success"), message: Text("Profile updated successfully!"), dismissButton: .default(Text("OK")))
         }
@@ -102,10 +115,13 @@ struct ProfileEditView: View {
 
         errorMessage = ""
 
-        // Update user information in Firebase
+        // Update user information using AuthViewModel
         if !newUsername.isEmpty {
-            authViewModel.currentUserName = newUsername
-            // Add Firebase update logic for username if necessary
+            authViewModel.updateUsername(newUsername: newUsername) { success, error in
+                if let error = error {
+                    self.errorMessage = error
+                }
+            }
         }
         if !newEmail.isEmpty {
             authViewModel.updateEmail(newEmail: newEmail)
@@ -114,7 +130,7 @@ struct ProfileEditView: View {
             authViewModel.updatePassword(newPassword: newPassword)
         }
 
-        // Show success message
+        // Show success message and reset fields
         showSuccessMessage = true
         resetFields()
     }
@@ -127,30 +143,7 @@ struct ProfileEditView: View {
         errorMessage = ""
     }
 }
-
-// Example extensions in AuthViewModel for updating email and password
-extension AuthViewModel {
-    func updateEmail(newEmail: String) {
-        guard let user = auth.currentUser else { return }
-        user.updateEmail(to: newEmail) { error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                    self.showError = true
-                }
-            }
-        }
-    }
-
-    func updatePassword(newPassword: String) {
-        guard let user = auth.currentUser else { return }
-        user.updatePassword(to: newPassword) { error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                    self.showError = true
-                }
-            }
-        }
-    }
+#Preview {
+    ProfileEditView()
+        .environmentObject(AuthViewModel())
 }

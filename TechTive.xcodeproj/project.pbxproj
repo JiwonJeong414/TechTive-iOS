@@ -41,6 +41,7 @@
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
 		29E214F12CFC268300ABD3B9 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214F02CFC268300ABD3B9 /* FirebaseCore */; };
+		EA8B773D2CFE3F5F0084114F /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B773C2CFE3F5F0084114F /* ProfileEditView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		2978DFB92CF5213500013C36 /* NotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewModel.swift; sourceTree = "<group>"; };
 		2978DFBB2CF5214800013C36 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedTextView.swift; sourceTree = "<group>"; };
+		EA8B773C2CFE3F5F0084114F /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				2978DFA42CF516B200013C36 /* MainView.swift */,
+				EA8B773C2CFE3F5F0084114F /* ProfileEditView.swift */,
 				2978DFA62CF516BC00013C36 /* AddNoteView.swift */,
 				2978DFA82CF516C400013C36 /* ProfileView.swift */,
 			);
@@ -425,6 +428,7 @@
 			files = (
 				2978DFA72CF516BC00013C36 /* AddNoteView.swift in Sources */,
 				2978DF722CF4366C00013C36 /* ContentView.swift in Sources */,
+				EA8B773D2CFE3F5F0084114F /* ProfileEditView.swift in Sources */,
 				2978DFB12CF516F500013C36 /* LoginViewModel.swift in Sources */,
 				2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */,
 				2978DFAB2CF516D200013C36 /* WeeklyOverviewSection.swift in Sources */,

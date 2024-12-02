@@ -22,12 +22,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct TechTiveApp: App {
   // register app delegate for Firebase setup
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
+    @StateObject private var authViewModel = AuthViewModel()
 
   var body: some Scene {
     WindowGroup {
       NavigationView {
         ContentView()
+        ProfileView()
+                .environmentObject(authViewModel)
       }
     }
   }

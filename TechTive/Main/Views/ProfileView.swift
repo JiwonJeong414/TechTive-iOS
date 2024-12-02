@@ -49,11 +49,13 @@ struct ProfileView: View {
                         // Add edit profile action
                     }) {
                         HStack {
+                            NavigationLink(destination: ProfileEditView()){
                             Text("Edit Profile")
                                 .foregroundColor(.black)
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.orange)
+                        }
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
