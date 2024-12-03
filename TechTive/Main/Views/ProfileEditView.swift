@@ -17,19 +17,19 @@ struct ProfileEditView: View {
     @State private var confirmPassword: String = ""
     @State private var showSuccessMessage: Bool = false
     @State private var errorMessage: String = ""
-
+    
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         VStack {
             Spacer().frame(height: 40)
-
+            
             // Title
             Text("Edit Profile")
                 .font(.custom("Poppins-SemiBold", size: 32))
                 .foregroundColor(Color(UIColor.color.darkPurple))
                 .padding(.bottom, 20)
-
+            
             // Form
             VStack(spacing: 20) {
                 // Username Field
@@ -45,14 +45,14 @@ struct ProfileEditView: View {
                     .font(.custom("Poppins-Regular", size: 16))
                     .keyboardType(.emailAddress)
                     .padding(.horizontal,20)
-
+                
                 // Password Field
                 SecureField("Change Password", text: $newPassword)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
                     .font(.custom("Poppins-Regular", size: 16))
                     .padding(.horizontal,20)
-
+                
                 // Confirm Password Field
                 SecureField("Confirm New Password", text: $confirmPassword)
                     .textFieldStyle(CustomTextFieldStyle())
@@ -60,7 +60,7 @@ struct ProfileEditView: View {
                     .font(.custom("Poppins-Regular", size: 16))
                     .padding(.horizontal,20)
             }
-
+            
             // Error Message
             if !errorMessage.isEmpty {
                 Text(errorMessage)
@@ -68,7 +68,7 @@ struct ProfileEditView: View {
                     .font(.caption)
                     .padding(.top, 10)
             }
-
+            
             // Buttons
             HStack(spacing: 20) {
                 // Save Changes Button
@@ -86,23 +86,23 @@ struct ProfileEditView: View {
                 
                 // Cancel Button
                 
-                    Button(action: {
-                        resetFields()
-                    }) {
-                        NavigationLink(destination: ProfileView().environmentObject(self.notesViewModel).environmentObject(self.authViewModel)) {
-                        Text("Cancel")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .font(.custom("CourierPrime-Regular", size: 16))
-                            .background(Color(hex: "F3E5F5"))
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                    }
+                Button(action: {
+                    resetFields()
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text("Cancel")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .font(.custom("CourierPrime-Regular", size: 16))
+                        .background(Color(hex: "F3E5F5"))
+                        .foregroundColor(.black)
+                        .cornerRadius(10)
+                    
                 }
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)
-
+            
             Spacer()
         }
         .background(Color(UIColor.color.backgroundColor).ignoresSafeArea())
@@ -126,7 +126,7 @@ struct ProfileEditView: View {
             }
         }
     }
-
+    
     private func handleSaveChanges() {
         // Validate input fields
         if newPassword != confirmPassword {
@@ -137,9 +137,9 @@ struct ProfileEditView: View {
             errorMessage = "Please fill in at least one field"
             return
         }
-
+        
         errorMessage = ""
-
+        
         // Update user information using AuthViewModel
         if !newUsername.isEmpty {
             authViewModel.updateUsername(newUsername: newUsername) { success, error in
@@ -154,12 +154,12 @@ struct ProfileEditView: View {
         if !newPassword.isEmpty {
             authViewModel.updatePassword(newPassword: newPassword)
         }
-
+        
         // Show success message and reset fields
         showSuccessMessage = true
         resetFields()
     }
-
+    
     private func resetFields() {
         newUsername = ""
         newEmail = ""
