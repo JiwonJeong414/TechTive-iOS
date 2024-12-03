@@ -18,6 +18,8 @@ struct ProfileEditView: View {
     @State private var showSuccessMessage: Bool = false
     @State private var errorMessage: String = ""
 
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         VStack {
             Spacer().frame(height: 40)
@@ -106,6 +108,22 @@ struct ProfileEditView: View {
         .background(Color(UIColor.color.backgroundColor).ignoresSafeArea())
         .alert(isPresented: $showSuccessMessage) {
             Alert(title: Text("Success"), message: Text("Profile updated successfully!"), dismissButton: .default(Text("OK")))
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.orange)
+                        Text("Back") // Back label
+                            .font(.custom("Poppins-Medium", size: 16))
+                            .foregroundColor(.orange)
+                    }
+                }
+            }
         }
     }
 

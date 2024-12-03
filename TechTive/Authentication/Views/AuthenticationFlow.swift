@@ -14,7 +14,7 @@ struct AuthenticationFlow: View {
     private let backgrounds = [Color(hex: "F3E5F5"), Color(hex: "E65100"), Color(hex: "FFF3E0")]
     private let images = ["pipe", "magnifying", "robot"]
     
-    private let onboarding = ["Your Private Space", "Understand Your Patterns", "Your Perspective"]
+    private let onboarding = ["Your Private Space", "Understand Patterns", "Your Perspective"]
     private let onboardingTwo = ["Express yourself freely without the pressure of social media. Your thoughts stay completely private and secure.", "Our AI analyzes your entries to help you gain insights into your emotions and personality trends over time.", "Start your journey of self-discovery and growth!"]
 
     private let sizex: [CGFloat] = [244, 168.94, 148].map { CGFloat($0) }

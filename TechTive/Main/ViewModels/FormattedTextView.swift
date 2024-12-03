@@ -4,12 +4,7 @@
 //
 //  Created by jiwon jeong on 11/27/24.
 //
-//
-//  FormattedTextView.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/27/24.
-//
+
 import SwiftUI
 import UIKit
 
@@ -22,6 +17,7 @@ struct FormattedTextView: UIViewRepresentable {
         textView.delegate = context.coordinator
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 15, left: 10, bottom: 15, right: 10)
+        textView.font = UIFont.systemFont(ofSize: 12)
         return textView
     }
     

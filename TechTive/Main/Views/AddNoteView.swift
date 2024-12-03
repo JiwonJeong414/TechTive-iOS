@@ -25,11 +25,20 @@ struct AddNoteView: View {
         self.originalNote = note // Store the original note
 
         if let note = note {
-            _attributedText = State(initialValue: note.toAttributedString())
+            // Normalize the font size in the note's attributed string
+            let normalizedText = NSMutableAttributedString(attributedString: note.toAttributedString())
+            normalizedText.enumerateAttributes(in: NSRange(location: 0, length: normalizedText.length), options: []) { attributes, range, _ in
+                if attributes[.font] == nil {
+                    normalizedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17), range: range)
+                }
+            }
+            _attributedText = State(initialValue: normalizedText)
         } else {
-            _attributedText = State(initialValue: NSAttributedString(string: ""))
+            let defaultText = NSMutableAttributedString(string: "", attributes: [.font: UIFont.systemFont(ofSize: 17)])
+            _attributedText = State(initialValue: defaultText)
         }
     }
+
 
     var body: some View {
         NavigationView {
