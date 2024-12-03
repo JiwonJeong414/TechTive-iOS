@@ -12,7 +12,9 @@ import Charts
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notesViewModel: NotesViewModel
-
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     private let buttonColor = Color(UIColor.color.lightYellow)
     
     var body: some View {
@@ -22,52 +24,52 @@ struct ProfileView: View {
                 Color.purple.opacity(0.1)
                     .frame(maxWidth: .infinity, maxHeight: 500)
                     .ignoresSafeArea()
-
+                
                 VStack {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 80, height: 80)
                         .foregroundColor(.gray)
-
+                    
                     Text(authViewModel.currentUserName)
                         .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.black)
-
+                    
                     Text(authViewModel.currentUserEmail)
                         .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.gray)
                 }
                 .padding()
             }
-
+            
             // Profile Settings/Options
             ZStack{
                 Color(UIColor.color.lightYellow).opacity(0.3)
                     .frame(maxWidth: .infinity, maxHeight: 550)
                     .ignoresSafeArea()
-
+                
                 VStack(spacing: 0) {
                     Button(action: {
                         // Add edit profile action
                     }) {
                         HStack {
                             NavigationLink(destination: ProfileEditView().environmentObject(authViewModel).environmentObject(notesViewModel)){
-                            Text("Edit Profile")
-                                .foregroundColor(.black)
-                                .font(.custom("Poppins-Medium", size: 16))
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.orange)
-                        }
+                                Text("Edit Profile")
+                                    .foregroundColor(.black)
+                                    .font(.custom("Poppins-Medium", size: 16))
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundColor(.orange)
+                            }
                         }
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(buttonColor)
                     }
-
+                    
                     Divider() // Divider between buttons
                         .background(Color.orange)
-
+                    
                     Button(action: {
                         // Add settings action
                     }) {
@@ -83,10 +85,10 @@ struct ProfileView: View {
                         .frame(maxWidth: .infinity)
                         .background(buttonColor)
                     }
-
+                    
                     Divider() // Divider between buttons
                         .background(Color.orange)
-
+                    
                     Button(action: {
                         authViewModel.signOut()
                     }) {
@@ -108,18 +110,20 @@ struct ProfileView: View {
                 .cornerRadius(8)
                 .frame(width: 380)
             }
-
+            
             VStack(alignment: .leading, spacing: 16) {
+                Divider()
+                
                 Text("MY STATS")
                     .font(.custom("Poppins-SemiBold", size: 20))
                     .padding(.leading)
-
+                
                 // Graph Section
                 VStack(spacing: 8) {
                     Text("Notes Last 5 Weeks")
                         .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.black)
-
+                    
                     Chart {
                         ForEach(notesViewModel.notesPerWeek(), id: \.week) { data in
                             BarMark(
@@ -136,7 +140,7 @@ struct ProfileView: View {
                 .background(Color.yellow.opacity(0.4))
                 .cornerRadius(12)
                 .padding(.horizontal)
-
+                
                 // Stats Buttons Section
                 HStack(spacing: 16) {
                     // Button 1: Total Notes
@@ -144,14 +148,14 @@ struct ProfileView: View {
                         title: "Total Notes",
                         value: "\(notesViewModel.notes.count)"
                     )
-
+                    
                     // Button 2: Average Notes/Week
                     StatCard(
                         title: "Average Notes/Week",
                         value: String(format: "%.1f", notesViewModel.notes.isEmpty ? 0 : Double(notesViewModel.notes.count) / 7.0)
-
+                        
                     )
-
+                    
                     // Button 3: Longest Streak
                     StatCard(
                         title: "Longest Streak",
@@ -163,6 +167,22 @@ struct ProfileView: View {
             .background(Color(UIColor.color.lightYellow).opacity(0.3))
         }
         .navigationTitle("Profile")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.orange)
+                        Text("Back") // Back label
+                            .font(.custom("Poppins-Medium", size: 16))
+                            .foregroundColor(.orange)
+                    }
+                }
+            }
+        }
     }
 }
 

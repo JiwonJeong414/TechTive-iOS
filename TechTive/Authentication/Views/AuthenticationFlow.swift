@@ -13,6 +13,10 @@ struct AuthenticationFlow: View {
     
     private let backgrounds = [Color(hex: "F3E5F5"), Color(hex: "E65100"), Color(hex: "FFF3E0")]
     private let images = ["pipe", "magnifying", "robot"]
+    
+    private let onboarding = ["Your Private Space", "Understand Your Patterns", "Your Perspective"]
+    private let onboardingTwo = ["Express yourself freely without the pressure of social media. Your thoughts stay completely private and secure.", "Our AI analyzes your entries to help you gain insights into your emotions and personality trends over time.", "Start your journey of self-discovery and growth!"]
+
     private let sizex: [CGFloat] = [244, 168.94, 148].map { CGFloat($0) }
     private let sizey: [CGFloat] = [132, 183, 264].map { CGFloat($0) }
     
@@ -38,14 +42,14 @@ struct AuthenticationFlow: View {
                             .frame(height: 40)
                         
                         // Title
-                        Text("Lorem ipsum dolor!")
-                            .font(.title2)
+                        Text(onboarding[currentPage])
+                            .font(.custom("Poppins-Medium", size: 30))
                             .bold()
                             .foregroundColor(currentPage == 1 ? .white : .black)
                         
                         // Description
-                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
-                            .font(.caption)
+                        Text(onboardingTwo[currentPage])
+                            .font(.custom("Poppins-Regular", size: 16))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 40)
                             .foregroundColor(currentPage == 1 ? .white.opacity(0.8) : .gray)
@@ -81,6 +85,7 @@ struct AuthenticationFlow: View {
                                     Text("Get Started")
                                         .frame(maxWidth: .infinity)
                                         .padding()
+                                        .font(.custom("Poppins-Regular", size: 16))
                                         .background(Color(hex: "F3E5F5"))
                                         .foregroundColor(.black)
                                         .cornerRadius(10)
