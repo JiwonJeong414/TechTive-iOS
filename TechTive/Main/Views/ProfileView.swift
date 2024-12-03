@@ -16,7 +16,7 @@ struct ProfileView: View {
     private let buttonColor = Color(UIColor.color.lightYellow)
     
     var body: some View {
-        VStack(spacing: 0) { // Use zero spacing between the VStack elements
+        VStack(spacing: 0) {
             // Profile Header
             ZStack{
                 Color.purple.opacity(0.1)
@@ -30,11 +30,11 @@ struct ProfileView: View {
                         .foregroundColor(.gray)
 
                     Text(authViewModel.currentUserName)
-                        .font(.headline)
+                        .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.black)
 
                     Text(authViewModel.currentUserEmail)
-                        .font(.subheadline)
+                        .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.gray)
                 }
                 .padding()
@@ -46,7 +46,7 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity, maxHeight: 550)
                     .ignoresSafeArea()
 
-                VStack(spacing: 0) { // Remove spacing between the buttons
+                VStack(spacing: 0) {
                     Button(action: {
                         // Add edit profile action
                     }) {
@@ -54,6 +54,7 @@ struct ProfileView: View {
                             NavigationLink(destination: ProfileEditView().environmentObject(authViewModel).environmentObject(notesViewModel)){
                             Text("Edit Profile")
                                 .foregroundColor(.black)
+                                .font(.custom("Poppins-Medium", size: 16))
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.orange)
@@ -73,6 +74,7 @@ struct ProfileView: View {
                         HStack {
                             Text("Settings")
                                 .foregroundColor(.black)
+                                .font(.custom("Poppins-Medium", size: 16))
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.orange)
@@ -91,6 +93,7 @@ struct ProfileView: View {
                         HStack {
                             Text("Logout")
                                 .foregroundColor(.red)
+                                .font(.custom("Poppins-Medium", size: 16))
                             Spacer()
                             Image(systemName: "chevron.right")
                                 .foregroundColor(.orange)
@@ -106,17 +109,15 @@ struct ProfileView: View {
                 .frame(width: 380)
             }
 
-            // Stats Section
-            // Stats Section
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text("MY STATS")
-                    .font(.headline)
+                    .font(.custom("Poppins-SemiBold", size: 20))
                     .padding(.leading)
 
                 // Graph Section
-                VStack {
+                VStack(spacing: 8) {
                     Text("Notes Last 5 Weeks")
-                        .font(.subheadline)
+                        .font(.custom("Poppins-Medium", size: 16))
                         .foregroundColor(.black)
 
                     Chart {
@@ -131,7 +132,7 @@ struct ProfileView: View {
                     .frame(height: 200)
                     .padding(.horizontal, 4)
                 }
-                .frame(height: 220)
+                .frame(height: 240)
                 .background(Color.yellow.opacity(0.4))
                 .cornerRadius(12)
                 .padding(.horizontal)
@@ -139,54 +140,54 @@ struct ProfileView: View {
                 // Stats Buttons Section
                 HStack(spacing: 16) {
                     // Button 1: Total Notes
-                    VStack {
-                        Text("Total Notes")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("\(notesViewModel.notes.count)")
-                            .font(.title)
-                            .foregroundColor(.orange)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.yellow.opacity(0.4))
-                    .cornerRadius(12)
+                    StatCard(
+                        title: "Total Notes",
+                        value: "\(notesViewModel.notes.count)"
+                    )
 
                     // Button 2: Average Notes/Week
-                    VStack {
-                        Text("Average Notes/Week")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        let avg = notesViewModel.notes.isEmpty ? 0 : notesViewModel.notes.count / 5
-                        Text("\(avg)")
-                            .font(.title)
-                            .foregroundColor(.orange)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.yellow.opacity(0.4))
-                    .cornerRadius(12)
+                    StatCard(
+                        title: "Average Notes/Week",
+                        value: String(format: "%.1f", notesViewModel.notes.isEmpty ? 0 : Double(notesViewModel.notes.count) / 7.0)
+
+                    )
 
                     // Button 3: Longest Streak
-                    VStack {
-                        Text("Longest Streak")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("3 Weeks") // Replace with dynamic logic if needed
-                            .font(.title)
-                            .foregroundColor(.orange)
-                    }
-                    .frame(width: 100, height: 100)
-                    .background(Color.yellow.opacity(0.4))
-                    .cornerRadius(12)
+                    StatCard(
+                        title: "Longest Streak",
+                        value: "3 Weeks"
+                    )
                 }
                 .padding(.horizontal)
             }
             .background(Color(UIColor.color.lightYellow).opacity(0.3))
-
         }
         .navigationTitle("Profile")
     }
 }
 
+struct StatCard: View {
+    let title: String
+    let value: String
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 8) {
+            Text(title)
+                .font(.custom("Poppins-Regular", size: 14))
+                .foregroundColor(.black)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.8)
+                .lineLimit(2)
+            
+            Text(value)
+                .font(.custom("Poppins-SemiBold", size: 20))
+                .foregroundColor(.orange)
+        }
+        .frame(width: 110, height: 110)
+        .background(Color.yellow.opacity(0.4))
+        .cornerRadius(12)
+    }
+}
 #Preview {
     ProfileView()
         .environmentObject(AuthViewModel())
