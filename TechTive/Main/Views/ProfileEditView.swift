@@ -24,7 +24,7 @@ struct ProfileEditView: View {
 
             // Title
             Text("Edit Profile")
-                .font(.system(size: 24, weight: .bold))
+                .font(.custom("Poppins-SemiBold", size: 32))
                 .foregroundColor(Color(UIColor.color.darkPurple))
                 .padding(.bottom, 20)
 
@@ -34,11 +34,13 @@ struct ProfileEditView: View {
                 TextField("Change Username", text: $newUsername)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
+                    .font(.custom("Poppins-Regular", size: 16))
                     .padding(.horizontal,20)
                 // Email Field
                 TextField("Change Email", text: $newEmail)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
+                    .font(.custom("Poppins-Regular", size: 16))
                     .keyboardType(.emailAddress)
                     .padding(.horizontal,20)
 
@@ -46,12 +48,14 @@ struct ProfileEditView: View {
                 SecureField("Change Password", text: $newPassword)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
+                    .font(.custom("Poppins-Regular", size: 16))
                     .padding(.horizontal,20)
 
                 // Confirm Password Field
                 SecureField("Confirm New Password", text: $confirmPassword)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
+                    .font(.custom("Poppins-Regular", size: 16))
                     .padding(.horizontal,20)
             }
 
@@ -72,6 +76,7 @@ struct ProfileEditView: View {
                     Text("Save Changes")
                         .frame(maxWidth: .infinity)
                         .padding()
+                        .font(.custom("CourierPrime-Regular", size: 16))
                         .background(Color(hex: "E65100"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
@@ -86,6 +91,7 @@ struct ProfileEditView: View {
                         Text("Cancel")
                             .frame(maxWidth: .infinity)
                             .padding()
+                            .font(.custom("CourierPrime-Regular", size: 16))
                             .background(Color(hex: "F3E5F5"))
                             .foregroundColor(.black)
                             .cornerRadius(10)
@@ -144,7 +150,9 @@ struct ProfileEditView: View {
         errorMessage = ""
     }
 }
+
 #Preview {
     ProfileEditView()
         .environmentObject(AuthViewModel())
+        .environmentObject(NotesViewModel())
 }

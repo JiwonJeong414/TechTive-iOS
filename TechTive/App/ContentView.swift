@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Main App Structure
 struct ContentView: View {
     @StateObject private var authViewModel = AuthViewModel()
-    
+     
     var body: some View {
         Group {
             if authViewModel.isAuthenticated {
