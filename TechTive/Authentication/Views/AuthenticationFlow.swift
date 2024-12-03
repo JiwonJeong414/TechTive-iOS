@@ -23,7 +23,7 @@ struct AuthenticationFlow: View {
     var body: some View {
         VStack {
             if currentPage < 3 {
-                // Onboarding Pages
+                // Onboarding Pages 
                 ZStack {
                     backgrounds[currentPage]
                         .ignoresSafeArea()

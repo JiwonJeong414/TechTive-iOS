@@ -46,6 +46,7 @@ struct NoteCard: View {
                         Text(note.content)
                             .font(.custom("CourierPrime-Regular", size: 18))
                             .foregroundColor(Color(UIColor.color.orange))
+                            .lineLimit(1)
                         Spacer()
                         Image(systemName: "chevron.right")
                             .foregroundColor(Color(UIColor.color.orange))
