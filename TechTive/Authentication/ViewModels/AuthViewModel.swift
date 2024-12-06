@@ -126,12 +126,32 @@ class AuthViewModel: ObservableObject {
     @Published var currentUserEmail: String = ""
     
     func fetchUserInfo() {
-        guard let userId = auth.currentUser?.uid else { return }
+        guard let currentUser = auth.currentUser else {
+            print("No current user logged in.")
+            return
+        }
         
+        // Fetch and print the user's ID token
+        currentUser.getIDToken { token, error in
+            if let error = error {
+                print("Error fetching ID token: \(error.localizedDescription)")
+                return
+            }
+            
+            if let token = token {
+                print("User token: \(token)")
+            }
+        }
+        
+        // Fetch additional user info from Firestore
+        let userId = currentUser.uid
         db.collection("users").document(userId).getDocument { [weak self] document, error in
             guard let self = self,
                   let document = document,
-                  let data = document.data() else { return }
+                  let data = document.data() else {
+                print("Error fetching user document: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
             
             DispatchQueue.main.async {
                 self.currentUserName = data["name"] as? String ?? ""
@@ -139,7 +159,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
+
     func getCurrentUserId() -> String? {
         return auth.currentUser?.uid
     }

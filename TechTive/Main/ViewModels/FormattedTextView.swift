@@ -17,7 +17,7 @@ struct FormattedTextView: UIViewRepresentable {
         textView.delegate = context.coordinator
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 15, left: 10, bottom: 15, right: 10)
-        textView.font = UIFont.systemFont(ofSize: 12)
+        textView.font = UIFont.systemFont(ofSize: 17)
         return textView
     }
     

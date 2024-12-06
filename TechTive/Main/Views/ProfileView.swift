@@ -108,7 +108,7 @@ struct ProfileView: View {
                 // Yellow Background Section
                 ZStack {
                     GeometryReader { geometry in
-                        Color(UIColor.color.lightYellow).opacity(0.3)
+                        Color(UIColor.color.lightYellow).opacity(0)
                             .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
                             .offset(y: -geometry.frame(in: .global).minY)
                             .allowsHitTesting(false)
