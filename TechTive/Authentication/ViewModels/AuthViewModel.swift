@@ -148,6 +148,7 @@ class AuthViewModel: ObservableObject {
         return auth.currentUser?.uid
     }
     
+    
     func uploadProfilePicture(image: UIImage) async throws -> Bool {
         print("🔄 Starting profile picture upload")
         
@@ -170,20 +171,18 @@ class AuthViewModel: ObservableObject {
         
         // Add image data to the raw HTTP request body
         data.append("--\(boundary)\(lineBreak)".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.png\"\(lineBreak)".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"\"; filename=\"image.png\"\(lineBreak)".data(using: .utf8)!)
         data.append("Content-Type: image/png\(lineBreak)\(lineBreak)".data(using: .utf8)!)
         
+        // Convert UIImage to PNG data
         guard let imageData = image.pngData() else {
-            print("❌ Failed to convert image to PNG")
+            print("❌ Failed to convert UIImage to PNG")
             throw URLError(.cannotCreateFile)
         }
         
-        print("📦 DEBUG - Image data size: \(imageData.count) bytes")
         data.append(imageData)
         data.append(lineBreak.data(using: .utf8)!)
         data.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
-        
-        print("📤 DEBUG - Sending request with form-data")
         
         let (responseData, response) = try await URLSession.shared.upload(for: request, from: data)
         
@@ -213,6 +212,8 @@ class AuthViewModel: ObservableObject {
         
         return false
     }
+
+
 
 
 
