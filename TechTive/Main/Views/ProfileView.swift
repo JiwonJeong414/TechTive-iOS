@@ -10,8 +10,10 @@ import Charts
 
 // MARK: - Profile View
 struct ProfileView: View {
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject var authViewModel = AuthViewModel()
     @EnvironmentObject var notesViewModel: NotesViewModel
+    
+    @State private var profileImage: UIImage?
     
     @Environment(\.dismiss) var dismiss
     
@@ -20,6 +22,26 @@ struct ProfileView: View {
     
     private let buttonColor = Color(UIColor.color.lightYellow)
     private let purpleColor = Color(UIColor.color.purple)
+    
+    private func loadProfilePicture() {
+        Task {
+            await authViewModel.fetchProfilePicture()
+            if let urlString = authViewModel.profilePictureURL,
+               let url = URL(string: urlString) {
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.profileImage = image
+                        }
+                    }
+                } catch {
+                    print("Error loading profile picture: \(error)")
+                }
+            }
+        }
+    }
+    
     
     var body: some View {
         ScrollView {
@@ -53,44 +75,54 @@ struct ProfileView: View {
                         .padding(.top, 30)
                         .padding(.horizontal)
                         
-
+                        
                         
                         ZStack(alignment: .bottomTrailing) {
-                             // Profile Image
-                             if let selectedImage = selectedImage {
-                                 Image(uiImage: selectedImage)
-                                     .resizable()
-                                     .scaledToFill()
-                                     .frame(width: 160, height: 160)
-                                     .clipShape(Circle())
-                             } else {
-                                 Image(systemName: "person.circle.fill")
-                                     .resizable()
-                                     .frame(width: 160, height: 160)
-                                     .foregroundColor(.gray)
-                             }
-                             
-                             // Edit Button
-                             Button(action: {
-                                 showImagePicker = true
-                             }) {
-                                 ZStack {
-                                     Circle()
-                                         .fill(Color.white)
-                                         .frame(width: 44, height: 44)
-                                         .shadow(radius: 4)
-                                     
-                                     Image(systemName: "pencil.circle.fill")
-                                         .resizable()
-                                         .frame(width: 40, height: 40)
-                                         .foregroundColor(.orange)
-                                 }
-                             }
-                             .offset(x: 8, y: 8)
-                         }
-                         .sheet(isPresented: $showImagePicker) {
-                             ImagePicker(selectedImage: $selectedImage)
-                         }
+                            if let selectedImage = selectedImage {
+                                Image(uiImage: selectedImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 160, height: 160)
+                                    .clipShape(Circle())
+                            } else if let profileImage = profileImage {
+                                Image(uiImage: profileImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 160, height: 160)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .frame(width: 160, height: 160)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            // Edit Button
+                            Button(action: {
+                                showImagePicker = true
+                            }) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 44, height: 44)
+                                        .shadow(radius: 4)
+                                    
+                                    Image(systemName: "pencil.circle.fill")
+                                        .resizable()
+                                        .frame(width: 40, height: 40)
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                            .offset(x: 8, y: 8)
+                        }
+                        .sheet(isPresented: $showImagePicker) {
+                            ImagePicker(selectedImage: $selectedImage, authViewModel: authViewModel) { success in
+                                if success {
+                                    // Refresh the profile picture
+                                    loadProfilePicture()
+                                }
+                            }
+                        }
                         
                         Text(authViewModel.currentUserName)
                             .font(.custom("Poppins-Medium", size: 24))
@@ -235,6 +267,9 @@ struct ProfileView: View {
         }
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
+        .onAppear {
+            loadProfilePicture()
+        }
     }
     
 }

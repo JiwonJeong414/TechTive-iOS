@@ -73,7 +73,7 @@ struct ProfileEditView: View {
             HStack(spacing: 20) {
                 // Save Changes Button
                 Button(action: {
-                    handleSaveChanges()
+//                    handleSaveChanges()
                 }) {
                     Text("Save Changes")
                         .frame(maxWidth: .infinity)
@@ -127,7 +127,7 @@ struct ProfileEditView: View {
         }
     }
     
-    private func handleSaveChanges() {
+    private func handleSaveChanges() async {
         // Validate input fields
         if newPassword != confirmPassword {
             errorMessage = "Passwords do not match"
@@ -142,19 +142,31 @@ struct ProfileEditView: View {
         
         // Update user information using AuthViewModel
         if !newUsername.isEmpty {
-            authViewModel.updateUsername(newUsername: newUsername) { success, error in
+            do {
+                let (success, error) = await authViewModel.updateUsername(newUsername: newUsername)
                 if let error = error {
                     self.errorMessage = error
                 }
+            } catch {
+                self.errorMessage = error.localizedDescription
             }
         }
+
         if !newEmail.isEmpty {
-            authViewModel.updateEmail(newEmail: newEmail)
+            do {
+                try await authViewModel.updateEmail(newEmail: newEmail)
+            } catch {
+                self.errorMessage = error.localizedDescription
+            }
         }
+
         if !newPassword.isEmpty {
-            authViewModel.updatePassword(newPassword: newPassword)
+            do {
+                try await authViewModel.updatePassword(newPassword: newPassword)
+            } catch {
+                self.errorMessage = error.localizedDescription
+            }
         }
-        
         // Show success message and reset fields
         showSuccessMessage = true
         resetFields()

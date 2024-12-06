@@ -16,7 +16,7 @@ struct NoteResponse: Codable {
 }
 
 class NoteNetworkService: ObservableObject {
-    private let baseURL = "http://127.0.0.1:5001/api"
+    private let baseURL = "https://631c-128-84-124-32.ngrok-free.app/api/"
     
     // Create a new note with formatting
     func createNote(attributedString: NSAttributedString, userId: String) async throws -> NoteResponse {
