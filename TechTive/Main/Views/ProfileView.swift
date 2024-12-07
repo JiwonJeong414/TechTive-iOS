@@ -259,7 +259,7 @@ struct ProfileView: View {
                                     value: "3 Weeks"
                                 )
                             }
-                            .padding(.horizontal)
+                            .padding(.horizontal, 20)
                         }
                     }
                 }

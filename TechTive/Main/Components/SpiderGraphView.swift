@@ -1,4 +1,12 @@
 //
+//  SpiderGraphView.swift
+//  TechTive
+//
+//  Created by Keya Aggarwal on 06/12/24.
+//
+
+
+//
 //  GraphView.swift
 //  TechTive
 //
@@ -9,6 +17,8 @@ struct SpiderGraphView: View {
     // Values for the 7 variables (0 to 1)
     let values: [Double]
     let labels: [String]
+
+    private let accentColor = Color(UIColor.color.orange)
     
     private let sides = 7
     private let maxValue: Double = 1.0
@@ -42,10 +52,10 @@ struct SpiderGraphView: View {
     private func dataPolygon(size: CGFloat, center: CGPoint) -> some View {
         if values.count == sides {
             Polygon(sides: sides, values: values)
-                .fill(Color.blue.opacity(0.3))
+                .fill(accentColor.opacity(0.3))
                 .overlay(
                     Polygon(sides: sides, values: values)
-                        .stroke(Color.blue, lineWidth: 2)
+                        .stroke(Color.accentColor, lineWidth: 2)
                 )
                 .frame(width: size * 2, height: size * 2)
                 .position(center)
@@ -113,18 +123,36 @@ struct Polygon: Shape {
     }
 }
 struct SomeView: View {
+    private let cardBackground = Color(UIColor.color.backgroundColor)
+    let note: Note // Pass the note object
+
     var body: some View {
+        let emotionValues = [
+            note.angerValue,
+            note.disgustValue,
+            note.fearValue,
+            note.joyValue,
+            note.neutralValue,
+            note.sadnessValue,
+            note.surpriseValue
+        ]
+        
+        let emotionLabels = ["Anger", "Disgust", "Fear", "Joy", "Neutral", "Sadness", "Surprise"]
+        
         SpiderGraphView(
-            values: [0.8, 0.6, 0.9, 0.5, 0.7, 0.4, 0.9], // Example values
-            labels: ["Var1", "Var2", "Var3", "Var4", "Var5", "Var6", "Var7"]
+            values: emotionValues, // Pass emotion values
+            labels: emotionLabels // Pass labels for emotions
         )
         .frame(width: 300, height: 300)
         .padding()
+        .background(cardBackground)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        SomeView()
+        let sampleNote = Note(content: "Sample journal entry", userId: "user123", angerValue: 0.8, joyValue: 0.7)
+        SomeView(note: sampleNote)
+       // SomeView()
     }
 }

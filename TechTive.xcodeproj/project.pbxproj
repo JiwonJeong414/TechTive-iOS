@@ -43,6 +43,7 @@
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
 		29E214F12CFC268300ABD3B9 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214F02CFC268300ABD3B9 /* FirebaseCore */; };
+		EA045B372D03C8D10012EEC7 /* SpiderGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA045B362D03C8D10012EEC7 /* SpiderGraphView.swift */; };
 		EA8B773D2CFE3F5F0084114F /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8B773C2CFE3F5F0084114F /* ProfileEditView.swift */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +100,7 @@
 		2978DFC12CF7C75E00013C36 /* FormattedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattedTextView.swift; sourceTree = "<group>"; };
 		29965E6A2D0377B300308CFF /* NoteNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteNetworkService.swift; sourceTree = "<group>"; };
 		29C0D8792CFFA97D00947EF9 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		EA045B362D03C8D10012EEC7 /* SpiderGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpiderGraphView.swift; sourceTree = "<group>"; };
 		EA8B773C2CFE3F5F0084114F /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -260,6 +262,7 @@
 				2978DFAC2CF516DF00013C36 /* NotesFeedSection.swift */,
 				2978DFAE2CF516E800013C36 /* NoteCard.swift */,
 				29C0D8792CFFA97D00947EF9 /* ImagePicker.swift */,
+				EA045B362D03C8D10012EEC7 /* SpiderGraphView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 				2978DFA72CF516BC00013C36 /* AddNoteView.swift in Sources */,
 				2978DF722CF4366C00013C36 /* ContentView.swift in Sources */,
 				EA8B773D2CFE3F5F0084114F /* ProfileEditView.swift in Sources */,
+				EA045B372D03C8D10012EEC7 /* SpiderGraphView.swift in Sources */,
 				29C0D87A2CFFA97D00947EF9 /* ImagePicker.swift in Sources */,
 				2978DFB12CF516F500013C36 /* LoginViewModel.swift in Sources */,
 				2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */,
