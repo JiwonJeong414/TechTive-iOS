@@ -255,8 +255,8 @@ struct ProfileView: View {
                                 )
                                 
                                 StatCard(
-                                    title: "Longest Streak",
-                                    value: "3 Weeks"
+                                    title: "Streak length in days",
+                                    value: "\(notesViewModel.currentStreak())"
                                 )
                             }
                             .padding(.horizontal, 20)

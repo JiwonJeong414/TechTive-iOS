@@ -60,6 +60,33 @@ class NotesViewModel: ObservableObject {
             notes = decodedNotes
         }
     }
+    func currentStreak() -> Int {
+        let calendar = Calendar.current
+        let sortedNotes = notes.sorted(by: { $0.timestamp > $1.timestamp }) // Sort notes by most recent
+        guard let mostRecentDate = sortedNotes.first?.timestamp else { return 0 }
+
+        var streak = 0
+        var currentDate = mostRecentDate
+
+        for note in sortedNotes {
+            if calendar.isDate(note.timestamp, inSameDayAs: currentDate) {
+                // Note is on the current streak date
+                continue
+            } else if let previousDay = calendar.date(byAdding: .day, value: -1, to: currentDate),
+                      calendar.isDate(note.timestamp, inSameDayAs: previousDay) {
+                // Note is on the previous day in the streak
+                streak += 1
+                currentDate = previousDay
+            } else {
+                // Streak is broken
+                break
+            }
+        }
+
+        // Add 1 to streak because the most recent note starts the streak
+        return streak + 1
+    }
+
     
     init() {
         loadNotes()
