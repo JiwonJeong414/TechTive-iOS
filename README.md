@@ -13,6 +13,9 @@ App requirements:
   
   At least one scrollable view: Our notes view is scrollable and animated! 
   
-  Networking integration with a backend API: our login is integrated with a firebase api. the sentiment analysis, notes and profile storage are all      through the backend api. 
+  Networking integration with a backend API: our login is integrated with a firebase api. The sentiment analysis, notes and profile storage are all through the backend api. 
+
   
+  <img width="396" alt="Screenshot 2024-12-06 at 8 37 31 PM" src="https://github.com/user-attachments/assets/8a845f63-70f8-4c87-8805-f5a74a7f4e4f">
+
   
