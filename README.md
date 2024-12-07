@@ -23,15 +23,25 @@ On the last onboarding screen, the user can click on the button to get started -
 
 <img width="402" alt="Screenshot 2024-12-06 at 8 37 39 PM" src="https://github.com/user-attachments/assets/b439b805-0adc-4a47-8a85-c4704bb16791">
 
-This leads them to the login page. Implemented using Firebase, the login page displays relevant errors such as user not existing, wrong password, or even wrongly formatted email
+This leads them to the login page. Implemented using Firebase, the login page displays relevant errors such as user not existing, wrong password, or even wrongly formatted email. We also have an option to reset password. This sends a reset link to the user's mail if they exist on our server.
 
 <img width="400" alt="Screenshot 2024-12-06 at 8 38 28 PM" src="https://github.com/user-attachments/assets/49bb543c-ff37-4802-8885-f50ae0183f65">
-
-We also have an option to reset email. This sends a reset link to the user's mail if they exist on our server. 
 <img width="407" alt="Screenshot 2024-12-06 at 8 39 10 PM" src="https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22">
 
 A new user can also sign up - this feature too gives all the relevant error messages - 
 
 <img width="398" alt="Screenshot 2024-12-06 at 8 56 12 PM" src="https://github.com/user-attachments/assets/58bbe9b0-03ef-4c01-825f-995b9ef39296">
+
+This is our profile page. It allows a user to change their profile image, edit their profile, and show their user stats. These stats include a bar graph of weekly notes updates, the total number of notes, the frequency of notes per week, and streak length. The edit profile button allows the user to select an image from their gallery. The edit profile allows them to change their username, password, and even email!
+
+<img width="300" alt="Screenshot 2024-12-06 at 9 11 32 PM" src="https://github.com/user-attachments/assets/fc01fa77-fb33-4ca9-9968-f93aa27b8815">
+<img width="300" alt="Screenshot 2024-12-06 at 9 14 20 PM" src="https://github.com/user-attachments/assets/eabdb497-bb0e-45d5-8fb6-a5996619aa69">
+<img width="300" alt="Screenshot 2024-12-06 at 9 03 22 PM" src="https://github.com/user-attachments/assets/01ca809c-f580-482e-9a8a-f6240cd639f9">
+
+The add post button leads to our custom text editor. This allows the user to bold or italicize the text, or even change its size. The post button will edit or post the note. 
+
+<img width="397" alt="Screenshot 2024-12-06 at 9 20 29 PM" src="https://github.com/user-attachments/assets/bafffc25-d186-4777-9b25-2e51b0bf1f75">
+
+
 
 
