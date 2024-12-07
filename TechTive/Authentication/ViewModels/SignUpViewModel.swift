@@ -86,10 +86,7 @@ class SignUpViewModel: ObservableObject {
                             return
                         }
                         
-                        DispatchQueue.main.async {
-                            self.showError = false
-                            // Trigger any action to return to the login page
-                        }
+                        self.navigateToHome = true
                     }
                 }
             }

@@ -31,14 +31,13 @@ struct SpiderGraphView: View {
             ZStack {
                 // Background
                 Background.ignoresSafeArea()
-                
                     ZStack {
                         spiderGrid(size: size, center: center)
                         dataPolygon(size: size, center: center)
                         axisLabels(size: size, center: center)
                     }
-                
             }
+            .cornerRadius(25)
         }
     }
 
@@ -130,6 +129,7 @@ struct Polygon: Shape {
 }
 struct GraphView: View {
     private let cardBackground = Color(UIColor.color.backgroundColor)
+    private let accentColor = Color(UIColor.color.orange)
     let note: Note // Pass the note object
 
     var body: some View {
@@ -152,7 +152,7 @@ struct GraphView: View {
                     .foregroundColor(Color(UIColor.color.darkPurple))
                 Text("These are your emotional readings from the note")
                     .font(.custom("Poppins-Medium", size: 14))
-                    .foregroundColor(Color(UIColor.color.darkPurple))
+                    .foregroundColor(accentColor)
                 
                 
                 SpiderGraphView(
@@ -162,7 +162,7 @@ struct GraphView: View {
                 .frame(width: 380, height: 400)
                 .padding()
                 .background(cardBackground)
-                .cornerRadius(25)
+                
             }
         }
         
@@ -173,6 +173,5 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let sampleNote = Note(content: "Sample journal entry", userId: "user123", angerValue: 0.8, disgustValue: 0.9, fearValue: 0.6, joyValue: 0.7,  neutralValue: 0.4, sadnessValue: 0.5, surpriseValue: 0.3)
         GraphView(note: sampleNote)
-       // SomeView()
     }
 }
