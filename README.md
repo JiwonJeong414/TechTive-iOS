@@ -31,6 +31,7 @@ We also have an option to reset email. This sends a reset link to the user's mai
 <img width="407" alt="Screenshot 2024-12-06 at 8 39 10 PM" src="https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22">
 
 A new user can also sign up - this feature too gives all the relevant error messages - 
+
 <img width="398" alt="Screenshot 2024-12-06 at 8 56 12 PM" src="https://github.com/user-attachments/assets/58bbe9b0-03ef-4c01-825f-995b9ef39296">
 
 
