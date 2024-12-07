@@ -149,10 +149,10 @@ struct SomeView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleNote = Note(content: "Sample journal entry", userId: "user123", angerValue: 0.8, joyValue: 0.7)
-        SomeView(note: sampleNote)
-       // SomeView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+////        let sampleNote = Note(content: "Sample journal entry", userId: "user123", angerValue: 0.8, joyValue: 0.7)
+////        SomeView(note: sampleNote)
+//       // SomeView()
+//    }
+//}

@@ -8,8 +8,8 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-   // @EnvironmentObject var notesViewModel: NotesViewModel
-
+    @State private var profileImage: UIImage?
+    
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     @StateObject private var viewModel = QuoteViewModel()
@@ -20,8 +20,28 @@ struct MainView: View {
     @State private var showNotes = false
     @State private var showAddButton = false
     
+    private func loadProfilePicture() {
+        Task {
+            await authViewModel.fetchProfilePicture()
+            if let urlString = authViewModel.profilePictureURL,
+               let url = URL(string: urlString) {
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    if let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.profileImage = image
+                        }
+                    }
+                } catch {
+                    print("Error loading profile picture: \(error)")
+                }
+            }
+        }
+    }
+    
+    
     var body: some View {
-        NavigationView { 
+        NavigationView {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
                     // Header Section
@@ -32,11 +52,19 @@ struct MainView: View {
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
                             NavigationLink(destination: ProfileView().environmentObject(notesViewModel).environmentObject(authViewModel)) {
+                                if let profileImage = profileImage {
+                                    Image(uiImage: profileImage)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 44, height: 44)
+                                        .clipShape(Circle())
+                                } else {
                                     Image(systemName: "person.circle")
                                         .font(.title2)
                                         .foregroundColor(Color(UIColor.color.darkPurple))
                                 }
-                           
+                            }
+                            
                         }
                         .opacity(showHeader ? 1 : 0)
                         
@@ -76,37 +104,38 @@ struct MainView: View {
             .overlay(
                 GeometryReader { geometry in
                     Group {
-                       
-                            Button(action: {
-                                showAddNote = true
-                            }) {
-                                Image(systemName: "plus")
-                                    .font(.system(size: 24, weight: .medium))
-                                    .foregroundColor(.white)
-                                    .frame(width: 56, height: 56)
-                                    .background(Color(UIColor.color.orange))
-                                    .clipShape(Circle())
-                                    .shadow(color: Color(UIColor.color.orange).opacity(0.3),
-                                            radius: 4, y: 2)
-                            }
-                            .offset(
-                                x: geometry.size.width - 85,
-                                y: geometry.size.height - 65
-                            )
-                            .scaleEffect(showAddButton ? 1 : 0, anchor: .center)
-                            .animation(
-                                .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
-                                value: showAddButton
-                            )
+                        
+                        Button(action: {
+                            showAddNote = true
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 24, weight: .medium))
+                                .foregroundColor(.white)
+                                .frame(width: 56, height: 56)
+                                .background(Color(UIColor.color.orange))
+                                .clipShape(Circle())
+                                .shadow(color: Color(UIColor.color.orange).opacity(0.3),
+                                        radius: 4, y: 2)
+                        }
+                        .offset(
+                            x: geometry.size.width - 85,
+                            y: geometry.size.height - 65
+                        )
+                        .scaleEffect(showAddButton ? 1 : 0, anchor: .center)
+                        .animation(
+                            .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
+                            value: showAddButton
+                        )
                         
                     }
                 }
             )
-
+            
             .sheet(isPresented: $showAddNote) {
-                AddNoteView(viewModel: notesViewModel, userId: "123")
-            }
+                AddNoteView(viewModel: NotesViewModel())
+                    .environmentObject(AuthViewModel())            }
             .onAppear {
+                loadProfilePicture()
                 // Trigger animations with delays
                 withAnimation(.easeIn(duration: 0.6)) {
                     showHeader = true

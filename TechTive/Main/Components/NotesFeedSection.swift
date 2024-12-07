@@ -48,9 +48,9 @@ struct NotesFeedSection: View {
         .sheet(item: $selectedNote) { note in
             AddNoteView(
                 viewModel: viewModel,
-                userId: note.userId,
                 note: note
             )
+            .environmentObject(AuthViewModel())
         }
     }
 }

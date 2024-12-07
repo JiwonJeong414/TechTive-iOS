@@ -212,11 +212,7 @@ class AuthViewModel: ObservableObject {
         
         return false
     }
-
-
-
-
-
+    
     private func storeProfilePictureURL(imageUrl: String) async throws {
         guard let userId = getCurrentUserId() else { return }
         
@@ -228,64 +224,64 @@ class AuthViewModel: ObservableObject {
             self.profilePictureURL = imageUrl
         }
     }
-      
-      func fetchProfilePicture() async {
-          guard let userId = getCurrentUserId() else { return }
-          do {
-              let document = try await db.collection("users").document(userId).getDocument()
-              if let data = document.data(), let url = data["profilePictureURL"] as? String {
-                  self.profilePictureURL = url
-              }
-          } catch {
-              print("Error fetching profile picture: \(error)")
-          }
-      }
-      
-      func fetchUserInfo() async {
-          guard let currentUser = auth.currentUser else {
-              print("No current user logged in.")
-              return
-          }
-          
-          do {
-              let document = try await db.collection("users").document(currentUser.uid).getDocument()
-              
-              guard let data = document.data() else {
-                  print("No user data found")
-                  return
-              }
-              
-              self.currentUserName = data["name"] as? String ?? ""
-              self.currentUserEmail = data["email"] as? String ?? ""
-              self.profilePictureURL = data["profilePictureURL"] as? String
-          } catch {
-              print("Error fetching user document: \(error)")
-          }
-      }
-      
-      func getAuthToken() async throws -> String {
-          guard let currentUser = auth.currentUser else {
-              throw URLError(.userAuthenticationRequired)
-          }
-          
-          return try await withCheckedThrowingContinuation { continuation in
-              currentUser.getIDToken { token, error in
-                  if let error = error {
-                      continuation.resume(throwing: error)
-                  } else if let token = token {
-                      continuation.resume(returning: token)
-                  } else {
-                      continuation.resume(throwing: URLError(.userAuthenticationRequired))
-                  }
-              }
-          }
-      }
+    
+    func fetchProfilePicture() async {
+        guard let userId = getCurrentUserId() else { return }
+        do {
+            let document = try await db.collection("users").document(userId).getDocument()
+            if let data = document.data(), let url = data["profilePictureURL"] as? String {
+                self.profilePictureURL = url
+            }
+        } catch {
+            print("Error fetching profile picture: \(error)")
+        }
+    }
+    
+    func fetchUserInfo() async {
+        guard let currentUser = auth.currentUser else {
+            print("No current user logged in.")
+            return
+        }
+        
+        do {
+            let document = try await db.collection("users").document(currentUser.uid).getDocument()
+            
+            guard let data = document.data() else {
+                print("No user data found")
+                return
+            }
+            
+            self.currentUserName = data["name"] as? String ?? ""
+            self.currentUserEmail = data["email"] as? String ?? ""
+            self.profilePictureURL = data["profilePictureURL"] as? String
+        } catch {
+            print("Error fetching user document: \(error)")
+        }
+    }
+    
+    func getAuthToken() async throws -> String {
+        guard let currentUser = auth.currentUser else {
+            throw URLError(.userAuthenticationRequired)
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            currentUser.getIDToken { token, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else if let token = token {
+                    continuation.resume(returning: token)
+                } else {
+                    continuation.resume(throwing: URLError(.userAuthenticationRequired))
+                }
+            }
+        }
+    }
     
     func updateUsername(newUsername: String) async -> (Bool, String?) {
         guard let userId = auth.currentUser?.uid else {
             return (false, "User not authenticated.")
         }
-
+        
         do {
             try await db.collection("users").document(userId).updateData(["name": newUsername])
             await MainActor.run {
@@ -296,7 +292,7 @@ class AuthViewModel: ObservableObject {
             return (false, error.localizedDescription)
         }
     }
-
+    
     func updateEmail(newEmail: String) async throws {
         guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }
         
@@ -308,7 +304,7 @@ class AuthViewModel: ObservableObject {
             self.currentUserEmail = newEmail
         }
     }
-
+    
     func updatePassword(newPassword: String) async throws {
         guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }
         try await user.updatePassword(to: newPassword)
