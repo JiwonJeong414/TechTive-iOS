@@ -296,6 +296,15 @@ class AuthViewModel: ObservableObject {
             return (false, error.localizedDescription)
         }
     }
+    func resetPassword(email: String, completion: @escaping (Bool, String?) -> Void) {
+        auth.sendPasswordReset(withEmail: email) { error in
+            if let error = error {
+                completion(false, error.localizedDescription)
+            } else {
+                completion(true, nil)
+            }
+        }
+    }
 
     func updateEmail(newEmail: String) async throws {
         guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }

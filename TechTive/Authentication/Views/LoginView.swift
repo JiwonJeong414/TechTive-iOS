@@ -13,6 +13,7 @@ struct LoginView: View {
     // State variables for form fields
     @State private var email = ""
     @State private var password = ""
+    @State private var showPopup = false
     
     // Custom colors
     private let backgroundColor = Color(UIColor.color.darkPurple)
@@ -91,6 +92,16 @@ struct LoginView: View {
                             }
                         }
                         .font(.system(size: 14))
+                        HStack(spacing: 4) {
+                            
+                            Button (action: {
+                                showPopup = true
+                            }){
+                                Text("Forgotten Password?")
+                                    .foregroundColor(accentColor)
+                            }
+                        }
+                        .font(.system(size: 14))
                     }
                     .frame(maxWidth: .infinity)
                     .frame(height: 450, alignment: .top)
@@ -98,6 +109,50 @@ struct LoginView: View {
                     .padding(.vertical, 50)
                     .background(cardBackground)
                     .cornerRadius(30)
+                }
+                if showPopup{
+                    ZStack {
+                        Color.black.opacity(0.4)
+                            .edgesIgnoringSafeArea(.all)
+                            .onTapGesture {
+                                showPopup = false
+                            }
+                        
+                        VStack(spacing: 20) {
+                            Text("Reset Password")
+                                .font(.headline)
+                            
+                            TextField("Enter your email", text: $email)
+                                .textFieldStyle(CustomTextFieldStyle())
+                                .keyboardType(.emailAddress)
+                            
+                            Button(action: {
+                                            authViewModel.resetPassword(email: email) { success, errorMessage in
+                                                if success {
+                                                    // Handle success (e.g., show confirmation)
+                                                    print("Password reset email sent.")
+                                                } else {
+                                                    // Handle error
+                                                    authViewModel.errorMessage = errorMessage ?? "An error occurred."
+                                                    authViewModel.showError = true
+                                                }
+                                            }
+                                            showPopup = false
+                                        }) {
+                                            Text("Submit")
+                                                .frame(maxWidth: .infinity)
+                                                .padding()
+                                                .foregroundColor(.white)
+                                                .background(accentColor)
+                                                .cornerRadius(8)
+                                        }
+                        }
+                        .padding()
+                        .background(cardBackground)
+                        .cornerRadius(12)
+                        .shadow(radius: 10)
+                        .frame(maxWidth: 300)
+                    }
                 }
             }
         }
@@ -108,6 +163,7 @@ struct LoginView: View {
         }            
         .navigationBarBackButtonHidden(true)
     }
+    
 }
 
 struct CustomTextFieldStyle: TextFieldStyle {
