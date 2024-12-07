@@ -38,6 +38,7 @@ struct AddNoteView: View {
             _attributedText = State(initialValue: defaultText)
         }
     }
+    
    
     private func postNote() async throws {
         let url = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/posts/")!
@@ -49,16 +50,51 @@ struct AddNoteView: View {
         let token = try await authViewModel.getAuthToken()
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        // Create request body with just the content
+        // Extract formatting from attributedText
+        var formattingArray: [Note.TextFormatting] = []
+        attributedText.enumerateAttributes(in: NSRange(location: 0, length: attributedText.length)) { attributes, range, _ in
+            if let font = attributes[.font] as? UIFont {
+                if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
+                    formattingArray.append(Note.TextFormatting(
+                        type: .bold,
+                        range: .init(location: range.location, length: range.length)
+                    ))
+                }
+                if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
+                    formattingArray.append(Note.TextFormatting(
+                        type: .italic,
+                        range: .init(location: range.location, length: range.length)
+                    ))
+                }
+                if font.pointSize >= 24 {
+                    formattingArray.append(Note.TextFormatting(
+                        type: .header,
+                        range: .init(location: range.location, length: range.length)
+                    ))
+                }
+            }
+        }
+
+        // Convert formattingArray into [[String: Any]]
+        let formattingDictionaries: [[String: Any]] = formattingArray.map { formatting in
+            return [
+                "type": formatting.type.rawValue,
+                "range": [
+                    "location": formatting.range.location,
+                    "length": formatting.range.length
+                ]
+            ]
+        }
+
         let requestBody: [String: Any] = [
-            "content": attributedText.string
+            "content": attributedText.string,
+            "formatting": formattingDictionaries
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
         
         let (data, httpResponse) = try await URLSession.shared.data(for: request)
         
-        // Print raw response data immediately after receiving it
         if let responseString = String(data: data, encoding: .utf8) {
             print("📍 DEBUG - Raw Response: \(responseString)")
         }
@@ -69,7 +105,6 @@ struct AddNoteView: View {
         
         print("📥 DEBUG - Response status code: \(httpUrlResponse.statusCode)")
         
-        // Print parsed JSON for debugging
         do {
             let json = try JSONSerialization.jsonObject(with: data)
             print("📍 DEBUG - Parsed JSON: \(json)")

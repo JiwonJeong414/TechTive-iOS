@@ -52,6 +52,11 @@ struct NotesFeedSection: View {
             )
             .environmentObject(AuthViewModel())
         }
+        .onAppear {
+            Task {
+                await viewModel.fetchNotes()
+            }
+        }
     }
 }
 

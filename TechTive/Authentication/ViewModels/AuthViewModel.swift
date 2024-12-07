@@ -4,11 +4,11 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseCore
+import Alamofire
 
 class AuthViewModel: ObservableObject {
     @Published var isAuthenticated = false
@@ -37,6 +37,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
+    
     deinit {
         if let listener = stateListener {
             auth.removeStateDidChangeListener(listener)
@@ -148,7 +149,6 @@ class AuthViewModel: ObservableObject {
         return auth.currentUser?.uid
     }
     
-    
     func uploadProfilePicture(image: UIImage) async throws -> Bool {
         print("🔄 Starting profile picture upload")
         
@@ -160,57 +160,41 @@ class AuthViewModel: ObservableObject {
             throw URLError(.badURL)
         }
         
-        let boundary = UUID().uuidString
-        var request = URLRequest(url: apiURL)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        var data = Data()
-        let lineBreak = "\r\n"
-        
-        // Add image data to the raw HTTP request body
-        data.append("--\(boundary)\(lineBreak)".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"\"; filename=\"image.png\"\(lineBreak)".data(using: .utf8)!)
-        data.append("Content-Type: image/png\(lineBreak)\(lineBreak)".data(using: .utf8)!)
-        
-        // Convert UIImage to PNG data
         guard let imageData = image.pngData() else {
             print("❌ Failed to convert UIImage to PNG")
             throw URLError(.cannotCreateFile)
         }
         
-        data.append(imageData)
-        data.append(lineBreak.data(using: .utf8)!)
-        data.append("--\(boundary)--\(lineBreak)".data(using: .utf8)!)
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)",
+            "Content-Type": "multipart/form-data"
+        ]
         
-        let (responseData, response) = try await URLSession.shared.upload(for: request, from: data)
-        
-        if let responseString = String(data: responseData, encoding: .utf8) {
-            print("📍 DEBUG - Response: \(responseString)")
-        }
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw URLError(.badServerResponse)
-        }
-        
-        print("📥 DEBUG - Response status code: \(httpResponse.statusCode)")
-        
-        let success = (200...299).contains(httpResponse.statusCode)
-        
-        if success {
-            let decoder = JSONDecoder()
-            let profileResponse = try decoder.decode(ProfilePictureResponse.self, from: responseData)
-            print("✅ Profile picture URL: \(profileResponse.link)")
-            try await storeProfilePictureURL(imageUrl: profileResponse.link)
-            return true
-        } else {
-            if let responseString = String(data: responseData, encoding: .utf8) {
-                print("❌ DEBUG - Server error response: \(responseString)")
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.upload(multipartFormData: { multipartFormData in
+                multipartFormData.append(imageData, withName: "", fileName: "image.png", mimeType: "image/png")
+            }, to: apiURL, headers: headers)
+            .responseDecodable(of: ProfilePictureResponse.self) { response in
+                switch response.result {
+                case .success(let profileResponse):
+                    print("✅ Profile picture URL: \(profileResponse.link)")
+                    Task {
+                        do {
+                            try await self.storeProfilePictureURL(imageUrl: profileResponse.link)
+                            continuation.resume(returning: true)
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                case .failure(let error):
+                    print("❌ Upload failed: \(error.localizedDescription)")
+                    if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
+                        print("❌ Server response: \(responseString)")
+                    }
+                    continuation.resume(throwing: error)
+                }
             }
         }
-        
-        return false
     }
     
     private func storeProfilePictureURL(imageUrl: String) async throws {
