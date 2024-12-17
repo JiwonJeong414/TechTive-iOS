@@ -3,7 +3,7 @@
 APP Name : TechTive 
 Tagline: Detective for your thoughts!
 
-Link to Backend repository: https://github.com/GeorgeDong00/journal-app-backend/blob/feature/s3/app/main/routes.py
+Link to Backend repository: [https://github.com/GeorgeDong00/journal-app-backend/blob/feature/s3/app/main/routes.py](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)
 
 App description : Our app is a journaling platform designed to help users understand their thoughts and emotions. Upon first use, users are guided through an onboarding process, with the option to skip and proceed to login. The login page, integrated with Firebase, supports account access, password recovery, and new account creation. The home page features motivational quotes, weekly feedback powered by ChatGPT, and a dynamic note navigation system with sentiment analysis through spider graphs. On the profile page, users can update personal details, manage their profile image, and view activity stats.
 
