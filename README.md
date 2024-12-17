@@ -1,13 +1,21 @@
-# TechTive
+# TechTive  
 
 ## App Name: TechTive  
-**Tagline:** Detective for your thoughts!
+**Tagline:** 🕵️‍♂️ Detective for your thoughts!
 
-**[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)**
+**[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)**  
 
-## **Achievements**
+---
 
-TechTive won **Best Overall/1st Place Team** at the **AppDev Hackathon (Fall 2024)** with 30+ teams and 140+ participants. Each team member received an **JBL Flip 5 Speakers** as a prize.
+## **🏆 Achievements**  
+
+TechTive won **🥇 Best Overall/1st Place Team** at the **AppDev Hackathon (Fall 2024)** with 30+ teams and 140+ participants. Each team member received **🔊 JBL Flip 5 Speakers** as a prize.
+
+---
+
+### **Frontend**  
+- Jiwon Jeong  
+- Keya Aggarwal
 
 ---
 
