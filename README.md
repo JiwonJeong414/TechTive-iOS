@@ -32,8 +32,8 @@ The app starts with three onboarding screens. Users can skip them or proceed to 
 ### **Login Page**
 Implemented using Firebase, the login page displays relevant error messages such as user not existing, wrong password, or incorrectly formatted email. Users can reset their passwords via email.
 
-<img src="https://github.com/user-attachments/assaets/49bb543c-ff37-4802-8885-f50ae0183f65" alt="Login Screen" width="300" width="300" />
-<img src="https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22" alt="Reset Password" width="300" width="300" />
+<img width="300" alt="Screenshot 2024-12-06 at 8 38 28 PM" src="https://github.com/user-attachments/assets/49bb543c-ff37-4802-8885-f50ae0183f65">
+<img width="300" alt="Screenshot 2024-12-06 at 8 39 10 PM" src="https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22">
 
 ### **Signup Page**
 New users can create accounts, with relevant error messages provided.
@@ -61,9 +61,9 @@ Allows users to:
 - Edit profile details
 - View activity stats including weekly updates, total notes, note frequency, and streak length
 
-<img src="https://github.com/user-attachments/assets/fc01fa77-fb33-4ca9-9968-f93aa27b8815" alt="Profile Overview" width="300" width="300" />
-<img src="https://github.com/user-attachments/assets/eabdb497-bb0e-45d5-8fb6-a5996619aa69" alt="Edit Profile" width="300" width="300" />
-<img src="https://github.com/user-attachments/assets/01ca809c-f580-482e-9a8a-f6240cd639f9" alt="Activity Stats" width="300" width="300" />
+<img src="https://github.com/user-attachments/assets/fc01fa77-fb33-4ca9-9968-f93aa27b8815" alt="Profile Overview" width="250" width="250" />
+<img src="https://github.com/user-attachments/assets/eabdb497-bb0e-45d5-8fb6-a5996619aa69" alt="Edit Profile" width="250" width="250" />
+<img src="https://github.com/user-attachments/assets/01ca809c-f580-482e-9a8a-f6240cd639f9" alt="Activity Stats" width="250" width="250" />
 
 ---
 
