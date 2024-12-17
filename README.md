@@ -5,10 +5,16 @@
 
 **[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)**
 
-## App Description
+## **Achievements**
+
+TechTive won **Best Overall/1st Place Team** at the **AppDev Hackathon (Fall 2024)** with 30+ teams and 140+ participants. Each team member received an **JBL Flip 5 Speakers** as a prize.
+
+---
+
+## Front End Description
 TechTive is a journaling platform designed to help users understand their thoughts and emotions. Upon first use, users are guided through an onboarding process, with the option to skip and proceed to login. The login page, integrated with Firebase, supports account access, password recovery, and new account creation.
 
-The home page features motivational quotes, weekly feedback powered by ChatGPT, and a dynamic note navigation system with sentiment analysis through spider graphs. On the profile page, users can update personal details, manage their profile image, and view activity stats.
+The home page features motivational quotes, weekly feedback powered by Open AI API, and a dynamic note navigation system with sentiment analysis through spider graphs. On the profile page, users can update personal details, manage their profile image, and view activity stats.
 
 ---
 
