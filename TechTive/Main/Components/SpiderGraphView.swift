@@ -19,6 +19,7 @@ struct SpiderGraphView: View {
     let labels: [String]
 
     private let accentColor = Color(UIColor.color.orange)
+    private let Background = Color(UIColor.color.lightYellow)
     
     private let sides = 7
     private let maxValue: Double = 1.0
@@ -27,13 +28,19 @@ struct SpiderGraphView: View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height) / 2 * 0.8
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-
             ZStack {
-                spiderGrid(size: size, center: center)
-                dataPolygon(size: size, center: center)
-                axisLabels(size: size, center: center)
+                // Background
+                Background.ignoresSafeArea()
+                ZStack {
+                    spiderGrid(size: size, center: center)
+                    dataPolygon(size: size, center: center)
+                    axisLabels(size: size, center: center)
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .cornerRadius(25)
         }
+        .aspectRatio(1, contentMode: .fit)
     }
 
     // Helper to draw the grid
@@ -55,7 +62,7 @@ struct SpiderGraphView: View {
                 .fill(accentColor.opacity(0.3))
                 .overlay(
                     Polygon(sides: sides, values: values)
-                        .stroke(Color.accentColor, lineWidth: 2)
+                        .stroke(accentColor, lineWidth: 2)
                 )
                 .frame(width: size * 2, height: size * 2)
                 .position(center)
@@ -122,8 +129,9 @@ struct Polygon: Shape {
         return path
     }
 }
-struct SomeView: View {
+struct GraphView: View {
     private let cardBackground = Color(UIColor.color.backgroundColor)
+    private let accentColor = Color(UIColor.color.orange)
     let note: Note // Pass the note object
 
     var body: some View {
@@ -137,22 +145,21 @@ struct SomeView: View {
             note.surpriseValue
         ]
         
-        let emotionLabels = ["Anger", "Disgust", "Fear", "Joy", "Neutral", "Sadness", "Surprise"]
+        let emotionLabels = ["Anger", "Disgust", "Fear", "Joy", "Neutral", "Sad", "Surprise"]
+        ZStack{
+            cardBackground.ignoresSafeArea()
+            VStack(spacing: 24){
+                SpiderGraphView(
+                    values: emotionValues, // Pass emotion values
+                    labels: emotionLabels // Pass labels for emotions
+                )
+                .frame(width: 300, height: 300)
+                .padding()
+                .background(cardBackground)
+                
+            }
+        }
         
-        SpiderGraphView(
-            values: emotionValues, // Pass emotion values
-            labels: emotionLabels // Pass labels for emotions
-        )
-        .frame(width: 300, height: 300)
-        .padding()
-        .background(cardBackground)
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-////        let sampleNote = Note(content: "Sample journal entry", userId: "user123", angerValue: 0.8, joyValue: 0.7)
-////        SomeView(note: sampleNote)
-//       // SomeView()
-//    }
-//}

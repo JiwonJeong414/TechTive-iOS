@@ -9,38 +9,36 @@ import Alamofire
 
 class WeeklyAdviceViewModel: ObservableObject {
     @Published var weeklyAdvice: String = "Loading..."
-    
-    func fetchWeeklyAdvice() {
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmZDA3MG"
-        ]
-        
-        AF.request("https://631c-128-84-124-32.ngrok-free.app/api/weekly_advice",
-                   method: .get,
-                   headers: headers)
-        .responseDecodable(of: WeeklyAdviceResponse.self) { response in
-            switch response.result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self.weeklyAdvice = data.weekly_advice.content
-                }
-            case .failure(let error):
-                print("Error fetching weekly advice: \(error)")
+    private let authViewModel = AuthViewModel()
+
+    func fetchWeeklyAdvice() async {
+        do {
+            let url = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/weekly_advice")!
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(try await authViewModel.getAuthToken())", forHTTPHeaderField: "Authorization")
+
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let weeklyAdviceResponse = try JSONDecoder().decode(WeeklyAdviceResponse.self, from: data)
+
+            DispatchQueue.main.async {
+                self.weeklyAdvice = weeklyAdviceResponse.message
+            }
+        } catch {
+            print("Error fetching weekly advice: \(error)")
+            DispatchQueue.main.async {
                 self.weeklyAdvice = "Failed to load weekly advice"
             }
         }
     }
 }
-
 struct WeeklyAdviceResponse: Codable {
     let message: String
-    let weekly_advice: WeeklyAdvice
-    
-    struct WeeklyAdvice: Codable {
-        let content: String
-        let created_at: String
-        let id: Int
-        let of_week: String
-        let user_id: Int
-    }
+}
+
+struct WeeklyAdvice: Codable {
+    let id: Int
+    let content: String
+    let ofWeek: String
+    let createdAt: String
+    let userId: Int
 }

@@ -5,19 +5,16 @@
 //  Created by jiwon jeong on 11/25/24.
 //
 import SwiftUI
-
-
 struct NoteCard: View {
     let note: Note
     let index: Int
     @State private var trapezoidPosition: CGFloat = 0
     @ObservedObject var noteViewModel: NotesViewModel
     @State private var offset: CGFloat = 0
-
-    // Add animation speed control
-    private let animationSpeed: CGFloat = 2.0 // Increase this value for faster animation
-    // Add starting position offset
-    private let startingOffset: CGFloat = 0 // Adjust this value to change starting position
+    @State private var showingGraph = false
+    
+    private let animationSpeed: CGFloat = 2.0
+    private let startingOffset: CGFloat = 0
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -52,13 +49,37 @@ struct NoteCard: View {
                             .foregroundColor(Color(UIColor.color.orange))
                     }
                     
-                    Text(dateFormatter.string(from: note.timestamp))
-                        .font(.custom("Poppins-Regular", size: 14))
-                        .foregroundColor(Color(UIColor.color.darkPurple))
+                    HStack {
+                        Text(dateFormatter.string(from: note.timestamp))
+                            .font(.custom("Poppins-Regular", size: 14))
+                            .foregroundColor(Color(UIColor.color.darkPurple))
+                        
+                        Spacer()
+                        
+                        // Clickable dominant emotion
+                        Button(action: {
+                            showingGraph = true
+                        }) {
+                            HStack(spacing: 4) {
+                                Text(note.dominantEmotion.emotion)
+                                    .font(.custom("Poppins-Regular", size: 12))
+                                    .foregroundColor(Color(UIColor.color.darkPurple))
+                                
+                                Image(systemName: "chart.radar")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(Color(UIColor.color.darkPurple))
+                            }
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(UIColor.color.darkPurple).opacity(0.1))
+                            )
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-
             }
             .frame(height: 105)
             .background(backgroundForIndex(index))
@@ -80,18 +101,19 @@ struct NoteCard: View {
                         }
                     }
             )
+            .popover(isPresented: $showingGraph) {
+                GraphView(note: note)
+                    .frame(width: 300, height: 300)
+                    .presentationCompactAdaptation(.popover)
+            }
         }
     }
     
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
         let screenHeight = UIScreen.main.bounds.height
-        
-        // Adjust scroll progress calculation with animation speed
         let adjustedPosition = trapezoidPosition * animationSpeed
         let scrollProgress = min(max(adjustedPosition / screenHeight, 0), 1)
-        
-        // Add starting offset to base position
         let maxMovement: CGFloat = 400
         return (baseOffset + startingOffset) - ((1 - scrollProgress) * maxMovement)
     }
@@ -102,6 +124,22 @@ struct NoteCard: View {
             case 1: return Color(UIColor.color.lightOrange)
             case 2: return Color(UIColor.color.lightYellow)
             default: return Color(UIColor.color.lightYellow)
+        }
+    }
+}
+
+struct EmotionsGraphModal: View {
+    @Environment(\.dismiss) var dismiss
+    let note: Note
+    
+    var body: some View {
+        NavigationView {
+            GraphView(note: note)
+                .navigationBarItems(
+                    trailing: Button("Done") {
+                        dismiss()
+                    }
+                )
         }
     }
 }

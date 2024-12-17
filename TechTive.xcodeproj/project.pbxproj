@@ -247,7 +247,6 @@
 		2978DF9D2CF515D300013C36 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				29965E692D03779A00308CFF /* Network */,
 				2978DFB82CF5212C00013C36 /* ViewModels */,
 				2978DF9F2CF515E100013C36 /* Views */,
 				2978DF9E2CF515DA00013C36 /* Components */,
@@ -288,13 +287,6 @@
 				29965E6C2D03E71300308CFF /* WeeklyAdviceViewModel.swift */,
 			);
 			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		29965E692D03779A00308CFF /* Network */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

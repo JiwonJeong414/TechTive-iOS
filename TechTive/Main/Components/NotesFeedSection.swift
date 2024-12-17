@@ -11,6 +11,8 @@ struct NotesFeedSection: View {
     @ObservedObject var viewModel: NotesViewModel
     @State private var selectedNote: Note? = nil
     @State private var showingEditor = false
+    @State private var timer: Timer? = nil
+
     
     private func bottomColor(_ count: Int) -> Color {
         guard count > 0 else { return .clear }

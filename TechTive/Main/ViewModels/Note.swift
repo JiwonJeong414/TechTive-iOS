@@ -135,7 +135,15 @@ extension Note {
         )
         
         for format in formatting {
-            let nsRange = NSRange(location: format.range.location, length: format.range.length)
+            // Validate the formatting range
+            let start = format.range.location
+            let end = start + format.range.length
+            guard start >= 0, end <= content.count else {
+                // Skip this formatting if it's invalid
+                continue
+            }
+            
+            let nsRange = NSRange(location: start, length: format.range.length)
             
             switch format.type {
             case .header:
@@ -146,7 +154,7 @@ extension Note {
                 attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: 17), range: nsRange)
             }
         }
-        
+
         return attributedString
     }
     
