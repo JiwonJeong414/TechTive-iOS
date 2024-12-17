@@ -1,61 +1,70 @@
 # TechTive
 
-APP Name : TechTive 
-Tagline: Detective for your thoughts!
+## App Name: TechTive  
+**Tagline:** Detective for your thoughts!
 
-Link to Backend repository: [https://github.com/GeorgeDong00/journal-app-backend/blob/feature/s3/app/main/routes.py](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)
+**[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)**
 
-App description : Our app is a journaling platform designed to help users understand their thoughts and emotions. Upon first use, users are guided through an onboarding process, with the option to skip and proceed to login. The login page, integrated with Firebase, supports account access, password recovery, and new account creation. The home page features motivational quotes, weekly feedback powered by ChatGPT, and a dynamic note navigation system with sentiment analysis through spider graphs. On the profile page, users can update personal details, manage their profile image, and view activity stats.
+## App Description
+TechTive is a journaling platform designed to help users understand their thoughts and emotions. Upon first use, users are guided through an onboarding process, with the option to skip and proceed to login. The login page, integrated with Firebase, supports account access, password recovery, and new account creation.
 
-App requirements:
+The home page features motivational quotes, weekly feedback powered by ChatGPT, and a dynamic note navigation system with sentiment analysis through spider graphs. On the profile page, users can update personal details, manage their profile image, and view activity stats.
 
-  Multiple screens that you can navigate between: we have several screens for the onboarding process, a signup screen, a login screen, a home screen,    a notes editor, a note analytics, a profile screen, a edit profile screen
-  
-  At least one scrollable view: Our notes view is scrollable and animated! 
-  
-  Networking integration with a backend API: our login is integrated with a firebase api. The sentiment analysis, notes and profile storage are all through the backend api. 
+---
 
-Features- 
-We start with three onboarding screens- the user can skip them or go to the next one-   
-  <img width="396" alt="Screenshot 2024-12-06 at 8 37 31 PM" src="https://github.com/user-attachments/assets/8a845f63-70f8-4c87-8805-f5a74a7f4e4f">
+## App Requirements
 
-On the last onboarding screen, the user can click on the button to get started - 
+- **Multiple Screens:** Includes onboarding, signup, login, home, notes editor, note analytics, profile, and edit profile screens.
+- **Scrollable View:** Notes view is scrollable and animated.
+- **Networking Integration:** Firebase API for login and backend API for sentiment analysis, notes, and profile storage.
 
-<img width="402" alt="Screenshot 2024-12-06 at 8 37 39 PM" src="https://github.com/user-attachments/assets/b439b805-0adc-4a47-8a85-c4704bb16791">
+---
 
-This leads them to the login page. Implemented using Firebase, the login page displays relevant errors such as user not existing, wrong password, or even wrongly formatted email. We also have an option to reset password. This sends a reset link to the user's mail if they exist on our server.
+## Features
 
-<img width="400" alt="Screenshot 2024-12-06 at 8 38 28 PM" src="https://github.com/user-attachments/assets/49bb543c-ff37-4802-8885-f50ae0183f65">
-<img width="407" alt="Screenshot 2024-12-06 at 8 39 10 PM" src="https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22">
+### **Onboarding Screens**
+The app starts with three onboarding screens. Users can skip them or proceed to the next screen.
 
-A new user can also sign up - this feature too gives all the relevant error messages - 
+![Onboarding Screen 1](https://github.com/user-attachments/assets/8a845f63-70f8-4c87-8805-f5a74a7f4e4f)
 
-<img width="398" alt="Screenshot 2024-12-06 at 8 56 12 PM" src="https://github.com/user-attachments/assets/58bbe9b0-03ef-4c01-825f-995b9ef39296">
+![Onboarding Screen Last](https://github.com/user-attachments/assets/b439b805-0adc-4a47-8a85-c4704bb16791)
 
-On our main screen, we have an AI generated weekly overview , a quote generator from a backend API, and our notes scroll view. 
+### **Login Page**
+Implemented using Firebase, the login page displays relevant error messages such as user not existing, wrong password, or incorrectly formatted email. Users can reset their passwords via email.
 
-<img width="399" alt="Screenshot 2024-12-07 at 12 33 41 AM" src="https://github.com/user-attachments/assets/15c0fa21-ab7d-4a06-a024-ab1696d07fc1">
+![Login Screen](https://github.com/user-attachments/assets/49bb543c-ff37-4802-8885-f50ae0183f65)
+![Reset Password](https://github.com/user-attachments/assets/b9dff481-45d2-486b-992d-1a97986c4c22)
 
-we also have spider graphs associated to the emotions of each post, based on the sentiment analysis
+### **Signup Page**
+New users can create accounts, with relevant error messages provided.
 
-<img width="305" alt="Screenshot 2024-12-17 at 5 42 42 PM" src="https://github.com/user-attachments/assets/35968d9b-c247-43c9-8478-c8de83848a14" />
+![Signup Screen](https://github.com/user-attachments/assets/58bbe9b0-03ef-4c01-825f-995b9ef39296)
 
-The add post button leads to our custom text editor. This allows the user to bold or italicize the text, or even change its size. The post button will edit or post the note. 
+### **Main Screen**
+Includes:
+- AI-generated weekly overview
+- Motivational quotes from a backend API
+- Scrollable notes view with sentiment analysis spider graphs
 
-<img width="397" alt="Screenshot 2024-12-06 at 9 20 29 PM" src="https://github.com/user-attachments/assets/bafffc25-d186-4777-9b25-2e51b0bf1f75">
+![Main Screen](https://github.com/user-attachments/assets/15c0fa21-ab7d-4a06-a024-ab1696d07fc1)
 
+![Sentiment Analysis](https://github.com/user-attachments/assets/35968d9b-c247-43c9-8478-c8de83848a14)
 
+### **Notes Editor**
+The custom text editor supports bold, italics, text size adjustments, and posting or editing notes.
 
-This is our profile page. It allows a user to change their profile image, edit their profile, and show their user stats. These stats include a bar graph of weekly notes updates, the total number of notes, the frequency of notes per week, and streak length. The edit profile button allows the user to select an image from their gallery. The edit profile allows them to change their username, password, and even email!
+![Notes Editor](https://github.com/user-attachments/assets/bafffc25-d186-4777-9b25-2e51b0bf1f75)
 
-<img width="300" alt="Screenshot 2024-12-06 at 9 11 32 PM" src="https://github.com/user-attachments/assets/fc01fa77-fb33-4ca9-9968-f93aa27b8815">
-<img width="300" alt="Screenshot 2024-12-06 at 9 14 20 PM" src="https://github.com/user-attachments/assets/eabdb497-bb0e-45d5-8fb6-a5996619aa69">
-<img width="300" alt="Screenshot 2024-12-06 at 9 03 22 PM" src="https://github.com/user-attachments/assets/01ca809c-f580-482e-9a8a-f6240cd639f9">
+### **Profile Page**
+Allows users to:
+- Change profile images
+- Edit profile details
+- View activity stats including weekly updates, total notes, note frequency, and streak length
 
+![Profile Overview](https://github.com/user-attachments/assets/fc01fa77-fb33-4ca9-9968-f93aa27b8815)
+![Edit Profile](https://github.com/user-attachments/assets/eabdb497-bb0e-45d5-8fb6-a5996619aa69)
+![Activity Stats](https://github.com/user-attachments/assets/01ca809c-f580-482e-9a8a-f6240cd639f9)
 
+---
 
-
-
-
-
-
+Thank you for exploring TechTive! 🚀
