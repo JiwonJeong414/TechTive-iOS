@@ -37,7 +37,8 @@ On our main screen, we have an AI generated weekly overview , a quote generator 
 <img width="399" alt="Screenshot 2024-12-07 at 12 33 41 AM" src="https://github.com/user-attachments/assets/15c0fa21-ab7d-4a06-a024-ab1696d07fc1">
 
 we also have spider graphs associated to the emotions of each post, based on the sentiment analysis
-<img width="388" alt="Screenshot 2024-12-07 at 12 34 05 AM" src="https://github.com/user-attachments/assets/53a3498d-687b-4bec-b19a-bfe74c21042b">
+
+<img width="305" alt="Screenshot 2024-12-17 at 5 42 42 PM" src="https://github.com/user-attachments/assets/35968d9b-c247-43c9-8478-c8de83848a14" />
 
 The add post button leads to our custom text editor. This allows the user to bold or italicize the text, or even change its size. The post button will edit or post the note. 
 
