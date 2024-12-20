@@ -9,7 +9,7 @@
 
 ## **🏆 Achievements**  
 
-TechTive won **🥇 Best Overall/1st Place Team** at the **AppDev Hackathon (Fall 2024)** with 30+ teams and 140+ participants. Each team member received **🔊 JBL Flip 5 Speakers** as a prize.
+TechTive won **🥇 Best Overall/1st Place Team** at the **Cornell AppDev Hackathon (Fall 2024)** with 30+ teams and 140+ participants. Each team member received **🔊 JBL Flip 5 Speakers** as a prize.
 
 ---
 
