@@ -3,7 +3,7 @@
 ## App Name: TechTive  
 **Tagline:** 🕵️‍♂️ Detective for your thoughts!
 
-**[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend/tree/dev/main)**  
+**[Backend Repository Link](https://github.com/GeorgeDong00/journal-app-backend)**
 
 ---
 
