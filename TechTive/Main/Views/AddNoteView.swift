@@ -107,8 +107,15 @@ struct AddNoteView: View {
             .serializingDecodable(CreateNoteResponse.self)
             .value
         
+        // First update the UI
         await MainActor.run {
-            viewModel.notes.append(response.post)
+            viewModel.notes.insert(response.post, at: 0)  // Directly insert at the beginning
+            dismiss()
+        }
+        
+        // Then refresh the full list
+        Task {
+            await viewModel.fetchNotes()
         }
     }
     

@@ -4,41 +4,64 @@
 //
 //  Created by jiwon jeong on 12/6/24.
 //
+
 import SwiftUI
 import Alamofire
 
-class WeeklyAdviceViewModel: ObservableObject {
-    @Published var weeklyAdvice: String = "Loading..."
+@MainActor
+final class WeeklyAdviceViewModel: ObservableObject {
+    @Published var weeklyAdvice: WeeklyAdviceResponse?
+    @Published var errorMessage: String?
+    
     private let authViewModel = AuthViewModel()
-
+    private let baseURL = "http://34.21.62.193/api/advices/latest/"
+    
     func fetchWeeklyAdvice() async {
         do {
-            let url = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/weekly_advice")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(try await authViewModel.getAuthToken())", forHTTPHeaderField: "Authorization")
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let weeklyAdviceResponse = try JSONDecoder().decode(WeeklyAdviceResponse.self, from: data)
-
-            DispatchQueue.main.async {
-                self.weeklyAdvice = weeklyAdviceResponse.message
-            }
+            let token = try await authViewModel.getAuthToken()
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token)",
+                "Accept": "application/json"
+            ]
+            
+            let response = try await AF.request(baseURL, headers: headers)
+                .validate()
+                .serializingDecodable(WeeklyAdviceResponse.self)
+                .value
+            
+            self.weeklyAdvice = response
+            self.errorMessage = nil
         } catch {
-            print("Error fetching weekly advice: \(error)")
-            DispatchQueue.main.async {
-                self.weeklyAdvice = "Failed to load weekly advice"
-            }
+            self.errorMessage = error.localizedDescription
+            print("Error: \(error)")
         }
     }
 }
+
+// Models matching exact JSON structure
 struct WeeklyAdviceResponse: Codable {
+    let advice: AdviceData
     let message: String
 }
 
-struct WeeklyAdvice: Codable {
-    let id: Int
-    let content: String
-    let ofWeek: String
+struct AdviceData: Codable {
+    let content: AdviceContent
     let createdAt: String
+    let id: Int
+    let ofWeek: String
     let userId: Int
+    
+    enum CodingKeys: String, CodingKey {
+        case content
+        case createdAt = "created_at"
+        case id
+        case ofWeek = "of_week"
+        case userId = "user_id"
+    }
+}
+
+struct AdviceContent: Codable {
+    let advice: String
+    let answer: String
+    let riddle: String
 }

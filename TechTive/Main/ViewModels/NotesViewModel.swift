@@ -4,7 +4,6 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-
 import SwiftUI
 import Alamofire
 
@@ -14,6 +13,9 @@ struct NotesResponse: Codable {
 
 class NotesViewModel: ObservableObject {
     @Published var notes: [Note] = []
+    @Published var isLoading = false
+    @Published var error: Error?
+    
     private let authViewModel = AuthViewModel()
     
     func notesPerWeek() -> [(week: String, count: Int)] {
@@ -28,7 +30,7 @@ class NotesViewModel: ObservableObject {
             weeklyCounts.append((week: weekLabel, count: count))
         }
         
-        return weeklyCounts.reversed() // Ensure the order is from oldest to newest
+        return weeklyCounts.reversed()
     }
     
     func fetchNotes() async {
@@ -47,10 +49,24 @@ class NotesViewModel: ObservableObject {
                 .value
                 
             await MainActor.run {
-                self.notes = response.posts
+                // Sort the posts with newest first
+                self.notes = response.posts.sorted {
+                    $0.timestamp > $1.timestamp
+                }
             }
         } catch {
             print("Error fetching notes: \(error)")
+        }
+    }
+    
+    // Call this after successfully posting a new note
+    func addNewNote(_ note: Note) {
+        notes.insert(note, at: 0) // Insert at the beginning since it's newest
+        saveNotes()
+        
+        // Refresh notes in the background
+        Task {
+            await fetchNotes()
         }
     }
     
@@ -58,6 +74,11 @@ class NotesViewModel: ObservableObject {
         if let index = notes.firstIndex(where: { $0.id == note.id }) {
             notes.remove(at: index)
             saveNotes()
+            
+            // Sync with server after local deletion
+            Task {
+                await fetchNotes()
+            }
         }
     }
     
@@ -65,6 +86,11 @@ class NotesViewModel: ObservableObject {
         if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
             notes[index] = updatedNote
             saveNotes()
+            
+            // Sync with server after local update
+            Task {
+                await fetchNotes()
+            }
         }
     }
     
@@ -84,8 +110,13 @@ class NotesViewModel: ObservableObject {
     
     init() {
         loadNotes()
+        // Fetch fresh data on init
+        Task {
+            await fetchNotes()
+        }
     }
 }
+
 extension Date {
     var startOfWeek: Date? {
         let calendar = Calendar.current

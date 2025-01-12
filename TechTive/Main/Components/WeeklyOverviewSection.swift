@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 
 struct WeeklyOverviewSection: View {
     @StateObject private var viewModel = WeeklyAdviceViewModel()
@@ -21,21 +22,27 @@ struct WeeklyOverviewSection: View {
                 .frame(height: 200)
                 .overlay(
                     VStack {
-                        Text("It sounds like you’re feeling overwhelmed right now, and that’s completely understandable with so many deadlines piling up. The good thing is you’ve already made progress by finishing one assignment. To handle the rest, try breaking everything into smaller steps.")
-                            .foregroundColor(.primary)
-                            .padding()
-                            .multilineTextAlignment(.center)
+                        if let advice = viewModel.weeklyAdvice?.advice.content.advice {
+                            Text(advice)
+                                .foregroundColor(.primary)
+                                .padding()
+                                .multilineTextAlignment(.center)
+                        } else if let error = viewModel.errorMessage {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .padding()
+                                .multilineTextAlignment(.center)
+                        } else {
+                            ProgressView()
+                        }
                     }
                 )
         }
-        .onAppear {
-            Task {
-                await viewModel.fetchWeeklyAdvice()
-            }
+        .task {
+            await viewModel.fetchWeeklyAdvice()
         }
     }
 }
-
 
 #Preview {
     WeeklyOverviewSection()
