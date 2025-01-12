@@ -33,13 +33,20 @@ class NotesViewModel: ObservableObject {
     
     func fetchNotes() async {
         do {
-            let url = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/posts/")!
-            var request = URLRequest(url: url)
-            request.setValue("Bearer \(try await authViewModel.getAuthToken())", forHTTPHeaderField: "Authorization")
-
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let response = try JSONDecoder().decode(NotesResponse.self, from: data)
-            DispatchQueue.main.async {
+            let url = "http://34.21.62.193/api/posts/"
+            let token = try await authViewModel.getAuthToken()
+            
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token)"
+            ]
+            
+            let response = try await AF.request(url,
+                                              method: .get,
+                                              headers: headers)
+                .serializingDecodable(NotesResponse.self)
+                .value
+                
+            await MainActor.run {
                 self.notes = response.posts
             }
         } catch {

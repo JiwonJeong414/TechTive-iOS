@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 
 
 struct AddNoteView: View {
@@ -39,16 +40,21 @@ struct AddNoteView: View {
         }
     }
     
-   
+
     private func postNote() async throws {
-        let url = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/posts/")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        print("hello")
+        let url = "http://34.21.62.193/api/posts/"
         
-        // Get token from AuthViewModel
+        // Get token
         let token = try await authViewModel.getAuthToken()
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        print("token: " + token)
+        
+        // Set up headers
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(token)"
+        ]
         
         // Extract formatting from attributedText
         var formattingArray: [Note.TextFormatting] = []
@@ -75,76 +81,34 @@ struct AddNoteView: View {
             }
         }
 
-        // Convert formattingArray into [[String: Any]]
-        let formattingDictionaries: [[String: Any]] = formattingArray.map { formatting in
-            return [
-                "type": formatting.type.rawValue,
-                "range": [
-                    "location": formatting.range.location,
-                    "length": formatting.range.length
-                ]
-            ]
-        }
-
-        let requestBody: [String: Any] = [
+        // Create request body
+        let parameters: [String: Any] = [
             "content": attributedText.string,
-            "formatting": formattingDictionaries
+            "formatting": formattingArray.map { formatting in
+                [
+                    "type": formatting.type.rawValue,
+                    "range": [
+                        "location": formatting.range.location,
+                        "length": formatting.range.length
+                    ]
+                ]
+            }
         ]
         
-        request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+        // For debugging
+        print("📍 DEBUG - Request URL: \(url)")
+        print("📍 DEBUG - Request Headers: \(headers)")
         
-        let (data, httpResponse) = try await URLSession.shared.data(for: request)
+        let response = try await AF.request(url,
+                                          method: .post,
+                                          parameters: parameters,
+                                          encoding: JSONEncoding.default,
+                                          headers: headers)
+            .serializingDecodable(CreateNoteResponse.self)
+            .value
         
-        if let responseString = String(data: data, encoding: .utf8) {
-            print("📍 DEBUG - Raw Response: \(responseString)")
-        }
-        
-        guard let httpUrlResponse = httpResponse as? HTTPURLResponse else {
-            throw URLError(.badServerResponse)
-        }
-        
-        print("📥 DEBUG - Response status code: \(httpUrlResponse.statusCode)")
-        
-        do {
-            let json = try JSONSerialization.jsonObject(with: data)
-            print("📍 DEBUG - Parsed JSON: \(json)")
-        } catch {
-            print("📍 DEBUG - JSON Parsing Error: \(error)")
-        }
-        
-        guard (200...299).contains(httpUrlResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .custom { decoder in
-            let container = try decoder.singleValueContainer()
-            let dateStr = try container.decode(String.self)
-            
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-            
-            if let date = formatter.date(from: dateStr) {
-                return date
-            }
-            
-            formatter.formatOptions = [.withInternetDateTime]
-            if let date = formatter.date(from: dateStr) {
-                return date
-            }
-            
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateStr)")
-        }
-        
-        do {
-            let noteResponse = try decoder.decode(CreateNoteResponse.self, from: data)
-            await MainActor.run {
-                viewModel.notes.append(noteResponse.post)
-            }
-        } catch {
-            print("📍 DEBUG - Decoding Error: \(error)")
-            throw error
+        await MainActor.run {
+            viewModel.notes.append(response.post)
         }
     }
     
