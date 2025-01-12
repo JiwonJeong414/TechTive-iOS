@@ -130,10 +130,10 @@ struct MainView: View {
                     }
                 }
             )
-            
             .sheet(isPresented: $showAddNote) {
-                AddNoteView(viewModel: NotesViewModel())
-                    .environmentObject(AuthViewModel())            }
+                AddNoteView(viewModel: notesViewModel)  // Use the existing viewModel
+                    .environmentObject(AuthViewModel())
+            }
             .onAppear {
                 loadProfilePicture()
                 // Trigger animations with delays

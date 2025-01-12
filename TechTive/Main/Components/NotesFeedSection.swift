@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct NotesFeedSection: View {
-    @ObservedObject var viewModel: NotesViewModel
+    @StateObject var viewModel: NotesViewModel  // Change this line
     @State private var selectedNote: Note? = nil
     @State private var showingEditor = false
     @State private var timer: Timer? = nil
+    @State private var refreshTrigger = false
 
     
     private func bottomColor(_ count: Int) -> Color {
@@ -31,8 +32,8 @@ struct NotesFeedSection: View {
             ZStack(alignment: .top){
                 ForEach(Array(viewModel.notes.enumerated()), id: \.element.id) { index, note in
                     NoteCard(note: note, index: index, noteViewModel: viewModel)
-                        .padding(.top, CGFloat(index) * 100) // Use padding instead of offset
-                        .zIndex(Double(index)) // Higher index cards render on top
+                        .padding(.top, CGFloat(index) * 100)
+                        .zIndex(Double(index))
                         .onTapGesture {
                             selectedNote = note
                             showingEditor = true
@@ -53,6 +54,12 @@ struct NotesFeedSection: View {
                 note: note
             )
             .environmentObject(AuthViewModel())
+        }
+        .onChange(of: refreshTrigger) { // New iOS 17 syntax
+            Task {
+                try? await Task.sleep(for: .seconds(2))
+                await viewModel.fetchNotes()
+            }
         }
         .onAppear {
             Task {

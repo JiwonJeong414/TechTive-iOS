@@ -12,7 +12,7 @@ struct NotesResponse: Codable {
 }
 
 class NotesViewModel: ObservableObject {
-    @Published var notes: [Note] = []
+    @Published var notes: [Note] = [] // Make sure Note conforms to Identifiable
     @Published var isLoading = false
     @Published var error: Error?
     
@@ -53,8 +53,14 @@ class NotesViewModel: ObservableObject {
                 self.notes = response.posts.sorted {
                     $0.timestamp > $1.timestamp
                 }
+                self.isLoading = false
+                self.objectWillChange.send()  // Force a refresh
             }
         } catch {
+            await MainActor.run {
+                self.error = error
+                self.isLoading = false
+            }
             print("Error fetching notes: \(error)")
         }
     }
