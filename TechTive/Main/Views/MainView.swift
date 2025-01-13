@@ -81,10 +81,8 @@ struct MainView: View {
                     
                     // Weekly Overview Section
                     WeeklyOverviewSection()
-                        .background(Color(UIColor.color.lightYellow))
-                        .cornerRadius(12)
-                        .padding()
                         .opacity(showWeekly ? 1 : 0)
+                        .padding(.horizontal)
                     
                     // Notes Section
                     VStack(alignment: .leading, spacing: 16) {
