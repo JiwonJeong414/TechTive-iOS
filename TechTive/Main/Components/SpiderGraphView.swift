@@ -6,35 +6,43 @@
 //
 
 
-//
-//  GraphView.swift
-//  TechTive
-//
-//  Created by Keya Aggarwal on 06/12/24.
-//
 import SwiftUI
+
 struct SpiderGraphView: View {
     // Values for the 7 variables (0 to 1)
     let values: [Double]
     let labels: [String]
-
+    
     private let accentColor = Color(UIColor.color.orange)
     private let Background = Color(UIColor.color.lightYellow)
-    
     private let sides = 7
-    private let maxValue: Double = 1.0
+    
+    // Add a computed property to check if all values are 0
+    private var isLoading: Bool {
+        values.allSatisfy { $0 == 0 }
+    }
     
     var body: some View {
         GeometryReader { geometry in
             let size = min(geometry.size.width, geometry.size.height) / 2 * 0.8
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
             ZStack {
-                // Background
                 Background.ignoresSafeArea()
-                ZStack {
-                    spiderGrid(size: size, center: center)
-                    dataPolygon(size: size, center: center)
-                    axisLabels(size: size, center: center)
+                
+                if isLoading {
+                    // Loading placeholder
+                    VStack {
+                        Text("Loading...")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.gray)
+                        ProgressView()
+                    }
+                } else {
+                    ZStack {
+                        spiderGrid(size: size, center: center)
+                        dataPolygon(size: size, center: center)
+                        axisLabels(size: size, center: center)
+                    }
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -42,7 +50,6 @@ struct SpiderGraphView: View {
         }
         .aspectRatio(1, contentMode: .fit)
     }
-
     // Helper to draw the grid
     @ViewBuilder
     private func spiderGrid(size: CGFloat, center: CGPoint) -> some View {
@@ -132,7 +139,21 @@ struct Polygon: Shape {
 struct GraphView: View {
     private let cardBackground = Color(UIColor.color.backgroundColor)
     private let accentColor = Color(UIColor.color.orange)
-    let note: Note // Pass the note object
+    let note: Note
+    
+    // Add a computed property to check if all values are 0
+    private var isLoading: Bool {
+        let emotionValues = [
+            note.angerValue,
+            note.disgustValue,
+            note.fearValue,
+            note.joyValue,
+            note.neutralValue,
+            note.sadnessValue,
+            note.surpriseValue
+        ]
+        return emotionValues.allSatisfy { $0 == 0 }
+    }
 
     var body: some View {
         let emotionValues = [
@@ -146,20 +167,19 @@ struct GraphView: View {
         ]
         
         let emotionLabels = ["Anger", "Disgust", "Fear", "Joy", "Neutral", "Sad", "Surprise"]
-        ZStack{
+        
+        ZStack {
             cardBackground.ignoresSafeArea()
-            VStack(spacing: 24){
+            VStack(spacing: 24) {
                 SpiderGraphView(
-                    values: emotionValues, // Pass emotion values
-                    labels: emotionLabels // Pass labels for emotions
+                    values: emotionValues,
+                    labels: emotionLabels
                 )
                 .frame(width: 300, height: 300)
                 .padding()
                 .background(cardBackground)
-                
             }
         }
-        
     }
 }
 

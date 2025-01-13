@@ -9,29 +9,39 @@ import SwiftUI
 
 
 // MARK: - Main App Structure
-struct ContentView: View { 
-    @EnvironmentObject var authViewModel: AuthViewModel 
-
+struct ContentView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     var body: some View {
         Group {
-            if authViewModel.isAuthenticated {
+            if authViewModel.isInitializing || authViewModel.isLoadingUserInfo {
+                VStack {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                    Text("Loading...")
+                        .font(.custom("Poppins-Regular", size: 16))
+                        .foregroundColor(.gray)
+                        .padding(.top)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(UIColor.systemBackground))
+            } else if authViewModel.isAuthenticated {
                 MainView()
-            } else if authViewModel.isSecondState{
+            } else if authViewModel.isSecondState {
                 LoginView()
-            }
-            else {
+            } else {
                 AuthenticationFlow()
             }
         }
         .environmentObject(authViewModel)
     }
 } 
-   
-#Preview { 
+
+#Preview {
     ContentView()
         .environmentObject(AuthViewModel())
 }
- 
- 
- 
+
+
+
 

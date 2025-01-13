@@ -20,20 +20,37 @@ class AuthViewModel: ObservableObject {
     @Published var currentUserName: String = ""
     @Published var currentUserEmail: String = ""
     @Published var profilePictureURL: String?
+    @Published var isLoadingUserInfo: Bool = false
+    @Published var isInitializing = true  // Start with true
+
     
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
     
     init() {
+        isInitializing = true
         stateListener = auth.addStateDidChangeListener { [weak self] _, user in
             let authViewModel = self
             Task { @MainActor in
                 if user != nil {
+                    authViewModel?.isLoadingUserInfo = true
+                    // Don't set isAuthenticated yet
                     await authViewModel?.fetchUserInfo()
                     await authViewModel?.fetchProfilePicture()
+                    // Now set both flags
+                    await MainActor.run {
+                        authViewModel?.isAuthenticated = true
+                        authViewModel?.isLoadingUserInfo = false
+                    }
+                } else {
+                    await MainActor.run {
+                        authViewModel?.isAuthenticated = false
+                    }
                 }
-                authViewModel?.isAuthenticated = user != nil
+                await MainActor.run {
+                    authViewModel?.isInitializing = false
+                }
             }
         }
     }
@@ -108,17 +125,25 @@ class AuthViewModel: ObservableObject {
         print("🔄 Starting profile picture upload")
         
         let token = try await getAuthToken()
-        print("🔑 DEBUG - Token: \(token)")
         
-        guard let apiURL = URL(string: "https://631c-128-84-124-32.ngrok-free.app/api/pfp/") else {
+        guard let apiURL = URL(string: "http://34.21.62.193/api/pfp/") else {
             print("❌ Invalid URL")
             throw URLError(.badURL)
         }
         
-        guard let imageData = image.pngData() else {
-            print("❌ Failed to convert UIImage to PNG")
-            throw URLError(.cannotCreateFile)
+        // Compress image before upload
+        let maxSizeKB = 1024 // 1MB
+        var compression: CGFloat = 1.0
+        var imageData = image.jpegData(compressionQuality: compression)!
+        
+        while imageData.count / 1024 > maxSizeKB && compression > 0.1 {
+            compression -= 0.1
+            if let compressedData = image.jpegData(compressionQuality: compression) {
+                imageData = compressedData
+            }
         }
+        
+        print("📤 Compressed image size: \(imageData.count / 1024)KB")
         
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(token)",
@@ -127,8 +152,16 @@ class AuthViewModel: ObservableObject {
         
         return try await withCheckedThrowingContinuation { continuation in
             AF.upload(multipartFormData: { multipartFormData in
-                multipartFormData.append(imageData, withName: "", fileName: "image.png", mimeType: "image/png")
+                multipartFormData.append(imageData,
+                                       withName: "ImageFile",  // Changed from "image" to "ImageFile"
+                                       fileName: "profile.jpg",
+                                       mimeType: "image/jpeg")
             }, to: apiURL, headers: headers)
+            .validate()
+            .responseString { response in
+                print("📥 Raw response: \(response.value ?? "no response")")
+                print("📥 Response status code: \(response.response?.statusCode ?? -1)")
+            }
             .responseDecodable(of: ProfilePictureResponse.self) { response in
                 switch response.result {
                 case .success(let profileResponse):
@@ -138,6 +171,7 @@ class AuthViewModel: ObservableObject {
                             try await self.storeProfilePictureURL(imageUrl: profileResponse.link)
                             continuation.resume(returning: true)
                         } catch {
+                            print("❌ Error storing profile URL: \(error)")
                             continuation.resume(throwing: error)
                         }
                     }

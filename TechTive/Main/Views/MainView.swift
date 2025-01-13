@@ -116,7 +116,7 @@ struct MainView: View {
                                 .clipShape(Circle())
                                 .shadow(color: Color(UIColor.color.orange).opacity(0.3),
                                         radius: 4, y: 2)
-                        }
+                        } 
                         .offset(
                             x: geometry.size.width - 85,
                             y: geometry.size.height - 65
@@ -128,7 +128,7 @@ struct MainView: View {
                         )
                         
                     }
-                }
+                } 
             )
             .sheet(isPresented: $showAddNote) {
                 AddNoteView(viewModel: notesViewModel)

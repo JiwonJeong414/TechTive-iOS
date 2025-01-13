@@ -73,7 +73,9 @@ struct ProfileEditView: View {
             HStack(spacing: 20) {
                 // Save Changes Button
                 Button(action: {
-//                    handleSaveChanges()
+                    Task {
+                        await handleSaveChanges()
+                    }
                 }) {
                     Text("Save Changes")
                         .frame(maxWidth: .infinity)
@@ -142,13 +144,10 @@ struct ProfileEditView: View {
         
         // Update user information using AuthViewModel
         if !newUsername.isEmpty {
-            do {
-                let (success, error) = await authViewModel.updateUsername(newUsername: newUsername)
-                if let error = error {
-                    self.errorMessage = error
-                }
-            } catch {
-                self.errorMessage = error.localizedDescription
+            let (_, error) = await authViewModel.updateUsername(newUsername: newUsername)
+            if let error = error {
+                errorMessage = error
+                return
             }
         }
 
@@ -156,7 +155,8 @@ struct ProfileEditView: View {
             do {
                 try await authViewModel.updateEmail(newEmail: newEmail)
             } catch {
-                self.errorMessage = error.localizedDescription
+                errorMessage = error.localizedDescription
+                return
             }
         }
 
@@ -164,9 +164,11 @@ struct ProfileEditView: View {
             do {
                 try await authViewModel.updatePassword(newPassword: newPassword)
             } catch {
-                self.errorMessage = error.localizedDescription
+                errorMessage = error.localizedDescription
+                return
             }
         }
+
         // Show success message and reset fields
         showSuccessMessage = true
         resetFields()

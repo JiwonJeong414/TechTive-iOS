@@ -12,9 +12,22 @@ struct NoteCard: View {
     @ObservedObject var noteViewModel: NotesViewModel
     @State private var offset: CGFloat = 0
     @State private var showingGraph = false
+    @State private var hasAppeared = false
+
     
     private let animationSpeed: CGFloat = 2.0
     private let startingOffset: CGFloat = 0
+    
+    private var isEmotionLoading: Bool {
+        return note.angerValue == 0 &&
+               note.disgustValue == 0 &&
+               note.fearValue == 0 &&
+               note.joyValue == 0 &&
+               note.neutralValue == 0 &&
+               note.sadnessValue == 0 &&
+               note.surpriseValue == 0
+    }
+    
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -56,16 +69,16 @@ struct NoteCard: View {
                         
                         Spacer()
                         
-                        // Clickable dominant emotion
+                        // Modified emotion button
                         Button(action: {
                             showingGraph = true
                         }) {
                             HStack(spacing: 4) {
-                                Text(note.dominantEmotion.emotion)
+                                Text(isEmotionLoading ? "Loading" : note.dominantEmotion.emotion)
                                     .font(.custom("Poppins-Regular", size: 12))
                                     .foregroundColor(Color(UIColor.color.darkPurple))
                                 
-                                Image(systemName: "chart.radar")
+                                Image(systemName: isEmotionLoading ? "clock" : "chart.radar")
                                     .font(.system(size: 10))
                                     .foregroundColor(Color(UIColor.color.darkPurple))
                             }
@@ -120,10 +133,10 @@ struct NoteCard: View {
     
     private func backgroundForIndex(_ index: Int) -> Color {
         switch index % 3 {
-            case 0: return Color(UIColor.color.purple)
-            case 1: return Color(UIColor.color.lightOrange)
-            case 2: return Color(UIColor.color.lightYellow)
-            default: return Color(UIColor.color.lightYellow)
+        case 0: return Color(UIColor.color.purple)
+        case 1: return Color(UIColor.color.lightOrange)
+        case 2: return Color(UIColor.color.lightYellow)
+        default: return Color(UIColor.color.lightYellow)
         }
     }
 }
@@ -171,5 +184,5 @@ struct TrapezoidShape: Shape {
 #Preview {
     MainView()
         .environmentObject(AuthViewModel())
-
+    
 }
