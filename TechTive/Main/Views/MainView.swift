@@ -131,8 +131,8 @@ struct MainView: View {
                 }
             )
             .sheet(isPresented: $showAddNote) {
-                AddNoteView(viewModel: notesViewModel)  // Use the existing viewModel
-                    .environmentObject(AuthViewModel())
+                AddNoteView(viewModel: notesViewModel)
+                    .environmentObject(authViewModel)
             }
             .onAppear {
                 loadProfilePicture()

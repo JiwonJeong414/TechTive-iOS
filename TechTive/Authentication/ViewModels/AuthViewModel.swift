@@ -61,7 +61,7 @@ class AuthViewModel: ObservableObject {
             
             isLoading = false
             isAuthenticated = true
-            await fetchUserInfo()
+            // Removed fetchUserInfo() since stateListener handles it
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -71,14 +71,13 @@ class AuthViewModel: ObservableObject {
         }
     }
 
-    
     func login(email: String, password: String) async {
         isLoading = true
         do {
             let _ = try await auth.signIn(withEmail: email, password: password)
             isLoading = false
             isAuthenticated = true
-            await fetchUserInfo()
+            // Removed fetchUserInfo() since stateListener handles it
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false

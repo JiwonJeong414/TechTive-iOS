@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct NotesFeedSection: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
+
     @StateObject var viewModel: NotesViewModel  // Change this line
     @State private var selectedNote: Note? = nil
     @State private var showingEditor = false
@@ -49,11 +51,8 @@ struct NotesFeedSection: View {
         }
         .padding(.vertical, 10)
         .sheet(item: $selectedNote) { note in
-            AddNoteView(
-                viewModel: viewModel,
-                note: note
-            )
-            .environmentObject(AuthViewModel())
+            AddNoteView(viewModel: viewModel, note: note)
+                .environmentObject(authViewModel)
         }
         .onChange(of: refreshTrigger) { // New iOS 17 syntax
             Task {
