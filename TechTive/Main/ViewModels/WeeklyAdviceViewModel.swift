@@ -45,11 +45,11 @@ struct WeeklyAdviceResponse: Codable {
 }
 
 struct AdviceData: Codable {
-    let content: AdviceContent
-    let createdAt: String
+    let content: AdviceContent?
+    let createdAt: String?
     let id: Int
-    let ofWeek: String
-    let userId: Int
+    let ofWeek: String?
+    let userId: Int?
     
     enum CodingKeys: String, CodingKey {
         case content
@@ -57,6 +57,14 @@ struct AdviceData: Codable {
         case id
         case ofWeek = "of_week"
         case userId = "user_id"
+    }
+    
+    // Computed property to check if advice is valid
+    var isAdviceAvailable: Bool {
+        if let content = content {
+            return !content.advice.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        return false
     }
 }
 

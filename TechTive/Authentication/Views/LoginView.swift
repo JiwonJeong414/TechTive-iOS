@@ -62,7 +62,9 @@ struct LoginView: View {
                         
                         // Login button with loading state
                         Button(action: {
-                            authViewModel.login(email: email, password: password)
+                            Task {
+                                await authViewModel.login(email: email, password: password)
+                            }
                         }) {
                             ZStack {
                                 Text("Login")

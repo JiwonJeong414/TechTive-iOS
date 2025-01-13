@@ -30,9 +30,8 @@ struct TechTiveApp: App {
     WindowGroup {
       NavigationView {
         ContentView()
-        ProfileView()
-                .environmentObject(authViewModel)
-                .environmentObject(notesViewModel)
+              .environmentObject(authViewModel)
+
       }
     }
   }

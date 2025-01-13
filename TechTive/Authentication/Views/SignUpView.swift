@@ -74,7 +74,9 @@ struct SignUpView: View {
                         // Sign Up button with loading state
                         Button(action: {
                             if password == confirmPassword {
-                                authViewModel.signUp(email: email, password: password, name: name)
+                                   Task {
+                                       await authViewModel.signUp(email: email, password: password, name: name)
+                                   }
                             } else {
                                 authViewModel.errorMessage = "Passwords don't match"
                                 authViewModel.showError = true

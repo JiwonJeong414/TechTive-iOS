@@ -44,72 +44,50 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func signUp(email: String, password: String, name: String) {
+    func signUp(email: String, password: String, name: String) async {
         isLoading = true
-        
-        auth.createUser(withEmail: email, password: password) { [weak self] result, error in
-            guard let self = self else { return }
+        do {
+            let result = try await auth.createUser(withEmail: email, password: password)
+            let user = result.user
             
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
-                    self.showError = true
-                    self.isLoading = false
-                    return
-                }
-                
-                guard let user = result?.user else {
-                    self.errorMessage = "Failed to create user"
-                    self.showError = true
-                    self.isLoading = false
-                    return
-                }
-                
-                let userData: [String: Any] = [
-                    "name": name,
-                    "email": email,
-                    "userId": user.uid,
-                    "createdAt": Date()
-                ]
-                
-                self.db.collection("users").document(user.uid).setData(userData) { error in
-                    DispatchQueue.main.async {
-                        self.isLoading = false
-                        
-                        if let error = error {
-                            self.errorMessage = error.localizedDescription
-                            self.showError = true
-                            return
-                        }
-                        
-                        self.isAuthenticated = true
-                        self.fetchUserInfo()
-                    }
-                }
-            }
-        }
-    }
-    
-    func login(email: String, password: String) {
-        isLoading = true
-        
-        auth.signIn(withEmail: email, password: password) { [weak self] result, error in
-            guard let self = self else { return }
+            let userData: [String: Any] = [
+                "name": name,
+                "email": email,
+                "userId": user.uid,
+                "createdAt": Date()
+            ]
             
+            try await db.collection("users").document(user.uid).setData(userData)
+            
+            isLoading = false
+            isAuthenticated = true
+            await fetchUserInfo()
+        } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
-                
-                if let error = error {
-                    self.errorMessage = error.localizedDescription
-                    self.showError = true
-                    return
-                }
-                
-                self.isAuthenticated = true
-                self.fetchUserInfo()
+                self.errorMessage = error.localizedDescription
+                self.showError = true
             }
         }
     }
+
+    
+    func login(email: String, password: String) async {
+        isLoading = true
+        do {
+            let _ = try await auth.signIn(withEmail: email, password: password)
+            isLoading = false
+            isAuthenticated = true
+            await fetchUserInfo()
+        } catch {
+            DispatchQueue.main.async {
+                self.isLoading = false
+                self.errorMessage = error.localizedDescription
+                self.showError = true
+            }
+        }
+    }
+
     
     func signOut() {
         do {
@@ -122,28 +100,6 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func fetchUserInfo() {
-        guard let currentUser = auth.currentUser else {
-            print("No current user logged in.")
-            return
-        }
-        
-        let userId = currentUser.uid
-        db.collection("users").document(userId).getDocument { [weak self] document, error in
-            guard let self = self,
-                  let document = document,
-                  let data = document.data() else {
-                print("Error fetching user document: \(error?.localizedDescription ?? "Unknown error")")
-                return
-            }
-            
-            DispatchQueue.main.async {
-                self.currentUserName = data["name"] as? String ?? ""
-                self.currentUserEmail = data["email"] as? String ?? ""
-                self.profilePictureURL = data["profilePictureURL"] as? String
-            }
-        }
-    }
     
     func getCurrentUserId() -> String? {
         return auth.currentUser?.uid
@@ -223,25 +179,32 @@ class AuthViewModel: ObservableObject {
     
     func fetchUserInfo() async {
         guard let currentUser = auth.currentUser else {
-            print("No current user logged in.")
+            print("🔴 No current user logged in.")
             return
         }
+        
+        print("🟢 Fetching user info for UID: \(currentUser.uid) at \(Date())")
         
         do {
             let document = try await db.collection("users").document(currentUser.uid).getDocument()
             
             guard let data = document.data() else {
-                print("No user data found")
+                print("❌ No user data found for UID: \(currentUser.uid) at \(Date())")
                 return
             }
             
-            self.currentUserName = data["name"] as? String ?? ""
-            self.currentUserEmail = data["email"] as? String ?? ""
-            self.profilePictureURL = data["profilePictureURL"] as? String
+            await MainActor.run {
+                self.currentUserName = data["name"] as? String ?? ""
+                self.currentUserEmail = data["email"] as? String ?? ""
+                self.profilePictureURL = data["profilePictureURL"] as? String
+                print("✅ User info fetched: \(self.currentUserName), \(self.currentUserEmail) at \(Date())")
+            }
         } catch {
-            print("Error fetching user document: \(error)")
+            print("❌ Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
         }
     }
+
+
     
     func getAuthToken() async throws -> String {
         guard let currentUser = auth.currentUser else {
@@ -279,15 +242,20 @@ class AuthViewModel: ObservableObject {
     
     func updateEmail(newEmail: String) async throws {
         guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }
-        
-        try await user.updateEmail(to: newEmail)
         guard let userId = getCurrentUserId() else { throw URLError(.userAuthenticationRequired) }
         
+        // Send email verification before updating the email
+        try await user.sendEmailVerification(beforeUpdatingEmail: newEmail)
+        
+        // Update email in Firestore
         try await db.collection("users").document(userId).updateData(["email": newEmail])
+        
+        // Update the local state
         await MainActor.run {
             self.currentUserEmail = newEmail
         }
     }
+
     
     func updatePassword(newPassword: String) async throws {
         guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }

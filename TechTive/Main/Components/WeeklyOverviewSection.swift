@@ -22,11 +22,18 @@ struct WeeklyOverviewSection: View {
                 .frame(height: 200)
                 .overlay(
                     VStack {
-                        if let advice = viewModel.weeklyAdvice?.advice.content.advice {
-                            Text(advice)
-                                .foregroundColor(.primary)
-                                .padding()
-                                .multilineTextAlignment(.center)
+                        if let adviceResponse = viewModel.weeklyAdvice {
+                            if adviceResponse.advice.isAdviceAvailable {
+                                Text(adviceResponse.advice.content?.advice ?? "")
+                                    .foregroundColor(.primary)
+                                    .padding()
+                                    .multilineTextAlignment(.center)
+                            } else {
+                                Text("Not enough notes yet to give advice.")
+                                    .foregroundColor(.secondary)
+                                    .padding()
+                                    .multilineTextAlignment(.center)
+                            }
                         } else if let error = viewModel.errorMessage {
                             Text(error)
                                 .foregroundColor(.red)
@@ -43,6 +50,8 @@ struct WeeklyOverviewSection: View {
         }
     }
 }
+
+
 
 #Preview {
     WeeklyOverviewSection()
