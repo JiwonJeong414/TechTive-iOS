@@ -18,6 +18,15 @@ class NotesViewModel: ObservableObject {
     
     private let authViewModel = AuthViewModel()
     
+    
+    init() {
+        loadNotes()
+        // Fetch fresh data on init
+        Task {
+            await fetchNotes()
+        }
+    }
+    
     func notesPerWeek() -> [(week: String, count: Int)] {
         let calendar = Calendar.current
         var weeklyCounts: [(week: String, count: Int)] = []
@@ -43,11 +52,11 @@ class NotesViewModel: ObservableObject {
             ]
             
             let response = try await AF.request(url,
-                                              method: .get,
-                                              headers: headers)
+                                                method: .get,
+                                                headers: headers)
                 .serializingDecodable(NotesResponse.self)
                 .value
-                
+            
             await MainActor.run {
                 // Sort the posts with newest first
                 self.notes = response.posts.sorted {
@@ -114,13 +123,81 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    init() {
-        loadNotes()
-        // Fetch fresh data on init
-        Task {
-            await fetchNotes()
+    func calculateLongestStreak() -> Int {
+        guard !notes.isEmpty else { return 0 }
+        
+        // Sort notes by date
+        let sortedNotes = notes.sorted { $0.timestamp < $1.timestamp }
+        
+        // Group notes by week
+        let calendar = Calendar.current
+        var weeklyNotes: [Date: [Note]] = [:]
+        
+        for note in sortedNotes {
+            // Get start of the week for the note's timestamp
+            let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: note.timestamp))!
+            if weeklyNotes[weekStart] == nil {
+                weeklyNotes[weekStart] = []
+            }
+            weeklyNotes[weekStart]?.append(note)
         }
+        
+        // Sort weeks chronologically
+        let sortedWeeks = weeklyNotes.keys.sorted()
+        
+        // Calculate streaks
+        var currentStreak = 1
+        var longestStreak = 1
+        
+        for i in 1..<sortedWeeks.count {
+            let currentWeek = sortedWeeks[i]
+            let previousWeek = sortedWeeks[i-1]
+            
+            // Check if weeks are consecutive
+            let weekDifference = calendar.dateComponents([.weekOfYear],
+                                                         from: previousWeek,
+                                                         to: currentWeek).weekOfYear ?? 0
+            
+            if weekDifference == 1 {
+                currentStreak += 1
+                longestStreak = max(longestStreak, currentStreak)
+            } else {
+                currentStreak = 1
+            }
+        }
+        
+        return longestStreak
     }
+    
+    // Get current streak
+    func getCurrentStreak() -> Int {
+        guard !notes.isEmpty else { return 0 }
+        
+        let calendar = Calendar.current
+        let currentWeekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: Date()))!
+        
+        // Group notes by week
+        var weeklyNotes: [Date: [Note]] = [:]
+        for note in notes {
+            let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: note.timestamp))!
+            if weeklyNotes[weekStart] == nil {
+                weeklyNotes[weekStart] = []
+            }
+            weeklyNotes[weekStart]?.append(note)
+        }
+        
+        var currentStreak = 0
+        var checkWeek = currentWeekStart
+        
+        // Count backwards from current week until we find a week with no notes
+        while let _ = weeklyNotes[checkWeek] {
+            currentStreak += 1
+            checkWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: checkWeek)!
+        }
+        
+        return currentStreak
+    }
+    
 }
 
 extension Date {
