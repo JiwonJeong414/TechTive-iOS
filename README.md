@@ -19,6 +19,17 @@ TechTive won **🥇 Best Overall/1st Place Team** at the **Cornell AppDev Hackat
 
 ---
 
+### **Backend**  
+- George Dong  
+- Abrar Amin
+
+---
+
+### **Designer**  
+- Seojin Park
+
+---
+
 ## Front End Description
 TechTive is a journaling platform designed to help users understand their thoughts and emotions. Upon first use, users are guided through an onboarding process, with the option to skip and proceed to login. The login page, integrated with Firebase, supports account access, password recovery, and new account creation.
 
