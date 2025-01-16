@@ -5,6 +5,7 @@
 //  Created by jiwon jeong on 11/25/24.
 //
 import SwiftUI
+
 struct NoteCard: View {
     let note: Note
     let index: Int
@@ -13,7 +14,6 @@ struct NoteCard: View {
     @State private var offset: CGFloat = 0
     @State private var showingGraph = false
     @State private var hasAppeared = false
-
     
     private let animationSpeed: CGFloat = 2.0
     private let startingOffset: CGFloat = 0
@@ -27,7 +27,6 @@ struct NoteCard: View {
                note.sadnessValue == 0 &&
                note.surpriseValue == 0
     }
-    
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -44,12 +43,19 @@ struct NoteCard: View {
                     .overlay(
                         GeometryReader { geometry in
                             Color.clear
+                                .onAppear {
+                                    // Set initial position
+                                    trapezoidPosition = geometry.frame(in: .global).minY
+                                }
                                 .onChange(of: geometry.frame(in: .global).minY) { oldValue, newValue in
-                                    trapezoidPosition = newValue
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        trapezoidPosition = newValue
+                                    }
                                 }
                         }
                     )
                     .offset(x: calculateOffset(), y: -47)
+                    .id("trapezoid-\(note.id)") // Add unique ID for updates
                 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
@@ -69,7 +75,6 @@ struct NoteCard: View {
                         
                         Spacer()
                         
-                        // Modified emotion button
                         Button(action: {
                             showingGraph = true
                         }) {
@@ -97,23 +102,18 @@ struct NoteCard: View {
             .frame(height: 105)
             .background(backgroundForIndex(index))
             .offset(x: offset)
-            .gesture(
-                DragGesture()
-                    .onChanged { gesture in
-                        if gesture.translation.width < 0 {
-                            offset = gesture.translation.width
-                        }
-                    }
-                    .onEnded { gesture in
-                        withAnimation {
-                            if gesture.translation.width < -100 {
-                                noteViewModel.deleteNote(note)
-                            } else {
-                                offset = 0
-                            }
-                        }
-                    }
-            )
+            .onAppear {
+                // Ensure initial position is set
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    hasAppeared = true
+                }
+            }
+            .onChange(of: noteViewModel.notes.count) { oldCount, newCount in
+                // Update when notes collection changes
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    trapezoidPosition = mainGeo.frame(in: .global).minY
+                }
+            }
             .popover(isPresented: $showingGraph) {
                 GraphView(note: note)
                     .frame(width: 300, height: 300)

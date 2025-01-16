@@ -8,9 +8,9 @@
 		<true/>
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string></string>
+	<string>This app requires access to your photo library to save your selected profile picture</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
+	<string>This app requires access to your photo library to allow you to choose a profile picture</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CourierPrime-Regular.ttf</string>

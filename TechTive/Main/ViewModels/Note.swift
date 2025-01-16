@@ -64,16 +64,25 @@ struct Note: Identifiable, Codable {
         self.content = try container.decode(String.self, forKey: .content)
         
         // Decode timestamp
-        if let dateString = try? container.decode(String.self, forKey: .timestamp) {
-            let formatter = ISO8601DateFormatter()
-            formatter.formatOptions = [.withInternetDateTime]
-            if let date = formatter.date(from: dateString) {
+        let dateString = try container.decode(String.self, forKey: .timestamp)
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        if let date = formatter.date(from: dateString) {
+            self.timestamp = date
+        } else {
+            // If the first formatter fails, try a backup format
+            let backupFormatter = DateFormatter()
+            backupFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            if let date = backupFormatter.date(from: dateString) {
                 self.timestamp = date
             } else {
-                self.timestamp = Date()
+                throw DecodingError.dataCorruptedError(
+                    forKey: .timestamp,
+                    in: container,
+                    debugDescription: "Date string \(dateString) does not match expected format"
+                )
             }
-        } else {
-            self.timestamp = Date()
         }
         
         // Decode userID

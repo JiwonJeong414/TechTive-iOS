@@ -120,8 +120,8 @@ struct WeeklyOverviewSection: View {
                 .foregroundColor(.black.opacity(0.8))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
-                .padding(.vertical, 20)
-                .frame(maxWidth: .infinity)
+                .frame(minHeight: 160)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     
@@ -174,7 +174,7 @@ struct WeeklyOverviewSection: View {
                     Text("Answer: \(response.advice.content?.answer ?? "")")
                         .font(.custom("CourierPrime-Regular", size: 15))
                         .foregroundColor(.black.opacity(0.6))
-                        
+                    
                     Button(action: resetRiddle) {
                         Text("Reset")
                             .font(.custom("Poppins-Regular", size: 16))

@@ -85,17 +85,17 @@ class NotesViewModel: ObservableObject {
         }
     }
     
-    func deleteNote(_ note: Note) {
-        if let index = notes.firstIndex(where: { $0.id == note.id }) {
-            notes.remove(at: index)
-            saveNotes()
-            
-            // Sync with server after local deletion
-            Task {
-                await fetchNotes()
-            }
-        }
-    }
+//    func deleteNote(_ note: Note) {
+//        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+//            notes.remove(at: index)
+//            saveNotes()
+//            
+//            // Sync with server after local deletion
+//            Task {
+//                await fetchNotes()
+//            }
+//        }
+//    }
     
     func updateNote(_ updatedNote: Note) {
         if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
