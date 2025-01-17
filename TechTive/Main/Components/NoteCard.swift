@@ -82,10 +82,11 @@ struct NoteCard: View {
                                 Text(isEmotionLoading ? "Loading" : note.dominantEmotion.emotion)
                                     .font(.custom("Poppins-Regular", size: 12))
                                     .foregroundColor(Color(UIColor.color.darkPurple))
-                                
-                                Image(systemName: isEmotionLoading ? "clock" : "chart.radar")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(Color(UIColor.color.darkPurple))
+                                if isEmotionLoading {
+                                    Image(systemName: "clock")
+                                        .font(.system(size: 10))
+                                        .foregroundColor(Color(UIColor.color.darkPurple))
+                                }
                             }
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)

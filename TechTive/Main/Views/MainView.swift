@@ -152,6 +152,12 @@ struct MainView: View {
                 }
             }
         }
+        .onAppear {
+            notesViewModel.authViewModel = authViewModel
+            Task {
+                await notesViewModel.fetchNotes()
+            }
+        }
     }
 }
 
