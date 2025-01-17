@@ -67,9 +67,3 @@ struct NotesFeedSection: View {
         }
     }
 }
-
-#Preview {
-    MainView()
-        .environmentObject(AuthViewModel())
-
-}

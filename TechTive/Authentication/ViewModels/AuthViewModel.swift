@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseCore
 import Alamofire
 
+@MainActor
 class AuthViewModel: ObservableObject {
     @Published var isAuthenticated = false
     @Published var isSecondState = false

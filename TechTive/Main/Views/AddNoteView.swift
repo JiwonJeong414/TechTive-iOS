@@ -99,13 +99,13 @@
             print("📍 DEBUG - Request URL: \(url)")
             print("📍 DEBUG - Request Headers: \(headers)")
             
-            let response = try await AF.request(url,
-                                                  method: .post,
-                                                  parameters: parameters,
-                                                  encoding: JSONEncoding.default,
-                                                  headers: headers)
-                    .serializingDecodable(CreateNoteResponse.self)
-                    .value
+            let _ = try await AF.request(url,
+                method: .post,
+                parameters: parameters,
+                encoding: JSONEncoding.default,
+                headers: headers)
+                .serializingDecodable(CreateNoteResponse.self)
+                .value
             
             await MainActor.run {
                 dismiss()

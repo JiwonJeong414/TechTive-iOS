@@ -180,9 +180,3 @@ struct TrapezoidShape: Shape {
         return path
     }
 }
-
-#Preview {
-    MainView()
-        .environmentObject(AuthViewModel())
-    
-}

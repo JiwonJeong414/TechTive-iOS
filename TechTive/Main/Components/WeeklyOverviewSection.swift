@@ -120,8 +120,7 @@ struct WeeklyOverviewSection: View {
                 .foregroundColor(.black.opacity(0.8))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
-                .frame(minHeight: 160)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(width: UIScreen.main.bounds.width - 38, height: 160)
         }
     }
     
@@ -189,11 +188,12 @@ struct WeeklyOverviewSection: View {
     }
     
     private func errorView(_ error: String) -> some View {
-        Text(error)
+        Text("Not Enough Notes")
             .font(.custom("CourierPrime-Regular", size: 17))
             .foregroundColor(.red)
             .padding()
             .multilineTextAlignment(.center)
+            .frame(width: UIScreen.main.bounds.width - 38, height: 160)
     }
     
     private func checkAnswer(_ correctAnswer: String) {

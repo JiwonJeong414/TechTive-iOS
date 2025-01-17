@@ -16,12 +16,11 @@ class NotesViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: Error?
     
-    private let authViewModel = AuthViewModel()
+    weak var authViewModel: AuthViewModel?  // Make it weak to avoid retain cycle
     
-    
-    init() {
+    init(authViewModel: AuthViewModel? = nil) {
+        self.authViewModel = authViewModel
         loadNotes()
-        // Fetch fresh data on init
         Task {
             await fetchNotes()
         }
@@ -43,34 +42,48 @@ class NotesViewModel: ObservableObject {
     }
     
     func fetchNotes() async {
+        await MainActor.run { self.isLoading = true }
+        
         do {
+            guard let authViewModel = authViewModel else {
+                print("Debug - Auth ViewModel is nil")
+                throw URLError(.userAuthenticationRequired)
+            }
+            
             let url = "http://34.21.62.193/api/posts/"
             let token = try await authViewModel.getAuthToken()
+            print("Debug - Token received:", token)
             
             let headers: HTTPHeaders = [
                 "Authorization": "Bearer \(token)"
             ]
+            print("Debug - Request headers:", headers)
             
             let response = try await AF.request(url,
-                                                method: .get,
-                                                headers: headers)
+                                              method: .get,
+                                              headers: headers)
+                .validate()  // Add validation
                 .serializingDecodable(NotesResponse.self)
                 .value
             
             await MainActor.run {
-                // Sort the posts with newest first
-                self.notes = response.posts.sorted {
-                    $0.timestamp > $1.timestamp
-                }
+                self.notes = response.posts.sorted { $0.timestamp > $1.timestamp }
                 self.isLoading = false
-                self.objectWillChange.send()  // Force a refresh
+                self.objectWillChange.send()
             }
-        } catch {
+        } catch let error as AFError {
+            print("Debug - Alamofire error:", error.localizedDescription)
+            print("Debug - Response:", error.responseCode ?? "No response code")
             await MainActor.run {
                 self.error = error
                 self.isLoading = false
             }
-            print("Error fetching notes: \(error)")
+        } catch {
+            print("Debug - Other error:", error.localizedDescription)
+            await MainActor.run {
+                self.error = error
+                self.isLoading = false
+            }
         }
     }
     

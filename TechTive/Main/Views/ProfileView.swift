@@ -50,7 +50,10 @@ struct ProfileView: View {
                 ZStack {
                     GeometryReader { geometry in
                         purpleColor
-                            .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
+                            .frame(
+                                width: geometry.size.width,
+                                height: max(0, geometry.size.height + geometry.frame(in: .global).minY)
+                            )
                             .offset(y: -geometry.frame(in: .global).minY)
                             .allowsHitTesting(false)
                     }

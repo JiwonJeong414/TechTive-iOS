@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2924B3272CFC4086009337FE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2924B3262CFC4086009337FE /* GoogleService-Info.plist */; };
 		29520C132CFA74BA00E0047E /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C122CFA74BA00E0047E /* UIColor.swift */; };
 		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
 		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
@@ -15,6 +14,7 @@
 		29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */; };
 		29520C202CFADC5300E0047E /* QuoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C1F2CFADC5300E0047E /* QuoteViewModel.swift */; };
 		29520C232CFADE6B00E0047E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 29520C222CFADE6B00E0047E /* Alamofire */; };
+		29619AF72D38F62600EC77D9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 29619AF62D38F62600EC77D9 /* GoogleService-Info.plist */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -65,7 +65,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2924B3262CFC4086009337FE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		29520C122CFA74BA00E0047E /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		29520C162CFA797400E0047E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		29520C172CFA797400E0047E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
@@ -73,6 +72,7 @@
 		29520C1C2CFA7A0200E0047E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		29520C1F2CFADC5300E0047E /* QuoteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteViewModel.swift; sourceTree = "<group>"; };
+		29619AF62D38F62600EC77D9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -169,7 +169,7 @@
 		2978DF6E2CF4366C00013C36 /* TechTive */ = {
 			isa = PBXGroup;
 			children = (
-				2924B3262CFC4086009337FE /* GoogleService-Info.plist */,
+				29619AF62D38F62600EC77D9 /* GoogleService-Info.plist */,
 				29520C1C2CFA7A0200E0047E /* Info.plist */,
 				29520C0E2CFA73CE00E0047E /* Font+Colors */,
 				2978DF9D2CF515D300013C36 /* Main */,
@@ -406,11 +406,11 @@
 			files = (
 				29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */,
 				29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */,
+				29619AF72D38F62600EC77D9 /* GoogleService-Info.plist in Resources */,
 				2978DF772CF4366D00013C36 /* Preview Assets.xcassets in Resources */,
 				29520C1E2CFA7FA900E0047E /* Poppins-SemiBold.ttf in Resources */,
 				29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */,
 				2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */,
-				2924B3272CFC4086009337FE /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -635,7 +635,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTive;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiwonjeong414.TechTive;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -665,7 +665,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = jiwonjeong414.TechTive;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jiwonjeong414.TechTive;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

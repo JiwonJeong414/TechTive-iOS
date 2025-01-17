@@ -30,9 +30,9 @@ final class WeeklyAdviceViewModel: ObservableObject {
                 .value
             
             self.weeklyAdvice = response
-            self.errorMessage = nil
+            self.errorMessage = "Not enough notes"
         } catch {
-            self.errorMessage = error.localizedDescription
+            self.errorMessage = "Not enough notes"
             print("Error: \(error)")
         }
     }

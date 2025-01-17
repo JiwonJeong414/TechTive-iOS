@@ -39,9 +39,8 @@ struct MainView: View {
         }
     }
     
-    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
                     // Header Section
@@ -64,7 +63,6 @@ struct MainView: View {
                                         .foregroundColor(Color(UIColor.color.darkPurple))
                                 }
                             }
-                            
                         }
                         .opacity(showHeader ? 1 : 0)
                         
@@ -99,10 +97,10 @@ struct MainView: View {
             }
             .background(Color(UIColor.color.backgroundColor))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .overlay(
                 GeometryReader { geometry in
                     Group {
-                        
                         Button(action: {
                             showAddNote = true
                         }) {
@@ -114,7 +112,7 @@ struct MainView: View {
                                 .clipShape(Circle())
                                 .shadow(color: Color(UIColor.color.orange).opacity(0.3),
                                         radius: 4, y: 2)
-                        } 
+                        }
                         .offset(
                             x: geometry.size.width - 85,
                             y: geometry.size.height - 65
@@ -124,9 +122,8 @@ struct MainView: View {
                             .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
                             value: showAddButton
                         )
-                        
                     }
-                } 
+                }
             )
             .sheet(isPresented: $showAddNote) {
                 AddNoteView(viewModel: notesViewModel)

@@ -58,9 +58,12 @@ struct SignUpView: View {
                             
                             SecureField("Password", text: $password)
                                 .textFieldStyle(CustomTextFieldStyle())
+                                .textContentType(.oneTimeCode)
+                                
                             
                             SecureField("Confirm Password", text: $confirmPassword)
                                 .textFieldStyle(CustomTextFieldStyle())
+                                .textContentType(.oneTimeCode)
                         }
                         
                         // Error Message (if any)
