@@ -32,8 +32,8 @@ class NotesViewModel: ObservableObject {
         
         for i in 0..<5 {
             let startOfWeek = calendar.date(byAdding: .weekOfYear, value: -i, to: Date())?.startOfWeek ?? Date()
-            let endOfWeek = calendar.date(byAdding: .day, value: 6, to: startOfWeek) ?? Date()
-            let count = notes.filter { $0.timestamp >= startOfWeek && $0.timestamp <= endOfWeek }.count
+            let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek) ?? Date() // Changed from 6 to 7
+            let count = notes.filter { $0.timestamp >= startOfWeek && $0.timestamp < endOfWeek }.count // Changed <= to
             let weekLabel = DateFormatter.localizedString(from: startOfWeek, dateStyle: .short, timeStyle: .none)
             weeklyCounts.append((week: weekLabel, count: count))
         }

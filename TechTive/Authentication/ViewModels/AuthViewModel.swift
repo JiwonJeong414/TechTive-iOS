@@ -23,7 +23,7 @@ class AuthViewModel: ObservableObject {
     @Published var profilePictureURL: String?
     @Published var isLoadingUserInfo: Bool = false
     @Published var isInitializing = true  // Start with true
-
+    
     
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
@@ -88,7 +88,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
     func login(email: String, password: String) async {
         isLoading = true
         do {
@@ -104,7 +104,7 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-
+    
     
     func signOut() {
         do {
@@ -154,9 +154,9 @@ class AuthViewModel: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             AF.upload(multipartFormData: { multipartFormData in
                 multipartFormData.append(imageData,
-                                       withName: "ImageFile",  // Changed from "image" to "ImageFile"
-                                       fileName: "profile.jpg",
-                                       mimeType: "image/jpeg")
+                                         withName: "ImageFile",  // Changed from "image" to "ImageFile"
+                                         fileName: "profile.jpg",
+                                         mimeType: "image/jpeg")
             }, to: apiURL, headers: headers)
             .validate()
             .responseString { response in
@@ -237,8 +237,8 @@ class AuthViewModel: ObservableObject {
             print("❌ Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
         }
     }
-
-
+    
+    
     
     func getAuthToken() async throws -> String {
         guard let currentUser = auth.currentUser else {
@@ -274,27 +274,67 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    func updateEmail(newEmail: String) async throws {
-        guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }
-        guard let userId = getCurrentUserId() else { throw URLError(.userAuthenticationRequired) }
-        
-        // Send email verification before updating the email
-        try await user.sendEmailVerification(beforeUpdatingEmail: newEmail)
-        
-        // Update email in Firestore
-        try await db.collection("users").document(userId).updateData(["email": newEmail])
-        
-        // Update the local state
-        await MainActor.run {
-            self.currentUserEmail = newEmail
+    func updateEmail(newEmail: String) {
+        guard let user = auth.currentUser else { return }
+        user.updateEmail(to: newEmail) { [weak self] error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.errorMessage = error.localizedDescription
+                    self?.showError = true
+                }
+            } else {
+                // Persist new email in Firestore
+                guard let userId = self?.getCurrentUserId() else { return }
+                self?.db.collection("users").document(userId).updateData(["email": newEmail]) { error in
+                    if let error = error {
+                        DispatchQueue.main.async {
+                            self?.errorMessage = error.localizedDescription
+                            self?.showError = true
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.currentUserEmail = newEmail
+                        }
+                    }
+                }
+            }
         }
     }
-
     
-    func updatePassword(newPassword: String) async throws {
-        guard let user = auth.currentUser else { throw URLError(.userAuthenticationRequired) }
-        try await user.updatePassword(to: newPassword)
+    
+    func updatePassword(newPassword: String) {
+        guard let user = auth.currentUser else { return }
+        user.updatePassword(to: newPassword) { [weak self] error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self?.errorMessage = error.localizedDescription
+                    self?.showError = true
+                }
+            }
+        }
     }
+    
+    func deleteUser() async throws {
+        guard let user = auth.currentUser,
+              let userId = getCurrentUserId() else {
+            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No authenticated user found."])
+        }
+        
+        // Delete user Firestore data first
+        try await db.collection("users").document(userId).delete()
+        
+        // Delete authentication record
+        try await user.delete()
+        
+        await MainActor.run {
+            self.isAuthenticated = false
+            self.currentUserEmail = ""
+            self.currentUserName = ""
+            self.profilePictureURL = nil
+        }
+        print("✅ User deleted successfully.")
+    }
+
 }
 
 struct ProfilePictureResponse: Codable {

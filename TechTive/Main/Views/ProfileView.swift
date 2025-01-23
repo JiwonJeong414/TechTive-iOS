@@ -19,6 +19,7 @@ struct ProfileView: View {
     
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
+    @State private var showDeleteConfirmation = false
     
     private let buttonColor = Color(UIColor.color.lightYellow)
     private let purpleColor = Color(UIColor.color.purple)
@@ -169,12 +170,12 @@ struct ProfileView: View {
                             Divider()
                                 .background(Color.orange)
                             
-                            // Settings Button
+                            // Logout Button
                             Button(action: {
-                                // Add settings action
+                                authViewModel.signOut()
                             }) {
                                 HStack {
-                                    Text("Settings")
+                                    Text("Logout")
                                         .foregroundColor(.black)
                                         .font(.custom("CourierPrime-Regular", fixedSize: 16))
                                     Spacer()
@@ -186,15 +187,16 @@ struct ProfileView: View {
                                 .background(buttonColor)
                             }
                             
+                            
                             Divider()
                                 .background(Color.orange)
                             
-                            // Logout Button
+                            // Settings Button
                             Button(action: {
-                                authViewModel.signOut()
+                                showDeleteConfirmation = true
                             }) {
                                 HStack {
-                                    Text("Logout")
+                                    Text("Delete Account")
                                         .foregroundColor(.red)
                                         .font(.custom("CourierPrime-Regular", fixedSize: 16))
                                     Spacer()
@@ -204,6 +206,20 @@ struct ProfileView: View {
                                 .padding()
                                 .frame(maxWidth: .infinity)
                                 .background(buttonColor)
+                            }
+                            .alert("Are you sure?", isPresented: $showDeleteConfirmation) {
+                                Button("Cancel", role: .cancel) {}
+                                Button("Delete", role: .destructive) {
+                                    Task {
+                                        do {
+                                            try await authViewModel.deleteUser()
+                                        } catch {
+                                            print("delete account error")
+                                        }
+                                    }
+                                }
+                            } message: {
+                                Text("This action cannot be undone.")
                             }
                         }
                         .padding(.horizontal)

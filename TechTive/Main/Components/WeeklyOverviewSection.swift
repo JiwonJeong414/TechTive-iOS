@@ -48,12 +48,6 @@ struct WeeklyOverviewSection: View {
         VStack(spacing: 0) {
             // Folder tabs with shadow effect
             ZStack(alignment: .top) {
-                // Content shadow line
-                Rectangle()
-                    .fill(Color.black.opacity(0.1))
-                    .frame(height: 1)
-                    .offset(y: 40)
-                
                 HStack(spacing: -2) {
                     ForEach([WeeklyTab.overview, .riddle], id: \.self) { tab in
                         Button(action: { withAnimation { selectedTab = tab } }) {
