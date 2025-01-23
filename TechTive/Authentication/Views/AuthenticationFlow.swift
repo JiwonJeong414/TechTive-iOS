@@ -43,13 +43,13 @@ struct AuthenticationFlow: View {
                         
                         // Title
                         Text(onboarding[currentPage])
-                            .font(.custom("Poppins-Medium", size: 30))
+                            .font(.custom("Poppins-Medium", fixedSize: 30))
                             .bold()
                             .foregroundColor(currentPage == 1 ? .white : .black)
                         
                         // Description
                         Text(onboardingTwo[currentPage])
-                            .font(.custom("Poppins-Regular", size: 16))
+                            .font(.custom("Poppins-Regular", fixedSize: 16))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 40)
                             .foregroundColor(currentPage == 1 ? .white.opacity(0.8) : .gray)
@@ -85,7 +85,7 @@ struct AuthenticationFlow: View {
                                     Text("Get Started")
                                         .frame(maxWidth: .infinity)
                                         .padding()
-                                        .font(.custom("Poppins-Regular", size: 16))
+                                        .font(.custom("Poppins-Regular", fixedSize: 16))
                                         .background(Color(hex: "F3E5F5"))
                                         .foregroundColor(.black)
                                         .cornerRadius(10)

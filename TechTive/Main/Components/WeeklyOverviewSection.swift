@@ -71,7 +71,7 @@ struct WeeklyOverviewSection: View {
                                 
                                 // Tab content
                                 Text(tab == .overview ? "Overview" : "Riddle")
-                                    .font(.custom("Poppins-Regular", size: 16))
+                                    .font(.custom("Poppins-Regular", fixedSize: 16))
                                     .foregroundColor(selectedTab == tab ? coral : .black.opacity(0.6))
                                     .padding(.bottom, 4)
                             }
@@ -116,11 +116,11 @@ struct WeeklyOverviewSection: View {
     private func overviewContent(_ response: WeeklyAdviceResponse) -> some View {
         ScrollView {
             Text(response.advice.content?.advice ?? "Not enough notes yet to give advice.")
-                .font(.custom("CourierPrime-Regular", size: 17))
+                .font(.custom("CourierPrime-Regular", fixedSize: 17))
                 .foregroundColor(.black.opacity(0.8))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 20)
-                .frame(width: UIScreen.main.bounds.width - 38, height: 160)
+                .padding(.horizontal, 18)
+                .frame(width: UIScreen.main.bounds.width - 36, height: 160)
         }
     }
     
@@ -128,12 +128,11 @@ struct WeeklyOverviewSection: View {
         VStack(spacing: 16) {
             ScrollView {
                 Text(response.advice.content?.riddle ?? "No riddle available")
-                    .font(.custom("CourierPrime-Regular", size: 17))
+                    .font(.custom("CourierPrime-Regular", fixedSize: 17))
                     .foregroundColor(.black.opacity(0.8))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
-                    .lineLimit(3)
                     .fixedSize(horizontal: false, vertical: true)
             }
             
@@ -145,7 +144,7 @@ struct WeeklyOverviewSection: View {
                     
                     if showIncorrectFeedback {
                         Text("Incorrect, try again!")
-                            .font(.custom("Poppins-Regular", size: 15))
+                            .font(.custom("Poppins-Regular", fixedSize: 15))
                             .foregroundColor(.red)
                             .transition(.opacity)
                     }
@@ -154,7 +153,7 @@ struct WeeklyOverviewSection: View {
                         checkAnswer(response.advice.content?.answer ?? "")
                     }) {
                         Text("Check Answer")
-                            .font(.custom("Poppins-Regular", size: 16))
+                            .font(.custom("Poppins-Regular", fixedSize: 16))
                             .foregroundColor(coral)
                             .padding(.vertical, 8)
                     }
@@ -167,16 +166,16 @@ struct WeeklyOverviewSection: View {
                         .font(.system(size: 32))
                     
                     Text("Correct!")
-                        .font(.custom("Poppins-Regular", size: 17))
+                        .font(.custom("Poppins-Regular", fixedSize: 17))
                         .foregroundColor(.green)
                     
                     Text("Answer: \(response.advice.content?.answer ?? "")")
-                        .font(.custom("CourierPrime-Regular", size: 15))
+                        .font(.custom("CourierPrime-Regular", fixedSize: 15))
                         .foregroundColor(.black.opacity(0.6))
                     
                     Button(action: resetRiddle) {
                         Text("Reset")
-                            .font(.custom("Poppins-Regular", size: 16))
+                            .font(.custom("Poppins-Regular", fixedSize: 16))
                             .foregroundColor(coral)
                             .padding(.vertical, 8)
                     }
@@ -189,7 +188,7 @@ struct WeeklyOverviewSection: View {
     
     private func errorView(_ error: String) -> some View {
         Text("Not Enough Notes")
-            .font(.custom("CourierPrime-Regular", size: 17))
+            .font(.custom("CourierPrime-Regular", fixedSize: 17))
             .foregroundColor(.red)
             .padding()
             .multilineTextAlignment(.center)

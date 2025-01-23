@@ -60,7 +60,7 @@ struct NoteCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(note.content)
-                            .font(.custom("CourierPrime-Regular", size: 18))
+                            .font(.custom("CourierPrime-Regular", fixedSize: 18))
                             .foregroundColor(Color(UIColor.color.orange))
                             .lineLimit(1)
                         Spacer()
@@ -70,7 +70,7 @@ struct NoteCard: View {
                     
                     HStack {
                         Text(dateFormatter.string(from: note.timestamp))
-                            .font(.custom("Poppins-Regular", size: 14))
+                            .font(.custom("Poppins-Regular", fixedSize: 14))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                         
                         Spacer()
@@ -80,7 +80,7 @@ struct NoteCard: View {
                         }) {
                             HStack(spacing: 4) {
                                 Text(isEmotionLoading ? "Loading" : note.dominantEmotion.emotion)
-                                    .font(.custom("Poppins-Regular", size: 12))
+                                    .font(.custom("Poppins-Regular", fixedSize: 12))
                                     .foregroundColor(Color(UIColor.color.darkPurple))
                                 if isEmotionLoading {
                                     Image(systemName: "clock")

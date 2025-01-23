@@ -26,7 +26,7 @@ struct ProfileEditView: View {
             
             // Title
             Text("Edit Profile")
-                .font(.custom("Poppins-SemiBold", size: 32))
+                .font(.custom("Poppins-SemiBold", fixedSize: 32))
                 .foregroundColor(Color(UIColor.color.darkPurple))
                 .padding(.bottom, 20)
             
@@ -80,7 +80,7 @@ struct ProfileEditView: View {
                     Text("Save Changes")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .font(.custom("CourierPrime-Regular", size: 16))
+                        .font(.custom("CourierPrime-Regular", fixedSize: 16))
                         .background(Color(hex: "E65100"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
@@ -95,7 +95,7 @@ struct ProfileEditView: View {
                     Text("Cancel")
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .font(.custom("CourierPrime-Regular", size: 16))
+                        .font(.custom("CourierPrime-Regular", fixedSize: 16))
                         .background(Color(hex: "F3E5F5"))
                         .foregroundColor(.black)
                         .cornerRadius(10)
@@ -121,7 +121,7 @@ struct ProfileEditView: View {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.orange)
                         Text("Back") // Back label
-                            .font(.custom("Poppins-Medium", size: 16))
+                            .font(.custom("Poppins-Medium", fixedSize: 16))
                             .foregroundColor(.orange)
                     }
                 }

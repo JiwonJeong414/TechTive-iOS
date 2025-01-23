@@ -69,7 +69,7 @@ struct ProfileView: View {
                                     Image(systemName: "chevron.left")
                                         .foregroundColor(.orange)
                                     Text("Back")
-                                        .font(.custom("Poppins-Medium", size: 16))
+                                        .font(.custom("Poppins-Medium", fixedSize: 16))
                                         .foregroundColor(.orange)
                                 }.padding(.top, 70)
                             }
@@ -128,11 +128,11 @@ struct ProfileView: View {
                         }
                         
                         Text(authViewModel.currentUserName)
-                            .font(.custom("Poppins-Medium", size: 24))
+                            .font(.custom("Poppins-Medium", fixedSize: 24))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                         
                         Text(authViewModel.currentUserEmail)
-                            .font(.custom("Poppins-Medium", size: 16))
+                            .font(.custom("Poppins-Medium", fixedSize: 16))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                             .padding(.bottom, 32)
                     }
@@ -156,7 +156,7 @@ struct ProfileView: View {
                                 NavigationLink(destination: ProfileEditView().environmentObject(authViewModel).environmentObject(notesViewModel)){
                                     Text("Edit Profile")
                                         .foregroundColor(.black)
-                                        .font(.custom("CourierPrime-Regular", size: 16))
+                                        .font(.custom("CourierPrime-Regular", fixedSize: 16))
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                         .foregroundColor(.orange)
@@ -176,7 +176,7 @@ struct ProfileView: View {
                                 HStack {
                                     Text("Settings")
                                         .foregroundColor(.black)
-                                        .font(.custom("CourierPrime-Regular", size: 16))
+                                        .font(.custom("CourierPrime-Regular", fixedSize: 16))
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                         .foregroundColor(.orange)
@@ -196,7 +196,7 @@ struct ProfileView: View {
                                 HStack {
                                     Text("Logout")
                                         .foregroundColor(.red)
-                                        .font(.custom("CourierPrime-Regular", size: 16))
+                                        .font(.custom("CourierPrime-Regular", fixedSize: 16))
                                     Spacer()
                                     Image(systemName: "chevron.right")
                                         .foregroundColor(.orange)
@@ -219,13 +219,13 @@ struct ProfileView: View {
                             Divider()
                             
                             Text("MY STATS")
-                                .font(.custom("Poppins-SemiBold", size: 20))
+                                .font(.custom("Poppins-SemiBold", fixedSize: 20))
                                 .padding(.leading)
                             
                             // Graph Section
                             VStack(spacing: 8) {
                                 Text("Notes Last 5 Weeks")
-                                    .font(.custom("Poppins-Medium", size: 16))
+                                    .font(.custom("Poppins-Medium", fixedSize: 16))
                                     .foregroundColor(.black)
                                 
                                 Chart {
@@ -284,14 +284,14 @@ struct StatCard: View {
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             Text(title)
-                .font(.custom("Poppins-Regular", size: 14))
+                .font(.custom("Poppins-Regular", fixedSize: 14))
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8)
                 .lineLimit(2)
             
             Text(value)
-                .font(.custom("Poppins-SemiBold", size: 20))
+                .font(.custom("Poppins-SemiBold", fixedSize: 20))
                 .foregroundColor(.orange)
         }
         .frame(width: 110, height: 110)

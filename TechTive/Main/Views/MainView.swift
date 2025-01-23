@@ -47,7 +47,7 @@ struct MainView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         HStack{
                             Text("HELLO " + authViewModel.currentUserName.uppercased(with: .autoupdatingCurrent) + "!")
-                                .font(.custom("Poppins-SemiBold", size: 32))
+                                .font(.custom("Poppins-SemiBold", fixedSize: 32))
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
                             NavigationLink(destination: ProfileView().environmentObject(notesViewModel).environmentObject(authViewModel)) {
@@ -67,7 +67,7 @@ struct MainView: View {
                         .opacity(showHeader ? 1 : 0)
                         
                         Text(viewModel.quote)
-                            .font(.custom("Poppins-Regular", size: 16))
+                            .font(.custom("Poppins-Regular", fixedSize: 16))
                             .foregroundColor(Color(UIColor.color.orange))
                             .opacity(showQuote ? 1 : 0)
                             .onAppear {
@@ -85,7 +85,7 @@ struct MainView: View {
                     // Notes Section
                     VStack(alignment: .leading, spacing: 16) {
                         Text("MY NOTES")
-                            .font(.custom("Poppins-SemiBold", size: 32))
+                            .font(.custom("Poppins-SemiBold", fixedSize: 32))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
