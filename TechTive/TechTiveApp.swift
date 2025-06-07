@@ -7,7 +7,9 @@
 
 import SwiftUI
 import FirebaseCore
+import Inject
 
+// Test comment for pre-commit hook
 @main
 struct TechTiveApp: App {
     @StateObject private var authViewModel: AuthViewModel
@@ -26,6 +28,7 @@ struct TechTiveApp: App {
                 ContentView()
                     .environmentObject(authViewModel)
                     .environmentObject(notesViewModel)
+                    .enableInjection()
             }
         }
     }
