@@ -99,7 +99,7 @@ struct LoginView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .frame(height: 50)
-                            .background(self.accentColor)
+                            .background(Color(self.accentColor))
                             .cornerRadius(25)
                         }
                         .disabled(self.authViewModel.isLoading)
@@ -149,7 +149,7 @@ struct LoginView: View {
 
                             NavigationLink(destination: SignUpView()) {
                                 Text("Sign up")
-                                    .foregroundColor(self.accentColor)
+                                    .foregroundColor(Color(self.accentColor))
                             }
                         }
                         .font(.system(size: 14))
@@ -158,7 +158,7 @@ struct LoginView: View {
                     .frame(height: 550, alignment: .top) // Increased height to accommodate Google button
                     .padding(.horizontal, 24)
                     .padding(.vertical, 50)
-                    .background(self.cardBackground)
+                    .background(Color(self.cardBackground))
                     .cornerRadius(30)
                 }
             }

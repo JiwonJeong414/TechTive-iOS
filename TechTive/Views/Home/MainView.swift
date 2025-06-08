@@ -6,6 +6,74 @@
 //
 import SwiftUI
 
+// MARK: - Header Section View
+
+private struct HeaderSection: View {
+    let userName: String
+    let profileImage: UIImage?
+    let quote: String
+    let showHeader: Bool
+    let showQuote: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("HELLO " + self.userName.uppercased(with: .autoupdatingCurrent) + "!")
+                    .font(.custom("Poppins-SemiBold", fixedSize: 32))
+                    .foregroundColor(Color(Constants.Colors.darkPurple))
+                Spacer()
+                NavigationLink(destination: ProfileView()) {
+                    if let profileImage = profileImage {
+                        Image(uiImage: profileImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 44, height: 44)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle")
+                            .font(.title2)
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
+                    }
+                }
+            }
+            .opacity(self.showHeader ? 1 : 0)
+
+            Text(self.quote)
+                .font(.custom("Poppins-Regular", fixedSize: 16))
+                .foregroundColor(Color(Constants.Colors.orange))
+                .opacity(self.showQuote ? 1 : 0)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+// MARK: - Floating Action Button
+
+private struct FloatingActionButton: View {
+    let showAddButton: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: self.action) {
+            Image(systemName: "plus")
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(.white)
+                .frame(width: 56, height: 56)
+                .background(Color(Constants.Colors.orange))
+                .clipShape(Circle())
+                .shadow(
+                    color: Color(Constants.Colors.orange).opacity(0.3),
+                    radius: 4,
+                    y: 2)
+        }
+        .scaleEffect(self.showAddButton ? 1 : 0, anchor: .center)
+        .animation(
+            .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
+            value: self.showAddButton)
+    }
+}
+
 struct MainView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var profileImage: UIImage?
@@ -13,6 +81,7 @@ struct MainView: View {
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     @StateObject private var viewModel = QuoteViewModel()
+
     // animation states
     @State private var showHeader = false
     @State private var showQuote = false
@@ -44,53 +113,24 @@ struct MainView: View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
-                    // Header Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("HELLO " + self.authViewModel.currentUserName
-                                .uppercased(with: .autoupdatingCurrent) + "!")
-                                .font(.custom("Poppins-SemiBold", fixedSize: 32))
-                                .foregroundColor(Color(UIColor.color.darkPurple))
-                            Spacer()
-                            NavigationLink(destination: ProfileView().environmentObject(self.notesViewModel)
-                                .environmentObject(self.authViewModel))
-                            {
-                                if let profileImage = profileImage {
-                                    Image(uiImage: profileImage)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 44, height: 44)
-                                        .clipShape(Circle())
-                                } else {
-                                    Image(systemName: "person.circle")
-                                        .font(.title2)
-                                        .foregroundColor(Color(UIColor.color.darkPurple))
-                                }
-                            }
+                    HeaderSection(
+                        userName: self.authViewModel.currentUserName,
+                        profileImage: self.profileImage,
+                        quote: self.viewModel.quote,
+                        showHeader: self.showHeader,
+                        showQuote: self.showQuote)
+                        .onAppear {
+                            self.viewModel.fetchQuote()
                         }
-                        .opacity(self.showHeader ? 1 : 0)
 
-                        Text(self.viewModel.quote)
-                            .font(.custom("Poppins-Regular", fixedSize: 16))
-                            .foregroundColor(Color(UIColor.color.orange))
-                            .opacity(self.showQuote ? 1 : 0)
-                            .onAppear {
-                                self.viewModel.fetchQuote()
-                            }
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                    // Weekly Overview Section
                     WeeklyOverviewSection()
                         .opacity(self.showWeekly ? 1 : 0)
                         .padding(.horizontal)
 
-                    // Notes Section
                     VStack(alignment: .leading, spacing: 16) {
                         Text("MY NOTES")
                             .font(.custom("Poppins-SemiBold", fixedSize: 32))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
 
@@ -99,34 +139,17 @@ struct MainView: View {
                     .opacity(self.showNotes ? 1 : 0)
                 }
             }
-            .background(Constants.Colors.backgroundColor)
+            .background(Color(Constants.Colors.backgroundColor))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .overlay(
                 GeometryReader { geometry in
-                    Group {
-                        Button(action: {
-                            self.showAddNote = true
-                        }) {
-                            Image(systemName: "plus")
-                                .font(.system(size: 24, weight: .medium))
-                                .foregroundColor(.white)
-                                .frame(width: 56, height: 56)
-                                .background(Color(UIColor.color.orange))
-                                .clipShape(Circle())
-                                .shadow(
-                                    color: Color(UIColor.color.orange).opacity(0.3),
-                                    radius: 4,
-                                    y: 2)
-                        }
-                        .offset(
-                            x: geometry.size.width - 85,
-                            y: geometry.size.height - 65)
-                        .scaleEffect(self.showAddButton ? 1 : 0, anchor: .center)
-                        .animation(
-                            .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
-                            value: self.showAddButton)
+                    FloatingActionButton(showAddButton: self.showAddButton) {
+                        self.showAddNote = true
                     }
+                    .offset(
+                        x: geometry.size.width - 85,
+                        y: geometry.size.height - 65)
                 })
             .sheet(isPresented: self.$showAddNote) {
                 AddNoteView(viewModel: self.notesViewModel)

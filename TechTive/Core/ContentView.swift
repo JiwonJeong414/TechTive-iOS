@@ -36,8 +36,3 @@ struct ContentView: View {
         .enableInjection()
     }
 }
-
-#Preview {
-    ContentView()
-        .environmentObject(AuthViewModel())
-}

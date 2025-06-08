@@ -289,8 +289,7 @@
 				2969CCEF2DF56BFB00B3206A /* ViewModels */,
 				29619AF62D38F62600EC77D9 /* GoogleService-Info.plist */,
 				29520C1C2CFA7A0200E0047E /* Info.plist */,
-				2978DF992CF5159D00013C36 /* App */,
-				2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */,
+				2978DF992CF5159D00013C36 /* Core */,
 			);
 			path = TechTive;
 			sourceTree = "<group>";
@@ -320,12 +319,13 @@
 			path = TechTiveUITests;
 			sourceTree = "<group>";
 		};
-		2978DF992CF5159D00013C36 /* App */ = {
+		2978DF992CF5159D00013C36 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */,
 				2978DF712CF4366C00013C36 /* ContentView.swift */,
 			);
-			path = App;
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -401,7 +401,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					2978DF6B2CF4366C00013C36 = {
 						CreatedOnToolsVersion = 15.4;
@@ -664,7 +664,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = WYL556DMZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -702,7 +702,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
-				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = WYL556DMZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -736,7 +736,6 @@
 		2978DF942CF4366D00013C36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -755,7 +754,6 @@
 		2978DF952CF4366D00013C36 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -774,7 +772,6 @@
 		2978DF972CF4366D00013C36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -791,7 +788,6 @@
 		2978DF982CF4366D00013C36 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;

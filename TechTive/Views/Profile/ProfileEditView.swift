@@ -98,7 +98,7 @@ struct ProfileEditView: View {
 
             Spacer()
         }
-        .background(Color(Constants.Colors.backgroundColor)).ignoresSafeArea();)
+        .background(Color(Constants.Colors.backgroundColor)).ignoresSafeArea()
         .alert(isPresented: self.$showSuccessMessage) {
             Alert(
                 title: Text("Success"),
