@@ -223,7 +223,3 @@ struct WeeklyRiddleTextFieldStyle: TextFieldStyle {
                     .stroke(Color.black.opacity(0.1), lineWidth: 1))
     }
 }
-
-#Preview {
-    WeeklyOverviewSection()
-}

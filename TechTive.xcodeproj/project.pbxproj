@@ -29,13 +29,14 @@
 		2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD0F2DF56DD300B3206A /* WeeklyOverviewSection.swift */; };
 		2969CD122DF56DDF00B3206A /* AuthenticationFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD112DF56DDF00B3206A /* AuthenticationFlow.swift */; };
 		2969CD142DF56DE900B3206A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD132DF56DE900B3206A /* LoginView.swift */; };
-		2969CD162DF56DFD00B3206A /* AddNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD152DF56DFD00B3206A /* AddNoteView.swift */; };
+		2969CD162DF56DFD00B3206A /* AddNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD152DF56DFD00B3206A /* AddNotesView.swift */; };
 		2969CD182DF56E0500B3206A /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD172DF56E0500B3206A /* MainView.swift */; };
 		2969CD222DF56E1B00B3206A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD212DF56E1B00B3206A /* ProfileView.swift */; };
 		2969CD232DF56E1B00B3206A /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD1F2DF56E1B00B3206A /* ProfileEditView.swift */; };
 		2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD252DF56E2000B3206A /* SignUpView.swift */; };
 		2969CD302DF6115200B3206A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD2F2DF6115100B3206A /* Constants.swift */; };
 		2969CD332DF6116700B3206A /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD322DF6116300B3206A /* DummyData.swift */; };
+		2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD342DF64E7100B3206A /* AddNotesViewModel.swift */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -89,13 +90,14 @@
 		2969CD0F2DF56DD300B3206A /* WeeklyOverviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyOverviewSection.swift; sourceTree = "<group>"; };
 		2969CD112DF56DDF00B3206A /* AuthenticationFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFlow.swift; sourceTree = "<group>"; };
 		2969CD132DF56DE900B3206A /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		2969CD152DF56DFD00B3206A /* AddNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteView.swift; sourceTree = "<group>"; };
+		2969CD152DF56DFD00B3206A /* AddNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesView.swift; sourceTree = "<group>"; };
 		2969CD172DF56E0500B3206A /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		2969CD1F2DF56E1B00B3206A /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		2969CD212DF56E1B00B3206A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2969CD252DF56E2000B3206A /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		2969CD2F2DF6115100B3206A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2969CD322DF6116300B3206A /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
+		2969CD342DF64E7100B3206A /* AddNotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesViewModel.swift; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 		2969CCEF2DF56BFB00B3206A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				2969CD342DF64E7100B3206A /* AddNotesViewModel.swift */,
 				2969CCF82DF56C7300B3206A /* SignUpViewModel.swift */,
 				2969CCF02DF56C5800B3206A /* AuthViewModel.swift */,
 				2969CCF22DF56C6400B3206A /* LoginViewModel.swift */,
@@ -203,7 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				2969CD172DF56E0500B3206A /* MainView.swift */,
-				2969CD152DF56DFD00B3206A /* AddNoteView.swift */,
+				2969CD152DF56DFD00B3206A /* AddNotesView.swift */,
 				2969CD0F2DF56DD300B3206A /* WeeklyOverviewSection.swift */,
 				2969CD092DF56DC900B3206A /* NoteCard.swift */,
 				2969CD0A2DF56DC900B3206A /* NotesFeedSection.swift */,
@@ -488,6 +491,7 @@
 				2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */,
 				2969CD332DF6116700B3206A /* DummyData.swift in Sources */,
 				2969CD142DF56DE900B3206A /* LoginView.swift in Sources */,
+				2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */,
 				2969CD0C2DF56DC900B3206A /* SpiderGraphView.swift in Sources */,
 				2969CD0D2DF56DC900B3206A /* NoteCard.swift in Sources */,
 				2969CD122DF56DDF00B3206A /* AuthenticationFlow.swift in Sources */,
@@ -497,7 +501,7 @@
 				2969CD232DF56E1B00B3206A /* ProfileEditView.swift in Sources */,
 				2969CCF52DF56C6A00B3206A /* NotesViewModel.swift in Sources */,
 				2969CD082DF56DAF00B3206A /* FormattedTextView.swift in Sources */,
-				2969CD162DF56DFD00B3206A /* AddNoteView.swift in Sources */,
+				2969CD162DF56DFD00B3206A /* AddNotesView.swift in Sources */,
 				2969CD182DF56E0500B3206A /* MainView.swift in Sources */,
 				2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */,
 				2969CCF12DF56C5800B3206A /* AuthViewModel.swift in Sources */,

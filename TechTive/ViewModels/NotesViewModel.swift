@@ -221,6 +221,38 @@ class NotesViewModel: ObservableObject {
 
         return currentStreak
     }
+
+    @MainActor func postNote(content: String, formatting: [Note.TextFormatting]) async throws {
+        guard let authViewModel = authViewModel else { throw URLError(.userAuthenticationRequired) }
+        let url = "http://34.21.62.193/api/posts/"
+        let token = try await authViewModel.getAuthToken()
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(token)"
+        ]
+        let parameters: [String: Any] = [
+            "content": content,
+            "formatting": formatting.map { formatting in
+                [
+                    "type": formatting.type.rawValue,
+                    "range": [
+                        "location": formatting.range.location,
+                        "length": formatting.range.length
+                    ]
+                ]
+            }
+        ]
+        _ = try await AF.request(
+            url,
+            method: .post,
+            parameters: parameters,
+            encoding: JSONEncoding.default,
+            headers: headers)
+            .serializingDecodable(CreateNoteResponse.self)
+            .value
+
+        await self.fetchNotes()
+    }
 }
 
 extension Date {

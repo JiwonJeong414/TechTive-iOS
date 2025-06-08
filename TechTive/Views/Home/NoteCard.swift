@@ -1,9 +1,3 @@
-//
-//  NoteCard.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/25/24.
-//
 import SwiftUI
 
 struct NoteCard: View {

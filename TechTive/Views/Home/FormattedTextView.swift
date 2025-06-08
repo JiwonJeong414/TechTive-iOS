@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct FormattedTextView: UIViewRepresentable {
     @Binding var attributedText: NSAttributedString
