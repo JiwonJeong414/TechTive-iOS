@@ -41,7 +41,7 @@ struct MainView: View {
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .overlay(self.floatingActionButton)
                 .sheet(isPresented: self.$showAddNote) {
-                    AddNoteView()
+                    AddNotesView()
                         .environmentObject(self.notesViewModel)
                         .environmentObject(self.authViewModel)
                 }
@@ -64,14 +64,12 @@ struct MainView: View {
     }
 
     private var headerSection: some View {
-        VStack {
-            HStack {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .center) {
                 Text("HELLO " + self.authViewModel.currentUserName.uppercased(with: .autoupdatingCurrent) + "!")
                     .font(.custom("Poppins-SemiBold", fixedSize: 32))
                     .foregroundColor(Color(Constants.Colors.darkPurple))
-
                 Spacer()
-
                 NavigationLink(destination: ProfileView()
                     .environmentObject(self.authViewModel)
                     .environmentObject(self.notesViewModel))
@@ -95,8 +93,10 @@ struct MainView: View {
                 .font(.custom("Poppins-Regular", fixedSize: 16))
                 .foregroundColor(Color(Constants.Colors.orange))
                 .opacity(self.showQuote ? 1 : 0)
+                .padding(.top, 2)
         }
-        .padding()
+        .padding(.horizontal)
+        .padding(.top, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
             self.viewModel.fetchQuote()

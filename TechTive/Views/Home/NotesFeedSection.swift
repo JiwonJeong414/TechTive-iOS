@@ -42,7 +42,7 @@ struct NotesFeedSection: View {
         }
         .padding(.vertical, 10)
         .sheet(item: self.$selectedNote) { note in
-            AddNoteView(note: note)
+            AddNotesView(note: note)
                 .environmentObject(self.notesViewModel)
                 .environmentObject(self.authViewModel)
         }

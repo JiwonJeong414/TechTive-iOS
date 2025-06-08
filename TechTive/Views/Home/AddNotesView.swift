@@ -29,7 +29,28 @@ struct AddNotesView: View {
             .background(Color(Constants.Colors.lightYellow).opacity(0.3))
             .navigationTitle(self.viewModel.isEditing ? "Edit Note" : "New Note")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { self.toolbarSection }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        self.dismiss()
+                    }
+                    .foregroundColor(Color(Constants.Colors.orange))
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(self.viewModel.isEditing ? "Save" : "Post") {
+                        self.viewModel.isLoading = true
+                        self.viewModel.error = nil
+                        Task {
+                            await self.viewModel.postNote(notesViewModel: self.notesViewModel) {
+                                self.dismiss()
+                            }
+                            self.viewModel.isLoading = false
+                        }
+                    }
+                    .foregroundColor(Color(Constants.Colors.orange))
+                    .disabled(self.viewModel.isLoading || self.viewModel.attributedText.string.isEmpty)
+                }
+            }
             .overlay(self.loadingOverlay)
         }
     }
@@ -70,29 +91,6 @@ struct AddNotesView: View {
             .background(Color(Constants.Colors.lightYellow))
             .cornerRadius(12)
             .padding()
-    }
-
-    private var toolbarSection: some ToolbarContent {
-        ToolbarItemGroup(placement: .navigationBarLeading) {
-            Button("Cancel") {
-                self.dismiss()
-            }
-            .foregroundColor(Color(Constants.Colors.orange))
-        }
-        ToolbarItemGroup(placement: .navigationBarTrailing) {
-            Button(self.viewModel.isEditing ? "Save" : "Post") {
-                self.viewModel.isLoading = true
-                self.viewModel.error = nil
-                Task {
-                    await self.viewModel.postNote(notesViewModel: self.notesViewModel) {
-                        self.dismiss()
-                    }
-                    self.viewModel.isLoading = false
-                }
-            }
-            .foregroundColor(Color(Constants.Colors.orange))
-            .disabled(self.viewModel.isLoading || self.viewModel.attributedText.string.isEmpty)
-        }
     }
 
     private var loadingOverlay: some View {
