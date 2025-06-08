@@ -9,22 +9,23 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var profileImage: UIImage?
-    
+
     @StateObject private var notesViewModel = NotesViewModel()
     @State private var showAddNote = false
     @StateObject private var viewModel = QuoteViewModel()
-    //animation states
+    // animation states
     @State private var showHeader = false
     @State private var showQuote = false
     @State private var showWeekly = false
     @State private var showNotes = false
     @State private var showAddButton = false
-    
+
     private func loadProfilePicture() {
         Task {
-            await authViewModel.fetchProfilePicture()
+            await self.authViewModel.fetchProfilePicture()
             if let urlString = authViewModel.profilePictureURL,
-               let url = URL(string: urlString) {
+               let url = URL(string: urlString)
+            {
                 do {
                     let (data, _) = try await URLSession.shared.data(from: url)
                     if let image = UIImage(data: data) {
@@ -38,19 +39,22 @@ struct MainView: View {
             }
         }
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 20) {
                     // Header Section
                     VStack(alignment: .leading, spacing: 8) {
-                        HStack{
-                            Text("HELLO " + authViewModel.currentUserName.uppercased(with: .autoupdatingCurrent) + "!")
+                        HStack {
+                            Text("HELLO " + self.authViewModel.currentUserName
+                                .uppercased(with: .autoupdatingCurrent) + "!")
                                 .font(.custom("Poppins-SemiBold", fixedSize: 32))
                                 .foregroundColor(Color(UIColor.color.darkPurple))
                             Spacer()
-                            NavigationLink(destination: ProfileView().environmentObject(notesViewModel).environmentObject(authViewModel)) {
+                            NavigationLink(destination: ProfileView().environmentObject(self.notesViewModel)
+                                .environmentObject(self.authViewModel))
+                            {
                                 if let profileImage = profileImage {
                                     Image(uiImage: profileImage)
                                         .resizable()
@@ -64,24 +68,24 @@ struct MainView: View {
                                 }
                             }
                         }
-                        .opacity(showHeader ? 1 : 0)
-                        
-                        Text(viewModel.quote)
+                        .opacity(self.showHeader ? 1 : 0)
+
+                        Text(self.viewModel.quote)
                             .font(.custom("Poppins-Regular", fixedSize: 16))
                             .foregroundColor(Color(UIColor.color.orange))
-                            .opacity(showQuote ? 1 : 0)
+                            .opacity(self.showQuote ? 1 : 0)
                             .onAppear {
-                                viewModel.fetchQuote()
+                                self.viewModel.fetchQuote()
                             }
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    
+
                     // Weekly Overview Section
                     WeeklyOverviewSection()
-                        .opacity(showWeekly ? 1 : 0)
+                        .opacity(self.showWeekly ? 1 : 0)
                         .padding(.horizontal)
-                    
+
                     // Notes Section
                     VStack(alignment: .leading, spacing: 16) {
                         Text("MY NOTES")
@@ -89,10 +93,10 @@ struct MainView: View {
                             .foregroundColor(Color(UIColor.color.darkPurple))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
-                        
-                        NotesFeedSection(viewModel: notesViewModel)
+
+                        NotesFeedSection(viewModel: self.notesViewModel)
                     }
-                    .opacity(showNotes ? 1 : 0)
+                    .opacity(self.showNotes ? 1 : 0)
                 }
             }
             .background(Color(UIColor.color.backgroundColor))
@@ -102,7 +106,7 @@ struct MainView: View {
                 GeometryReader { geometry in
                     Group {
                         Button(action: {
-                            showAddNote = true
+                            self.showAddNote = true
                         }) {
                             Image(systemName: "plus")
                                 .font(.system(size: 24, weight: .medium))
@@ -110,52 +114,51 @@ struct MainView: View {
                                 .frame(width: 56, height: 56)
                                 .background(Color(UIColor.color.orange))
                                 .clipShape(Circle())
-                                .shadow(color: Color(UIColor.color.orange).opacity(0.3),
-                                        radius: 4, y: 2)
+                                .shadow(
+                                    color: Color(UIColor.color.orange).opacity(0.3),
+                                    radius: 4,
+                                    y: 2)
                         }
                         .offset(
                             x: geometry.size.width - 85,
-                            y: geometry.size.height - 65
-                        )
-                        .scaleEffect(showAddButton ? 1 : 0, anchor: .center)
+                            y: geometry.size.height - 65)
+                        .scaleEffect(self.showAddButton ? 1 : 0, anchor: .center)
                         .animation(
                             .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
-                            value: showAddButton
-                        )
+                            value: self.showAddButton)
                     }
-                }
-            )
-            .sheet(isPresented: $showAddNote) {
-                AddNoteView(viewModel: notesViewModel)
-                    .environmentObject(authViewModel)
+                })
+            .sheet(isPresented: self.$showAddNote) {
+                AddNoteView(viewModel: self.notesViewModel)
+                    .environmentObject(self.authViewModel)
             }
             .onAppear {
-                loadProfilePicture()
+                self.loadProfilePicture()
                 // Trigger animations with delays
                 withAnimation(.easeIn(duration: 0.6)) {
-                    showHeader = true
+                    self.showHeader = true
                 }
-                
+
                 withAnimation(.easeIn(duration: 0.6).delay(0.3)) {
-                    showQuote = true
+                    self.showQuote = true
                 }
-                
+
                 withAnimation(.easeIn(duration: 0.6).delay(0.6)) {
-                    showWeekly = true
+                    self.showWeekly = true
                 }
-                
+
                 withAnimation(.easeIn(duration: 0.6).delay(0.9)) {
-                    showNotes = true
+                    self.showNotes = true
                 }
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(1.2)) {
-                    showAddButton = true
+                    self.showAddButton = true
                 }
             }
         }
         .onAppear {
-            notesViewModel.authViewModel = authViewModel
+            self.notesViewModel.authViewModel = self.authViewModel
             Task {
-                await notesViewModel.fetchNotes()
+                await self.notesViewModel.fetchNotes()
             }
         }
     }

@@ -20,5 +20,14 @@
 		<string>Poppins-Regular.ttf</string>
 		<string>Poppins-SemiBold.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.62152510090-qqlah33fo64t8sujpcft1o6tsrjoca9a</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

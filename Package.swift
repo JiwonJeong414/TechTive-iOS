@@ -10,7 +10,7 @@ let package = Package(
     products: [
         .library(
             name: "TechTive",
-            targets: ["TechTive"]),
+            targets: ["TechTive"])
     ],
     dependencies: [
         .package(url: "https://github.com/krzysztofzablocki/Inject.git", from: "1.2.0")
@@ -18,6 +18,5 @@ let package = Package(
     targets: [
         .target(
             name: "TechTive",
-            dependencies: ["Inject"]),
-    ]
-) 
+            dependencies: ["Inject"])
+    ])

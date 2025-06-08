@@ -1,14 +1,6 @@
-//
-//  TechTiveUITestsLaunchTests.swift
-//  TechTiveUITests
-//
-//  Created by jiwon jeong on 11/24/24.
-//
-
 import XCTest
 
 final class TechTiveUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

@@ -4,25 +4,25 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import SwiftUI
 
 class LoginViewModel: ObservableObject {
-    @Published var email: String = ""
-    @Published var password: String = ""
-    @Published var errorMessage: String = ""
-    @Published var isLoading: Bool = false
-    @Published var navigateToHome: Bool = false
-    @Published var showError: Bool = false
+    @Published var email = ""
+    @Published var password = ""
+    @Published var errorMessage = ""
+    @Published var isLoading = false
+    @Published var navigateToHome = false
+    @Published var showError = false
     private var authStateListener: AuthStateDidChangeListenerHandle?
-    
+
     private let auth = Auth.auth()
-    
+
     // Check if user is already logged in
     func checkAuthState() {
         // Retain the listener handle to avoid the unused result warning
-        authStateListener = auth.addStateDidChangeListener { [weak self] _, user in
+        self.authStateListener = self.auth.addStateDidChangeListener { [weak self] _, user in
             DispatchQueue.main.async {
                 if user != nil {
                     self?.navigateToHome = true
@@ -32,46 +32,46 @@ class LoginViewModel: ObservableObject {
             }
         }
     }
-    
+
     deinit {
         if let listener = authStateListener {
             auth.removeStateDidChangeListener(listener)
         }
     }
-    
+
     func login() {
-        guard !email.isEmpty else {
-            errorMessage = "Please enter your email"
-            showError = true
+        guard !self.email.isEmpty else {
+            self.errorMessage = "Please enter your email"
+            self.showError = true
             return
         }
-        
-        guard !password.isEmpty else {
-            errorMessage = "Please enter your password"
-            showError = true
+
+        guard !self.password.isEmpty else {
+            self.errorMessage = "Please enter your password"
+            self.showError = true
             return
         }
-        
-        isLoading = true
-        
-        auth.signIn(withEmail: email, password: password) { [weak self] result, error in
+
+        self.isLoading = true
+
+        self.auth.signIn(withEmail: self.email, password: self.password) { [weak self] result, error in
             guard let self = self else { return }
-            
+
             DispatchQueue.main.async {
                 self.isLoading = false
-                
+
                 if let error = error {
                     self.errorMessage = error.localizedDescription
                     self.showError = true
                     return
                 }
-                
+
                 guard let user = result?.user else {
                     self.errorMessage = "Failed to log in"
                     self.showError = true
                     return
                 }
-                
+
                 print("Logged in with: \(user.email ?? "")")
                 self.navigateToHome = true
             }

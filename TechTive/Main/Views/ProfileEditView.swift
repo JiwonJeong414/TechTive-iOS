@@ -1,80 +1,72 @@
-//
-//  ProfileEditView.swift
-//  TechTive
-//
-//  Created by Keya Aggarwal on 02/12/24.
-//
-
-
 import SwiftUI
 
 struct ProfileEditView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notesViewModel: NotesViewModel
-    @State private var newUsername: String = ""
-    @State private var newEmail: String = ""
-    @State private var newPassword: String = ""
-    @State private var confirmPassword: String = ""
-    @State private var showSuccessMessage: Bool = false
-    @State private var errorMessage: String = ""
-    
+    @State private var newUsername = ""
+    @State private var newEmail = ""
+    @State private var newPassword = ""
+    @State private var confirmPassword = ""
+    @State private var showSuccessMessage = false
+    @State private var errorMessage = ""
+
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         VStack {
             Spacer().frame(height: 40)
-            
+
             // Title
             Text("Edit Profile")
                 .font(.custom("Poppins-SemiBold", fixedSize: 32))
                 .foregroundColor(Color(UIColor.color.darkPurple))
                 .padding(.bottom, 20)
-            
+
             // Form
             VStack(spacing: 20) {
                 // Username Field
-                TextField("Change Username", text: $newUsername)
+                TextField("Change Username", text: self.$newUsername)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
                     .font(.custom("Poppins-Regular", size: 16))
-                    .padding(.horizontal,20)
+                    .padding(.horizontal, 20)
                 // Email Field
-                TextField("Change Email", text: $newEmail)
+                TextField("Change Email", text: self.$newEmail)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
                     .font(.custom("Poppins-Regular", size: 16))
                     .keyboardType(.emailAddress)
-                    .padding(.horizontal,20)
-                
+                    .padding(.horizontal, 20)
+
                 // Password Field
-                SecureField("Change Password", text: $newPassword)
+                SecureField("Change Password", text: self.$newPassword)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
                     .font(.custom("Poppins-Regular", size: 16))
-                    .padding(.horizontal,20)
-                
+                    .padding(.horizontal, 20)
+
                 // Confirm Password Field
-                SecureField("Confirm New Password", text: $confirmPassword)
+                SecureField("Confirm New Password", text: self.$confirmPassword)
                     .textFieldStyle(CustomTextFieldStyle())
                     .autocapitalization(.none)
                     .font(.custom("Poppins-Regular", size: 16))
-                    .padding(.horizontal,20)
+                    .padding(.horizontal, 20)
             }
-            
+
             // Error Message
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
+            if !self.errorMessage.isEmpty {
+                Text(self.errorMessage)
                     .foregroundColor(.red)
                     .font(.caption)
                     .padding(.top, 10)
             }
-            
+
             // Buttons
             HStack(spacing: 20) {
                 // Save Changes Button
                 Button(action: {
                     Task {
-                        await handleSaveChanges()
+                        await self.handleSaveChanges()
                     }
                 }) {
                     Text("Save Changes")
@@ -85,12 +77,12 @@ struct ProfileEditView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                
+
                 // Cancel Button
-                
+
                 Button(action: {
-                    resetFields()
-                    presentationMode.wrappedValue.dismiss()
+                    self.resetFields()
+                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Cancel")
                         .frame(maxWidth: .infinity)
@@ -99,23 +91,25 @@ struct ProfileEditView: View {
                         .background(Color(hex: "F3E5F5"))
                         .foregroundColor(.black)
                         .cornerRadius(10)
-                    
                 }
             }
             .padding(.horizontal, 20)
             .padding(.top, 20)
-            
+
             Spacer()
         }
         .background(Color(UIColor.color.backgroundColor).ignoresSafeArea())
-        .alert(isPresented: $showSuccessMessage) {
-            Alert(title: Text("Success"), message: Text("Profile updated successfully!"), dismissButton: .default(Text("OK")))
+        .alert(isPresented: self.$showSuccessMessage) {
+            Alert(
+                title: Text("Success"),
+                message: Text("Profile updated successfully!"),
+                dismissButton: .default(Text("OK")))
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    presentationMode.wrappedValue.dismiss()
+                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack {
                         Image(systemName: "chevron.left")
@@ -128,58 +122,58 @@ struct ProfileEditView: View {
             }
         }
     }
-    
+
     private func handleSaveChanges() async {
         // Validate input fields
-        if newPassword != confirmPassword {
-            errorMessage = "Passwords do not match"
+        if self.newPassword != self.confirmPassword {
+            self.errorMessage = "Passwords do not match"
             return
         }
-        if newEmail.isEmpty && newUsername.isEmpty && newPassword.isEmpty {
-            errorMessage = "Please fill in at least one field"
+        if self.newEmail.isEmpty && self.newUsername.isEmpty && self.newPassword.isEmpty {
+            self.errorMessage = "Please fill in at least one field"
             return
         }
-        
-        errorMessage = ""
-        
+
+        self.errorMessage = ""
+
         // Update user information using AuthViewModel
-        if !newUsername.isEmpty {
-            let (_, error) = await authViewModel.updateUsername(newUsername: newUsername)
+        if !self.newUsername.isEmpty {
+            let (_, error) = await authViewModel.updateUsername(newUsername: self.newUsername)
             if let error = error {
-                errorMessage = error
+                self.errorMessage = error
                 return
             }
         }
 
-        if !newEmail.isEmpty {
+        if !self.newEmail.isEmpty {
             do {
-                try await authViewModel.updateEmail(newEmail: newEmail)
+                try await self.authViewModel.updateEmail(newEmail: self.newEmail)
             } catch {
-                errorMessage = error.localizedDescription
+                self.errorMessage = error.localizedDescription
                 return
             }
         }
 
-        if !newPassword.isEmpty {
+        if !self.newPassword.isEmpty {
             do {
-                try await authViewModel.updatePassword(newPassword: newPassword)
+                try await self.authViewModel.updatePassword(newPassword: self.newPassword)
             } catch {
-                errorMessage = error.localizedDescription
+                self.errorMessage = error.localizedDescription
                 return
             }
         }
 
         // Show success message and reset fields
-        showSuccessMessage = true
-        resetFields()
+        self.showSuccessMessage = true
+        self.resetFields()
     }
-    
+
     private func resetFields() {
-        newUsername = ""
-        newEmail = ""
-        newPassword = ""
-        confirmPassword = ""
-        errorMessage = ""
+        self.newUsername = ""
+        self.newEmail = ""
+        self.newPassword = ""
+        self.confirmPassword = ""
+        self.errorMessage = ""
     }
 }
 

@@ -1,19 +1,11 @@
-//
-//  ProfileEditView 2.swift
-//  TechTive
-//
-//  Created by Keya Aggarwal on 02/12/24.
-//
-
-
 struct ProfileEditView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var newUsername: String = ""
-    @State private var newEmail: String = ""
-    @State private var newPassword: String = ""
-    @State private var confirmPassword: String = ""
-    @State private var showSuccessMessage: Bool = false
-    @State private var errorMessage: String = ""
+    @State private var newUsername = ""
+    @State private var newEmail = ""
+    @State private var newPassword = ""
+    @State private var confirmPassword = ""
+    @State private var showSuccessMessage = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack {
@@ -29,30 +21,30 @@ struct ProfileEditView: View {
             // Form
             VStack(spacing: 20) {
                 // Username Field
-                TextField("New Username", text: $newUsername)
+                TextField("New Username", text: self.$newUsername)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal, 20)
 
                 // Email Field
-                TextField("New Email", text: $newEmail)
+                TextField("New Email", text: self.$newEmail)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal, 20)
                     .keyboardType(.emailAddress)
 
                 // Password Field
-                SecureField("New Password", text: $newPassword)
+                SecureField("New Password", text: self.$newPassword)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal, 20)
 
                 // Confirm Password Field
-                SecureField("Confirm Password", text: $confirmPassword)
+                SecureField("Confirm Password", text: self.$confirmPassword)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal, 20)
             }
 
             // Error Message
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
+            if !self.errorMessage.isEmpty {
+                Text(self.errorMessage)
                     .foregroundColor(.red)
                     .font(.caption)
                     .padding(.top, 10)
@@ -62,7 +54,7 @@ struct ProfileEditView: View {
             HStack(spacing: 20) {
                 // Save Changes Button
                 Button(action: {
-                    handleSaveChanges()
+                    self.handleSaveChanges()
                 }) {
                     Text("Save Changes")
                         .frame(maxWidth: .infinity)
@@ -74,7 +66,7 @@ struct ProfileEditView: View {
 
                 // Cancel Button
                 Button(action: {
-                    resetFields()
+                    self.resetFields()
                 }) {
                     Text("Cancel")
                         .frame(maxWidth: .infinity)
@@ -90,49 +82,52 @@ struct ProfileEditView: View {
             Spacer()
         }
         .background(Color(hex: "FFF3E0").ignoresSafeArea())
-        .alert(isPresented: $showSuccessMessage) {
-            Alert(title: Text("Success"), message: Text("Profile updated successfully!"), dismissButton: .default(Text("OK")))
+        .alert(isPresented: self.$showSuccessMessage) {
+            Alert(
+                title: Text("Success"),
+                message: Text("Profile updated successfully!"),
+                dismissButton: .default(Text("OK")))
         }
     }
 
     private func handleSaveChanges() {
         // Validate input fields
-        if newPassword != confirmPassword {
-            errorMessage = "Passwords do not match"
+        if self.newPassword != self.confirmPassword {
+            self.errorMessage = "Passwords do not match"
             return
         }
-        if newEmail.isEmpty && newUsername.isEmpty && newPassword.isEmpty {
-            errorMessage = "Please fill in at least one field"
+        if self.newEmail.isEmpty && self.newUsername.isEmpty && self.newPassword.isEmpty {
+            self.errorMessage = "Please fill in at least one field"
             return
         }
 
-        errorMessage = ""
+        self.errorMessage = ""
 
         // Update user information using AuthViewModel
-        if !newUsername.isEmpty {
-            authViewModel.updateUsername(newUsername: newUsername) { success, error in
+        if !self.newUsername.isEmpty {
+            self.authViewModel.updateUsername(newUsername: self.newUsername) { _, error in
                 if let error = error {
                     self.errorMessage = error
                 }
             }
         }
-        if !newEmail.isEmpty {
-            authViewModel.updateEmail(newEmail: newEmail)
+        if !self.newEmail.isEmpty {
+            self.authViewModel.updateEmail(newEmail: self.newEmail)
         }
-        if !newPassword.isEmpty {
-            authViewModel.updatePassword(newPassword: newPassword)
+        if !self.newPassword.isEmpty {
+            self.authViewModel.updatePassword(newPassword: self.newPassword)
         }
 
         // Show success message and reset fields
-        showSuccessMessage = true
-        resetFields()
+        self.showSuccessMessage = true
+        self.resetFields()
     }
 
     private func resetFields() {
-        newUsername = ""
-        newEmail = ""
-        newPassword = ""
-        confirmPassword = ""
-        errorMessage = ""
+        self.newUsername = ""
+        self.newEmail = ""
+        self.newPassword = ""
+        self.confirmPassword = ""
+        self.errorMessage = ""
     }
 }

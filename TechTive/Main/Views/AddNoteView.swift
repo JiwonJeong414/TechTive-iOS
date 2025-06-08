@@ -1,19 +1,12 @@
-//
-//  AddNoteView.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/25/24.
-//
-
-import SwiftUI
 import Alamofire
+import SwiftUI
 
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
 
     @State private var attributedText: NSAttributedString
-    @State private var selectedRange: NSRange = NSRange(location: 0, length: 0)
+    @State private var selectedRange = NSRange(location: 0, length: 0)
     @State private var isLoading = false
     @State private var error: String?
     @ObservedObject var viewModel: NotesViewModel
@@ -27,11 +20,15 @@ struct AddNoteView: View {
 
         if let note = note {
             let normalizedText = NSMutableAttributedString(attributedString: note.toAttributedString())
-            normalizedText.enumerateAttributes(in: NSRange(location: 0, length: normalizedText.length), options: []) { attributes, range, _ in
-                if attributes[.font] == nil {
-                    normalizedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17), range: range)
+            normalizedText
+                .enumerateAttributes(
+                    in: NSRange(location: 0, length: normalizedText.length),
+                    options: [])
+                { attributes, range, _ in
+                    if attributes[.font] == nil {
+                        normalizedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 17), range: range)
+                    }
                 }
-            }
             _attributedText = State(initialValue: normalizedText)
         } else {
             let defaultText = NSMutableAttributedString(string: "", attributes: [.font: UIFont.systemFont(ofSize: 17)])
@@ -52,25 +49,25 @@ struct AddNoteView: View {
         ]
 
         var formattingArray: [Note.TextFormatting] = []
-        attributedText.enumerateAttributes(in: NSRange(location: 0, length: attributedText.length)) { attributes, range, _ in
+        self.attributedText.enumerateAttributes(in: NSRange(
+            location: 0,
+            length: self.attributedText.length))
+        { attributes, range, _ in
             if let font = attributes[.font] as? UIFont {
                 if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
                     formattingArray.append(Note.TextFormatting(
                         type: .bold,
-                        range: .init(location: range.location, length: range.length)
-                    ))
+                        range: .init(location: range.location, length: range.length)))
                 }
                 if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
                     formattingArray.append(Note.TextFormatting(
                         type: .italic,
-                        range: .init(location: range.location, length: range.length)
-                    ))
+                        range: .init(location: range.location, length: range.length)))
                 }
                 if font.pointSize >= 24 {
                     formattingArray.append(Note.TextFormatting(
                         type: .header,
-                        range: .init(location: range.location, length: range.length)
-                    ))
+                        range: .init(location: range.location, length: range.length)))
                 }
             }
         }
@@ -91,7 +88,8 @@ struct AddNoteView: View {
         print("📍 DEBUG - Request URL: \(url)")
         print("📍 DEBUG - Request Headers: \(headers)")
 
-        let _ = try await AF.request(url,
+        let _ = try await AF.request(
+            url,
             method: .post,
             parameters: parameters,
             encoding: JSONEncoding.default,
@@ -100,26 +98,26 @@ struct AddNoteView: View {
             .value
 
         await MainActor.run {
-            dismiss()
+            self.dismiss()
         }
 
         try? await Task.sleep(for: .seconds(0.5))
-        await viewModel.fetchNotes()
+        await self.viewModel.fetchNotes()
     }
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
-                    Button(action: { toggleHeader() }) {
+                    Button(action: { self.toggleHeader() }) {
                         Image(systemName: "textformat.size.larger")
                             .foregroundColor(Color(UIColor.color.orange))
                     }
-                    Button(action: { toggleBold() }) {
+                    Button(action: { self.toggleBold() }) {
                         Image(systemName: "bold")
                             .foregroundColor(Color(UIColor.color.orange))
                     }
-                    Button(action: { toggleItalic() }) {
+                    Button(action: { self.toggleItalic() }) {
                         Image(systemName: "italic")
                             .foregroundColor(Color(UIColor.color.orange))
                     }
@@ -136,7 +134,7 @@ struct AddNoteView: View {
                         .padding()
                 }
 
-                FormattedTextView(attributedText: $attributedText, selectedRange: $selectedRange)
+                FormattedTextView(attributedText: self.$attributedText, selectedRange: self.$selectedRange)
                     .background(Color(UIColor.color.lightYellow))
                     .cornerRadius(12)
                     .padding()
@@ -147,35 +145,35 @@ struct AddNoteView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
-                        dismiss()
+                        self.dismiss()
                     }
                     .foregroundColor(Color(UIColor.color.orange))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
-                        isLoading = true
-                        error = nil
+                        self.isLoading = true
+                        self.error = nil
 
                         Task {
                             do {
-                                try await postNote()
+                                try await self.postNote()
                                 await MainActor.run {
-                                    dismiss()
+                                    self.dismiss()
                                 }
                             } catch {
                                 await MainActor.run {
                                     self.error = "Failed to post note: \(error.localizedDescription)"
-                                    isLoading = false
+                                    self.isLoading = false
                                 }
                             }
                         }
                     }
                     .foregroundColor(Color(UIColor.color.orange))
-                    .disabled(isLoading || attributedText.string.isEmpty)
+                    .disabled(self.isLoading || self.attributedText.string.isEmpty)
                 }
             }
             .overlay {
-                if isLoading {
+                if self.isLoading {
                     ProgressView()
                         .scaleEffect(1.5)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -186,7 +184,7 @@ struct AddNoteView: View {
     }
 
     private func toggleHeader() {
-        guard selectedRange.length > 0 else { return }
+        guard self.selectedRange.length > 0 else { return }
 
         let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
 
@@ -196,15 +194,15 @@ struct AddNoteView: View {
         }
 
         let newFont = isCurrentlyHeader
-        ? UIFont.systemFont(ofSize: 17)
-        : UIFont.systemFont(ofSize: 24, weight: .bold)
+            ? UIFont.systemFont(ofSize: 17)
+            : UIFont.systemFont(ofSize: 24, weight: .bold)
 
-        mutableAttrString.addAttribute(.font, value: newFont, range: selectedRange)
-        attributedText = mutableAttrString
+        mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+        self.attributedText = mutableAttrString
     }
 
     private func toggleBold() {
-        guard selectedRange.length > 0 else { return }
+        guard self.selectedRange.length > 0 else { return }
 
         let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
 
@@ -214,15 +212,15 @@ struct AddNoteView: View {
         }
 
         let newFont = isCurrentlyBold
-        ? UIFont.systemFont(ofSize: 17)
-        : UIFont.boldSystemFont(ofSize: 17)
+            ? UIFont.systemFont(ofSize: 17)
+            : UIFont.boldSystemFont(ofSize: 17)
 
-        mutableAttrString.addAttribute(.font, value: newFont, range: selectedRange)
-        attributedText = mutableAttrString
+        mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+        self.attributedText = mutableAttrString
     }
 
     private func toggleItalic() {
-        guard selectedRange.length > 0 else { return }
+        guard self.selectedRange.length > 0 else { return }
 
         let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
 
@@ -232,11 +230,11 @@ struct AddNoteView: View {
         }
 
         let newFont = isCurrentlyItalic
-        ? UIFont.systemFont(ofSize: 17)
-        : UIFont.italicSystemFont(ofSize: 17)
+            ? UIFont.systemFont(ofSize: 17)
+            : UIFont.italicSystemFont(ofSize: 17)
 
-        mutableAttrString.addAttribute(.font, value: newFont, range: selectedRange)
-        attributedText = mutableAttrString
+        mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+        self.attributedText = mutableAttrString
     }
 }
 

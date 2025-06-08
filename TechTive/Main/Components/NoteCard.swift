@@ -14,52 +14,51 @@ struct NoteCard: View {
     @State private var offset: CGFloat = 0
     @State private var showingGraph = false
     @State private var hasAppeared = false
-    
+
     private let animationSpeed: CGFloat = 2.0
     private let startingOffset: CGFloat = 0
-    
+
     private var isEmotionLoading: Bool {
-        return note.angerValue == 0 &&
-               note.disgustValue == 0 &&
-               note.fearValue == 0 &&
-               note.joyValue == 0 &&
-               note.neutralValue == 0 &&
-               note.sadnessValue == 0 &&
-               note.surpriseValue == 0
+        return self.note.angerValue == 0 &&
+            self.note.disgustValue == 0 &&
+            self.note.fearValue == 0 &&
+            self.note.joyValue == 0 &&
+            self.note.neutralValue == 0 &&
+            self.note.sadnessValue == 0 &&
+            self.note.surpriseValue == 0
     }
-    
+
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "M/d/yyyy"
         return formatter
     }()
-    
+
     var body: some View {
         GeometryReader { mainGeo in
             HStack(spacing: 0) {
                 TrapezoidShape()
-                    .fill(backgroundForIndex(index))
+                    .fill(self.backgroundForIndex(self.index))
                     .frame(width: 40, height: 10)
                     .overlay(
                         GeometryReader { geometry in
                             Color.clear
                                 .onAppear {
                                     // Set initial position
-                                    trapezoidPosition = geometry.frame(in: .global).minY
+                                    self.trapezoidPosition = geometry.frame(in: .global).minY
                                 }
-                                .onChange(of: geometry.frame(in: .global).minY) { oldValue, newValue in
+                                .onChange(of: geometry.frame(in: .global).minY) { _, newValue in
                                     withAnimation(.easeInOut(duration: 0.3)) {
-                                        trapezoidPosition = newValue
+                                        self.trapezoidPosition = newValue
                                     }
                                 }
-                        }
-                    )
-                    .offset(x: calculateOffset(), y: -47)
-                    .id("trapezoid-\(note.id)") // Add unique ID for updates
-                
+                        })
+                    .offset(x: self.calculateOffset(), y: -47)
+                    .id("trapezoid-\(self.note.id)") // Add unique ID for updates
+
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(note.content)
+                        Text(self.note.content)
                             .font(.custom("CourierPrime-Regular", fixedSize: 18))
                             .foregroundColor(Color(UIColor.color.orange))
                             .lineLimit(1)
@@ -67,22 +66,22 @@ struct NoteCard: View {
                         Image(systemName: "chevron.right")
                             .foregroundColor(Color(UIColor.color.orange))
                     }
-                    
+
                     HStack {
-                        Text(dateFormatter.string(from: note.timestamp))
+                        Text(self.dateFormatter.string(from: self.note.timestamp))
                             .font(.custom("Poppins-Regular", fixedSize: 14))
                             .foregroundColor(Color(UIColor.color.darkPurple))
-                        
+
                         Spacer()
-                        
+
                         Button(action: {
-                            showingGraph = true
+                            self.showingGraph = true
                         }) {
                             HStack(spacing: 4) {
-                                Text(isEmotionLoading ? "Loading" : note.dominantEmotion.emotion)
+                                Text(self.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
                                     .font(.custom("Poppins-Regular", fixedSize: 12))
                                     .foregroundColor(Color(UIColor.color.darkPurple))
-                                if isEmotionLoading {
+                                if self.isEmotionLoading {
                                     Image(systemName: "clock")
                                         .font(.system(size: 10))
                                         .foregroundColor(Color(UIColor.color.darkPurple))
@@ -92,8 +91,7 @@ struct NoteCard: View {
                             .padding(.horizontal, 8)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(UIColor.color.darkPurple).opacity(0.1))
-                            )
+                                    .fill(Color(UIColor.color.darkPurple).opacity(0.1)))
                         }
                     }
                 }
@@ -101,43 +99,43 @@ struct NoteCard: View {
                 .padding(.vertical, 12)
             }
             .frame(height: 105)
-            .background(backgroundForIndex(index))
-            .offset(x: offset)
+            .background(self.backgroundForIndex(self.index))
+            .offset(x: self.offset)
             .onAppear {
                 // Ensure initial position is set
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    hasAppeared = true
+                    self.hasAppeared = true
                 }
             }
-            .onChange(of: noteViewModel.notes.count) { oldCount, newCount in
+            .onChange(of: self.noteViewModel.notes.count) { _, _ in
                 // Update when notes collection changes
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    trapezoidPosition = mainGeo.frame(in: .global).minY
+                    self.trapezoidPosition = mainGeo.frame(in: .global).minY
                 }
             }
-            .popover(isPresented: $showingGraph) {
-                GraphView(note: note)
+            .popover(isPresented: self.$showingGraph) {
+                GraphView(note: self.note)
                     .frame(width: 300, height: 300)
                     .presentationCompactAdaptation(.popover)
             }
         }
     }
-    
+
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
         let screenHeight = UIScreen.main.bounds.height
-        let adjustedPosition = trapezoidPosition * animationSpeed
+        let adjustedPosition = self.trapezoidPosition * self.animationSpeed
         let scrollProgress = min(max(adjustedPosition / screenHeight, 0), 1)
         let maxMovement: CGFloat = 400
-        return (baseOffset + startingOffset) - ((1 - scrollProgress) * maxMovement)
+        return (baseOffset + self.startingOffset) - ((1 - scrollProgress) * maxMovement)
     }
-    
+
     private func backgroundForIndex(_ index: Int) -> Color {
         switch index % 3 {
-        case 0: return Color(UIColor.color.purple)
-        case 1: return Color(UIColor.color.lightOrange)
-        case 2: return Color(UIColor.color.lightYellow)
-        default: return Color(UIColor.color.lightYellow)
+            case 0: return Color(UIColor.color.purple)
+            case 1: return Color(UIColor.color.lightOrange)
+            case 2: return Color(UIColor.color.lightYellow)
+            default: return Color(UIColor.color.lightYellow)
         }
     }
 }
@@ -145,15 +143,14 @@ struct NoteCard: View {
 struct EmotionsGraphModal: View {
     @Environment(\.dismiss) var dismiss
     let note: Note
-    
+
     var body: some View {
         NavigationView {
-            GraphView(note: note)
+            GraphView(note: self.note)
                 .navigationBarItems(
                     trailing: Button("Done") {
-                        dismiss()
-                    }
-                )
+                        self.dismiss()
+                    })
         }
     }
 }
@@ -161,23 +158,23 @@ struct EmotionsGraphModal: View {
 struct TrapezoidShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        
+
         let inset: CGFloat = 25
         let height: CGFloat = -15
         let baseWidth: CGFloat = 30
-        
+
         // Top base (wider)
         path.move(to: CGPoint(x: rect.midX - baseWidth, y: rect.minY))
         path.addLine(to: CGPoint(x: rect.midX + baseWidth, y: rect.minY))
-        
+
         // Right diagonal to bottom base
         path.addLine(to: CGPoint(x: rect.midX + inset, y: rect.minY + height))
-        
+
         // Bottom base (narrower than top but wider than before)
         path.addLine(to: CGPoint(x: rect.midX - inset, y: rect.minY + height))
-        
+
         path.closeSubpath()
-        
+
         return path
     }
 }

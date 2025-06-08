@@ -1,34 +1,29 @@
-//
-//  ProfileView.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/25/24.
-//
-
-import SwiftUI
 import Charts
+import SwiftUI
 
 // MARK: - Profile View
+
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notesViewModel: NotesViewModel
-    
+
     @State private var profileImage: UIImage?
-    
+
     @Environment(\.dismiss) var dismiss
-    
+
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
     @State private var showDeleteConfirmation = false
-    
+
     private let buttonColor = Color(UIColor.color.lightYellow)
     private let purpleColor = Color(UIColor.color.purple)
-    
+
     private func loadProfilePicture() {
         Task {
-            await authViewModel.fetchProfilePicture()
+            await self.authViewModel.fetchProfilePicture()
             if let urlString = authViewModel.profilePictureURL,
-               let url = URL(string: urlString) {
+               let url = URL(string: urlString)
+            {
                 do {
                     let (data, _) = try await URLSession.shared.data(from: url)
                     if let image = UIImage(data: data) {
@@ -42,29 +37,27 @@ struct ProfileView: View {
             }
         }
     }
-    
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 // Profile Header Section with Purple Background
                 ZStack {
                     GeometryReader { geometry in
-                        purpleColor
+                        self.purpleColor
                             .frame(
                                 width: geometry.size.width,
-                                height: max(0, geometry.size.height + geometry.frame(in: .global).minY)
-                            )
+                                height: max(0, geometry.size.height + geometry.frame(in: .global).minY))
                             .offset(y: -geometry.frame(in: .global).minY)
                             .allowsHitTesting(false)
                     }
-                    
+
                     VStack {
                         // Back button aligned to the left
                         HStack {
                             Button(action: {
                                 print("Dismiss tapped")
-                                dismiss()
+                                self.dismiss()
                             }) {
                                 HStack {
                                     Image(systemName: "chevron.left")
@@ -78,9 +71,7 @@ struct ProfileView: View {
                         }
                         .padding(.top, 30)
                         .padding(.horizontal)
-                        
-                        
-                        
+
                         ZStack(alignment: .bottomTrailing) {
                             if let selectedImage = selectedImage {
                                 Image(uiImage: selectedImage)
@@ -100,17 +91,17 @@ struct ProfileView: View {
                                     .frame(width: 160, height: 160)
                                     .foregroundColor(.gray)
                             }
-                            
+
                             // Edit Button
                             Button(action: {
-                                showImagePicker = true
+                                self.showImagePicker = true
                             }) {
                                 ZStack {
                                     Circle()
                                         .fill(Color.white)
                                         .frame(width: 44, height: 44)
                                         .shadow(radius: 4)
-                                    
+
                                     Image(systemName: "pencil.circle.fill")
                                         .resizable()
                                         .frame(width: 40, height: 40)
@@ -119,20 +110,23 @@ struct ProfileView: View {
                             }
                             .offset(x: 8, y: 8)
                         }
-                        .sheet(isPresented: $showImagePicker) {
-                            ImagePicker(selectedImage: $selectedImage, authViewModel: authViewModel) { success in
+                        .sheet(isPresented: self.$showImagePicker) {
+                            ImagePicker(
+                                selectedImage: self.$selectedImage,
+                                authViewModel: self.authViewModel)
+                            { success in
                                 if success {
                                     // Refresh the profile picture
-                                    loadProfilePicture()
+                                    self.loadProfilePicture()
                                 }
                             }
                         }
-                        
-                        Text(authViewModel.currentUserName)
+
+                        Text(self.authViewModel.currentUserName)
                             .font(.custom("Poppins-Medium", fixedSize: 24))
                             .foregroundColor(Color(UIColor.color.darkPurple))
-                        
-                        Text(authViewModel.currentUserEmail)
+
+                        Text(self.authViewModel.currentUserEmail)
                             .font(.custom("Poppins-Medium", fixedSize: 16))
                             .foregroundColor(Color(UIColor.color.darkPurple))
                             .padding(.bottom, 32)
@@ -140,21 +134,25 @@ struct ProfileView: View {
                     .padding(.horizontal)
                 }
                 .frame(height: 300)
-                
+
                 // Yellow Background Section
                 ZStack {
                     GeometryReader { geometry in
                         Color(UIColor.color.lightYellow).opacity(0)
-                            .frame(width: geometry.size.width, height: geometry.size.height + geometry.frame(in: .global).minY)
+                            .frame(
+                                width: geometry.size.width,
+                                height: geometry.size.height + geometry.frame(in: .global).minY)
                             .offset(y: -geometry.frame(in: .global).minY)
                             .allowsHitTesting(false)
                     }
-                    
+
                     VStack(spacing: 0) {
                         // Profile Settings/Options
                         VStack(spacing: 0) {
                             HStack {
-                                NavigationLink(destination: ProfileEditView().environmentObject(authViewModel).environmentObject(notesViewModel)){
+                                NavigationLink(destination: ProfileEditView().environmentObject(self.authViewModel)
+                                    .environmentObject(self.notesViewModel))
+                                {
                                     Text("Edit Profile")
                                         .foregroundColor(.black)
                                         .font(.custom("CourierPrime-Regular", fixedSize: 16))
@@ -165,14 +163,14 @@ struct ProfileView: View {
                             }
                             .padding()
                             .frame(maxWidth: .infinity)
-                            .background(buttonColor)
-                            
+                            .background(self.buttonColor)
+
                             Divider()
                                 .background(Color.orange)
-                            
+
                             // Logout Button
                             Button(action: {
-                                authViewModel.signOut()
+                                self.authViewModel.signOut()
                             }) {
                                 HStack {
                                     Text("Logout")
@@ -184,16 +182,15 @@ struct ProfileView: View {
                                 }
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(buttonColor)
+                                .background(self.buttonColor)
                             }
-                            
-                            
+
                             Divider()
                                 .background(Color.orange)
-                            
+
                             // Settings Button
                             Button(action: {
-                                showDeleteConfirmation = true
+                                self.showDeleteConfirmation = true
                             }) {
                                 HStack {
                                     Text("Delete Account")
@@ -205,14 +202,14 @@ struct ProfileView: View {
                                 }
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(buttonColor)
+                                .background(self.buttonColor)
                             }
-                            .alert("Are you sure?", isPresented: $showDeleteConfirmation) {
+                            .alert("Are you sure?", isPresented: self.$showDeleteConfirmation) {
                                 Button("Cancel", role: .cancel) {}
                                 Button("Delete", role: .destructive) {
                                     Task {
                                         do {
-                                            try await authViewModel.deleteUser()
+                                            try await self.authViewModel.deleteUser()
                                         } catch {
                                             print("delete account error")
                                         }
@@ -223,34 +220,33 @@ struct ProfileView: View {
                             }
                         }
                         .padding(.horizontal)
-                        .background(buttonColor)
+                        .background(self.buttonColor)
                         .cornerRadius(8)
                         .frame(width: 380)
                         .padding(.top, 60)
                         .padding(.bottom, 15)
-                        
+
                         // Stats Section
                         VStack(alignment: .leading, spacing: 16) {
                             // Your existing stats section code remains the same
                             Divider()
-                            
+
                             Text("MY STATS")
                                 .font(.custom("Poppins-SemiBold", fixedSize: 20))
                                 .padding(.leading)
-                            
+
                             // Graph Section
                             VStack(spacing: 8) {
                                 Text("Notes Last 5 Weeks")
                                     .font(.custom("Poppins-Medium", fixedSize: 16))
                                     .foregroundColor(.black)
-                                
+
                                 Chart {
-                                    ForEach(notesViewModel.notesPerWeek(), id: \.week) { data in
+                                    ForEach(self.notesViewModel.notesPerWeek(), id: \.week) { data in
                                         BarMark(
                                             x: .value("Week", data.week),
-                                            y: .value("Count", data.count)
-                                        )
-                                        .foregroundStyle(Color.orange)
+                                            y: .value("Count", data.count))
+                                            .foregroundStyle(Color.orange)
                                     }
                                 }
                                 .frame(height: 200)
@@ -260,23 +256,23 @@ struct ProfileView: View {
                             .background(Color.yellow.opacity(0.4))
                             .cornerRadius(12)
                             .padding(.horizontal)
-                            
+
                             // Stats Cards
                             HStack(spacing: 16) {
                                 StatCard(
                                     title: "Total Notes",
-                                    value: "\(notesViewModel.notes.count)"
-                                )
-                                
+                                    value: "\(self.notesViewModel.notes.count)")
+
                                 StatCard(
                                     title: "Average Notes/Week",
-                                    value: String(format: "%.1f", notesViewModel.notes.isEmpty ? 0 : Double(notesViewModel.notes.count) / 7.0)
-                                )
-                                
+                                    value: String(
+                                        format: "%.1f",
+                                        self.notesViewModel.notes
+                                            .isEmpty ? 0 : Double(self.notesViewModel.notes.count) / 7.0))
+
                                 StatCard(
                                     title: "Longest Streak",
-                                    value: "\(notesViewModel.calculateLongestStreak()) Weeks"
-                                )
+                                    value: "\(self.notesViewModel.calculateLongestStreak()) Weeks")
                             }
                             .padding(.horizontal, 20)
                         }
@@ -287,26 +283,25 @@ struct ProfileView: View {
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
         .onAppear {
-            loadProfilePicture()
+            self.loadProfilePicture()
         }
     }
-    
 }
 
 struct StatCard: View {
     let title: String
     let value: String
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
-            Text(title)
+            Text(self.title)
                 .font(.custom("Poppins-Regular", fixedSize: 14))
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8)
                 .lineLimit(2)
-            
-            Text(value)
+
+            Text(self.value)
                 .font(.custom("Poppins-SemiBold", fixedSize: 20))
                 .foregroundColor(.orange)
         }

@@ -1,20 +1,19 @@
-//
-//  ContentView.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/24/24.
-//
-
+import Inject
 import SwiftUI
 
+#if DEBUG
+    import Inject
+#endif
 
 // MARK: - Main App Structure
+
 struct ContentView: View {
+    @ObserveInjection var inject
     @EnvironmentObject var authViewModel: AuthViewModel
-    
+
     var body: some View {
         Group {
-            if authViewModel.isInitializing || authViewModel.isLoadingUserInfo {
+            if self.authViewModel.isInitializing || self.authViewModel.isLoadingUserInfo {
                 VStack {
                     ProgressView()
                         .scaleEffect(1.5)
@@ -25,23 +24,20 @@ struct ContentView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color(UIColor.systemBackground))
-            } else if authViewModel.isAuthenticated {
+            } else if self.authViewModel.isAuthenticated {
                 MainView()
-            } else if authViewModel.isSecondState {
+            } else if self.authViewModel.isSecondState {
                 LoginView()
             } else {
                 AuthenticationFlow()
             }
         }
-        .environmentObject(authViewModel)
+        .environmentObject(self.authViewModel)
+        .enableInjection()
     }
-} 
+}
 
 #Preview {
     ContentView()
         .environmentObject(AuthViewModel())
 }
-
-
-
-
