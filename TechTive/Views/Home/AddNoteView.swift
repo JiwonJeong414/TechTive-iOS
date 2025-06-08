@@ -4,17 +4,18 @@ import SwiftUI
 struct AddNoteView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var viewModel: NotesViewModel
 
     @State private var attributedText: NSAttributedString
     @State private var selectedRange = NSRange(location: 0, length: 0)
     @State private var isLoading = false
     @State private var error: String?
-    @ObservedObject var viewModel: NotesViewModel
+    let note: Note?
     let isEditing: Bool
     private let originalNote: Note?
 
-    init(viewModel: NotesViewModel, note: Note? = nil) {
-        self.viewModel = viewModel
+    init(note: Note? = nil) {
+        self.note = note
         self.isEditing = note != nil
         self.originalNote = note
 
@@ -236,9 +237,4 @@ struct AddNoteView: View {
         mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
         self.attributedText = mutableAttrString
     }
-}
-
-#Preview {
-    AddNoteView(viewModel: NotesViewModel())
-        .environmentObject(AuthViewModel())
 }

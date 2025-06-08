@@ -1,4 +1,3 @@
-import Inject
 import SwiftUI
 
 #if DEBUG
@@ -8,7 +7,6 @@ import SwiftUI
 // MARK: - Main App Structure
 
 struct ContentView: View {
-    @ObserveInjection var inject
     @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
@@ -23,7 +21,7 @@ struct ContentView: View {
                         .padding(.top)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(UIColor.systemBackground))
+                .background(Color(.systemBackground))
             } else if self.authViewModel.isAuthenticated {
                 MainView()
             } else if self.authViewModel.isSecondState {
@@ -32,7 +30,5 @@ struct ContentView: View {
                 AuthenticationFlow()
             }
         }
-        .environmentObject(self.authViewModel)
-        .enableInjection()
     }
 }

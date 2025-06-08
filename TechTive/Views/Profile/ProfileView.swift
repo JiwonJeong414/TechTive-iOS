@@ -285,6 +285,11 @@ struct ProfileView: View {
         .onAppear {
             self.loadProfilePicture()
         }
+        .onChange(of: self.authViewModel.isAuthenticated) { isAuthenticated in
+            if !isAuthenticated {
+                self.dismiss()
+            }
+        }
     }
 }
 

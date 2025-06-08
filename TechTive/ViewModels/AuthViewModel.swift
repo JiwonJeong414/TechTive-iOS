@@ -23,6 +23,7 @@ import SwiftUI
     @Published var profilePictureURL: String?
     @Published var isLoadingUserInfo = false
     @Published var isInitializing = true // Start with true
+    @Published var profileImage: UIImage?
 
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
@@ -411,6 +412,22 @@ import SwiftUI
         } catch {
             self.errorMessage = error.localizedDescription
             self.showError = true
+        }
+    }
+
+    func loadProfilePicture() async {
+        await self.fetchProfilePicture()
+        if let urlString = profilePictureURL, let url = URL(string: urlString) {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let image = UIImage(data: data) {
+                    await MainActor.run {
+                        self.profileImage = image
+                    }
+                }
+            } catch {
+                print("Error loading profile picture: \(error)")
+            }
         }
     }
 }

@@ -8,28 +8,39 @@ import SwiftUI
 
 // Test comment for pre-commit hook
 @main struct TechTiveApp: App {
-    @StateObject private var authViewModel: AuthViewModel
-    @StateObject private var notesViewModel: NotesViewModel
+    // MARK: - Properties
 
-    init() {
-        FirebaseApp.configure()
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var authViewModel = AuthViewModel()
 
-        // Configure Google Sign In
-        guard let clientID = FirebaseApp.app()?.options.clientID else { fatalError("No client ID found in Firebase configuration") }
-        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
-
-        let auth = AuthViewModel()
-        _authViewModel = StateObject(wrappedValue: auth)
-        _notesViewModel = StateObject(wrappedValue: NotesViewModel(authViewModel: auth))
-    }
+    // MARK: - UI
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
+            NavigationStack {
                 ContentView()
                     .environmentObject(self.authViewModel)
-                    .environmentObject(self.notesViewModel)
             }
         }
+    }
+}
+
+// MARK: - AppDelegate
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(
+        _: UIApplication,
+        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool
+    {
+        FirebaseApp.configure()
+        if let clientID = FirebaseApp.app()?.options.clientID {
+            GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+        }
+        // Add push notification, FCM, etc. setup here if needed
+        return true
+    }
+
+    func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        GIDSignIn.sharedInstance.handle(url)
     }
 }

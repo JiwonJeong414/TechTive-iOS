@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct NotesFeedSection: View {
+    @EnvironmentObject var notesViewModel: NotesViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-
-    @StateObject var viewModel: NotesViewModel // Change this line
     @State private var selectedNote: Note? = nil
     @State private var showingEditor = false
     @State private var timer: Timer? = nil
@@ -24,8 +23,8 @@ struct NotesFeedSection: View {
         VStack(alignment: .leading, spacing: 0) {
             // Show full notes feed with alternating colors
             ZStack(alignment: .top) {
-                ForEach(Array(self.viewModel.notes.enumerated()), id: \.element.id) { index, note in
-                    NoteCard(note: note, index: index, noteViewModel: self.viewModel)
+                ForEach(Array(self.notesViewModel.notes.enumerated()), id: \.element.id) { index, note in
+                    NoteCard(note: note, index: index, noteViewModel: self.notesViewModel)
                         .padding(.top, CGFloat(index) * 100)
                         .zIndex(Double(index))
                         .onTapGesture {
@@ -37,24 +36,25 @@ struct NotesFeedSection: View {
             .frame(maxWidth: .infinity)
 
             Rectangle()
-                .fill(self.bottomColor(self.viewModel.notes.count))
+                .fill(self.bottomColor(self.notesViewModel.notes.count))
                 .frame(height: 100)
                 .offset(y: 95)
         }
         .padding(.vertical, 10)
         .sheet(item: self.$selectedNote) { note in
-            AddNoteView(viewModel: self.viewModel, note: note)
+            AddNoteView(note: note)
+                .environmentObject(self.notesViewModel)
                 .environmentObject(self.authViewModel)
         }
         .onChange(of: self.refreshTrigger) { // New iOS 17 syntax
             Task {
                 try? await Task.sleep(for: .seconds(2))
-                await self.viewModel.fetchNotes()
+                await self.notesViewModel.fetchNotes()
             }
         }
         .onAppear {
             Task {
-                await self.viewModel.fetchNotes()
+                await self.notesViewModel.fetchNotes()
             }
         }
     }
