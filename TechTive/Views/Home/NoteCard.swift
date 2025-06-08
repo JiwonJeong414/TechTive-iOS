@@ -60,17 +60,17 @@ struct NoteCard: View {
                     HStack {
                         Text(self.note.content)
                             .font(.custom("CourierPrime-Regular", fixedSize: 18))
-                            .foregroundColor(Color(UIColor.color.orange))
+                            .foregroundColor(Color(Constants.Colors.orange))
                             .lineLimit(1)
                         Spacer()
                         Image(systemName: "chevron.right")
-                            .foregroundColor(Color(UIColor.color.orange))
+                            .foregroundColor(Color(Constants.Colors.orange))
                     }
 
                     HStack {
                         Text(self.dateFormatter.string(from: self.note.timestamp))
                             .font(.custom("Poppins-Regular", fixedSize: 14))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
 
                         Spacer()
 
@@ -80,18 +80,18 @@ struct NoteCard: View {
                             HStack(spacing: 4) {
                                 Text(self.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
                                     .font(.custom("Poppins-Regular", fixedSize: 12))
-                                    .foregroundColor(Color(UIColor.color.darkPurple))
+                                    .foregroundColor(Color(Constants.Colors.darkPurple))
                                 if self.isEmotionLoading {
                                     Image(systemName: "clock")
                                         .font(.system(size: 10))
-                                        .foregroundColor(Color(UIColor.color.darkPurple))
+                                        .foregroundColor(Color(Constants.Colors.darkPurple))
                                 }
                             }
                             .padding(.vertical, 4)
                             .padding(.horizontal, 8)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(UIColor.color.darkPurple).opacity(0.1)))
+                                    .fill(Color(Constants.Colors.darkPurple).opacity(0.1)))
                         }
                     }
                 }
@@ -132,10 +132,10 @@ struct NoteCard: View {
 
     private func backgroundForIndex(_ index: Int) -> Color {
         switch index % 3 {
-            case 0: return Color(UIColor.color.purple)
-            case 1: return Color(UIColor.color.lightOrange)
-            case 2: return Color(UIColor.color.lightYellow)
-            default: return Color(UIColor.color.lightYellow)
+            case 0: return Color(Constants.Colors.purple)
+            case 1: return Color(Constants.Colors.lightOrange)
+            case 2: return Color(Constants.Colors.lightYellow)
+            default: return Color(Constants.Colors.lightYellow)
         }
     }
 }

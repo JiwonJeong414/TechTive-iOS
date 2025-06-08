@@ -18,9 +18,9 @@ struct SignUpView: View {
     @State private var confirmPassword = ""
 
     // Custom colors (to maintain consistency)
-    private let backgroundColor = Color(UIColor.color.darkPurple)
-    private let cardBackground = Color(UIColor.color.backgroundColor)
-    private let accentColor = Color(UIColor.color.orange)
+    private let backgroundColor = Color(Constants.Colors.darkPurple)
+    private let cardBackground = Color(Constants.Colors.backgroundColor)
+    private let accentColor = Color(Constants.Colors.orange)
 
     var body: some View {
         NavigationView {
@@ -41,7 +41,7 @@ struct SignUpView: View {
                         // Title
                         Text("SIGN UP")
                             .font(.system(size: 24, weight: .bold))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
 
                         // Input fields
                         VStack(spacing: 16) {

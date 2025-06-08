@@ -99,7 +99,7 @@ struct MainView: View {
                     .opacity(self.showNotes ? 1 : 0)
                 }
             }
-            .background(Color(UIColor.color.backgroundColor))
+            .background(Constants.Colors.backgroundColor)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .overlay(
@@ -162,9 +162,4 @@ struct MainView: View {
             }
         }
     }
-}
-
-#Preview {
-    MainView()
-        .environmentObject(AuthViewModel())
 }

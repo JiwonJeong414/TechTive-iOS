@@ -5,8 +5,8 @@ struct SpiderGraphView: View {
     let values: [Double]
     let labels: [String]
 
-    private let accentColor = Color(UIColor.color.orange)
-    private let Background = Color(UIColor.color.lightYellow)
+    private let accentColor = Color(Constants.Colors.orange)
+    private let Background = Color(Constants.Colors.lightYellow)
     private let sides = 7
 
     // Add a computed property to check if all values are 0
@@ -125,8 +125,8 @@ struct Polygon: Shape {
 }
 
 struct GraphView: View {
-    private let cardBackground = Color(UIColor.color.backgroundColor)
-    private let accentColor = Color(UIColor.color.orange)
+    private let cardBackground = Color(Constants.Colors.backgroundColor)
+    private let accentColor = Color(Constants.Colors.orange)
     let note: Note
 
     // Add a computed property to check if all values are 0

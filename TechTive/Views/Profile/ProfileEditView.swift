@@ -19,7 +19,7 @@ struct ProfileEditView: View {
             // Title
             Text("Edit Profile")
                 .font(.custom("Poppins-SemiBold", fixedSize: 32))
-                .foregroundColor(Color(UIColor.color.darkPurple))
+                .foregroundColor(Color(Constants.Colors.darkPurple))
                 .padding(.bottom, 20)
 
             // Form
@@ -98,7 +98,7 @@ struct ProfileEditView: View {
 
             Spacer()
         }
-        .background(Color(UIColor.color.backgroundColor).ignoresSafeArea())
+        .background(Color(Constants.Colors.backgroundColor)).ignoresSafeArea();)
         .alert(isPresented: self.$showSuccessMessage) {
             Alert(
                 title: Text("Success"),
@@ -175,10 +175,4 @@ struct ProfileEditView: View {
         self.confirmPassword = ""
         self.errorMessage = ""
     }
-}
-
-#Preview {
-    ProfileEditView()
-        .environmentObject(AuthViewModel())
-        .environmentObject(NotesViewModel())
 }

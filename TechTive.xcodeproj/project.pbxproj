@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		29520C132CFA74BA00E0047E /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29520C122CFA74BA00E0047E /* UIColor.swift */; };
 		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
 		29520C192CFA797400E0047E /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C172CFA797400E0047E /* Poppins-Medium.ttf */; };
 		29520C1B2CFA798300E0047E /* CourierPrime-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */; };
@@ -35,6 +34,8 @@
 		2969CD222DF56E1B00B3206A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD212DF56E1B00B3206A /* ProfileView.swift */; };
 		2969CD232DF56E1B00B3206A /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD1F2DF56E1B00B3206A /* ProfileEditView.swift */; };
 		2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD252DF56E2000B3206A /* SignUpView.swift */; };
+		2969CD302DF6115200B3206A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD2F2DF6115100B3206A /* Constants.swift */; };
+		2969CD332DF6116700B3206A /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD322DF6116300B3206A /* DummyData.swift */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
 		2978DF742CF4366D00013C36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2978DF732CF4366D00013C36 /* Assets.xcassets */; };
@@ -67,7 +68,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		29520C122CFA74BA00E0047E /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		29520C162CFA797400E0047E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		29520C172CFA797400E0047E /* Poppins-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CourierPrime-Regular.ttf"; sourceTree = "<group>"; };
@@ -94,6 +94,8 @@
 		2969CD1F2DF56E1B00B3206A /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		2969CD212DF56E1B00B3206A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2969CD252DF56E2000B3206A /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		2969CD2F2DF6115100B3206A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2969CD322DF6116300B3206A /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
 		2978DF712CF4366C00013C36 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -138,16 +140,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		29520C0E2CFA73CE00E0047E /* Font+Colors */ = {
+		29520C0E2CFA73CE00E0047E /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
 				29520C162CFA797400E0047E /* Poppins-Regular.ttf */,
 				29520C1D2CFA7FA900E0047E /* Poppins-SemiBold.ttf */,
 				29520C1A2CFA798300E0047E /* CourierPrime-Regular.ttf */,
 				29520C172CFA797400E0047E /* Poppins-Medium.ttf */,
-				29520C122CFA74BA00E0047E /* UIColor.swift */,
 			);
-			path = "Font+Colors";
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		2969CCEB2DF5560500B3206A /* Frameworks */ = {
@@ -222,6 +223,41 @@
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		2969CD282DF6109E00B3206A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				29520C0E2CFA73CE00E0047E /* Fonts */,
+				2978DF752CF4366D00013C36 /* Preview Content */,
+				2978DF732CF4366D00013C36 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2969CD292DF6111F00B3206A /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2969CD322DF6116300B3206A /* DummyData.swift */,
+				2969CD2F2DF6115100B3206A /* Constants.swift */,
+				2969CD2C2DF6113D00B3206A /* Extensions */,
+				2969CD2A2DF6112500B3206A /* Custom */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		2969CD2A2DF6112500B3206A /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		2969CD2C2DF6113D00B3206A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		2978DF632CF4366C00013C36 = {
 			isa = PBXGroup;
 			children = (
@@ -246,16 +282,15 @@
 		2978DF6E2CF4366C00013C36 /* TechTive */ = {
 			isa = PBXGroup;
 			children = (
+				2969CD292DF6111F00B3206A /* Utils */,
+				2969CD282DF6109E00B3206A /* Resources */,
 				2969CCFF2DF56CD000B3206A /* Views */,
 				2969CCFC2DF56CBD00B3206A /* Models */,
 				2969CCEF2DF56BFB00B3206A /* ViewModels */,
 				29619AF62D38F62600EC77D9 /* GoogleService-Info.plist */,
 				29520C1C2CFA7A0200E0047E /* Info.plist */,
-				29520C0E2CFA73CE00E0047E /* Font+Colors */,
 				2978DF992CF5159D00013C36 /* App */,
 				2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */,
-				2978DF732CF4366D00013C36 /* Assets.xcassets */,
-				2978DF752CF4366D00013C36 /* Preview Content */,
 			);
 			path = TechTive;
 			sourceTree = "<group>";
@@ -451,6 +486,7 @@
 				2969CCF72DF56C6F00B3206A /* QuoteViewModel.swift in Sources */,
 				2969CD062DF56D7400B3206A /* ImagePicker.swift in Sources */,
 				2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */,
+				2969CD332DF6116700B3206A /* DummyData.swift in Sources */,
 				2969CD142DF56DE900B3206A /* LoginView.swift in Sources */,
 				2969CD0C2DF56DC900B3206A /* SpiderGraphView.swift in Sources */,
 				2969CD0D2DF56DC900B3206A /* NoteCard.swift in Sources */,
@@ -462,10 +498,10 @@
 				2969CCF52DF56C6A00B3206A /* NotesViewModel.swift in Sources */,
 				2969CD082DF56DAF00B3206A /* FormattedTextView.swift in Sources */,
 				2969CD162DF56DFD00B3206A /* AddNoteView.swift in Sources */,
-				29520C132CFA74BA00E0047E /* UIColor.swift in Sources */,
 				2969CD182DF56E0500B3206A /* MainView.swift in Sources */,
 				2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */,
 				2969CCF12DF56C5800B3206A /* AuthViewModel.swift in Sources */,
+				2969CD302DF6115200B3206A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

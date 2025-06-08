@@ -18,9 +18,9 @@ struct LoginView: View {
     @State private var isPasswordVisible = false
 
     // Custom colors
-    private let backgroundColor = Color(UIColor.color.darkPurple)
-    private let cardBackground = Color(UIColor.color.backgroundColor)
-    private let accentColor = Color(UIColor.color.orange)
+    private let backgroundColor = Color(Constants.Colors.darkPurple)
+    private let cardBackground = Constants.Colors.backgroundColor
+    private let accentColor = Constants.Colors.orange
 
     var body: some View {
         NavigationView {
@@ -42,7 +42,7 @@ struct LoginView: View {
                         // Title
                         Text("LOGIN")
                             .font(.system(size: 24, weight: .bold))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
 
                         // Input fields
                         VStack(spacing: 16) {
@@ -184,9 +184,4 @@ struct CustomTextFieldStyle: TextFieldStyle {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(Color.gray.opacity(0.2), lineWidth: 1))
     }
-}
-
-#Preview {
-    LoginView()
-        .environmentObject(AuthViewModel())
 }

@@ -13,9 +13,9 @@ struct NotesFeedSection: View {
         guard count > 0 else { return .clear }
         let lastIndex = count - 1
         switch lastIndex % 3 {
-            case 0: return Color(UIColor.color.purple)
-            case 1: return Color(UIColor.color.lightOrange)
-            case 2: return Color(UIColor.color.lightYellow)
+            case 0: return Color(Constants.Colors.purple)
+            case 1: return Color(Constants.Colors.lightOrange)
+            case 2: return Color(Constants.Colors.lightYellow)
             default: return .clear
         }
     }

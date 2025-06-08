@@ -15,8 +15,8 @@ struct ProfileView: View {
     @State private var selectedImage: UIImage?
     @State private var showDeleteConfirmation = false
 
-    private let buttonColor = Color(UIColor.color.lightYellow)
-    private let purpleColor = Color(UIColor.color.purple)
+    private let buttonColor = Color(Constants.Colors.lightYellow)
+    private let purpleColor = Color(Constants.Colors.purple)
 
     private func loadProfilePicture() {
         Task {
@@ -124,11 +124,11 @@ struct ProfileView: View {
 
                         Text(self.authViewModel.currentUserName)
                             .font(.custom("Poppins-Medium", fixedSize: 24))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
 
                         Text(self.authViewModel.currentUserEmail)
                             .font(.custom("Poppins-Medium", fixedSize: 16))
-                            .foregroundColor(Color(UIColor.color.darkPurple))
+                            .foregroundColor(Color(Constants.Colors.darkPurple))
                             .padding(.bottom, 32)
                     }
                     .padding(.horizontal)
@@ -138,7 +138,7 @@ struct ProfileView: View {
                 // Yellow Background Section
                 ZStack {
                     GeometryReader { geometry in
-                        Color(UIColor.color.lightYellow).opacity(0)
+                        Color(Constants.Colors.lightYellow).opacity(0)
                             .frame(
                                 width: geometry.size.width,
                                 height: geometry.size.height + geometry.frame(in: .global).minY)

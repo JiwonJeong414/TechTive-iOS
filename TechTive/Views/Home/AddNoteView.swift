@@ -111,15 +111,15 @@ struct AddNoteView: View {
                 HStack(spacing: 16) {
                     Button(action: { self.toggleHeader() }) {
                         Image(systemName: "textformat.size.larger")
-                            .foregroundColor(Color(UIColor.color.orange))
+                            .foregroundColor(Color(Constants.Colors.orange))
                     }
                     Button(action: { self.toggleBold() }) {
                         Image(systemName: "bold")
-                            .foregroundColor(Color(UIColor.color.orange))
+                            .foregroundColor(Color(Constants.Colors.orange))
                     }
                     Button(action: { self.toggleItalic() }) {
                         Image(systemName: "italic")
-                            .foregroundColor(Color(UIColor.color.orange))
+                            .foregroundColor(Color(Constants.Colors.orange))
                     }
                 }
                 .padding(.horizontal)
@@ -135,11 +135,11 @@ struct AddNoteView: View {
                 }
 
                 FormattedTextView(attributedText: self.$attributedText, selectedRange: self.$selectedRange)
-                    .background(Color(UIColor.color.lightYellow))
+                    .background(Color(Constants.Colors.lightYellow))
                     .cornerRadius(12)
                     .padding()
             }
-            .background(Color(UIColor.color.lightYellow).opacity(0.3))
+            .background(Color(Constants.Colors.lightYellow).opacity(0.3))
             .navigationTitle("New Note")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -147,7 +147,7 @@ struct AddNoteView: View {
                     Button("Cancel") {
                         self.dismiss()
                     }
-                    .foregroundColor(Color(UIColor.color.orange))
+                    .foregroundColor(Color(Constants.Colors.orange))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
@@ -168,7 +168,7 @@ struct AddNoteView: View {
                             }
                         }
                     }
-                    .foregroundColor(Color(UIColor.color.orange))
+                    .foregroundColor(Color(Constants.Colors.orange))
                     .disabled(self.isLoading || self.attributedText.string.isEmpty)
                 }
             }
