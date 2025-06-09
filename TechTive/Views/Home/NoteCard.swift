@@ -52,7 +52,7 @@ struct NoteCard: View {
     private var noteContent: some View {
         HStack {
             Text(self.note.content)
-                .font(.custom("CourierPrime-Regular", fixedSize: 18))
+                .font(Constants.Fonts.courierPrime18)
                 .foregroundColor(Color(Constants.Colors.orange))
                 .lineLimit(1)
             Spacer()
@@ -64,7 +64,7 @@ struct NoteCard: View {
     private var noteFooter: some View {
         HStack {
             Text(self.note.timestamp.shortDateString)
-                .font(.custom("Poppins-Regular", fixedSize: 14))
+                .font(Constants.Fonts.poppinsRegular14)
                 .foregroundColor(Color(Constants.Colors.darkPurple))
 
             Spacer()
@@ -79,7 +79,7 @@ struct NoteCard: View {
         }) {
             HStack(spacing: 4) {
                 Text(self.viewModel.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
-                    .font(.custom("Poppins-Regular", fixedSize: 12))
+                    .font(Constants.Fonts.poppinsRegular12)
                     .foregroundColor(Color(Constants.Colors.darkPurple))
                 if self.viewModel.isEmotionLoading {
                     Image(systemName: "clock")

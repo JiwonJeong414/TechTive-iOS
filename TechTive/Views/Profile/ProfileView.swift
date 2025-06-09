@@ -113,7 +113,7 @@ struct ProfileView: View {
                     Image(systemName: "pencil.circle.fill")
                         .resizable()
                         .frame(width: 40, height: 40)
-                        .foregroundColor(Color(Constants.Colors.orange))
+                        .foregroundColor(Color(Constants.Colors.profileOrange))
                 }
             }
             .onChange(of: self.viewModel.selectedItem) { newItem in
@@ -210,7 +210,7 @@ struct ProfileView: View {
         HStack {
             Text(title)
                 .foregroundColor(isDestructive ? Color(Constants.Colors.orange) : Color(Constants.Colors.black))
-                .font(.custom("CourierPrime-Regular", fixedSize: 16))
+                .font(Constants.Fonts.courierPrime16)
             Spacer()
             Image(systemName: "chevron.right")
                 .foregroundColor(Color(Constants.Colors.orange))
@@ -225,7 +225,7 @@ struct ProfileView: View {
             Divider()
 
             Text("MY STATS")
-                .font(.custom("Poppins-SemiBold", fixedSize: 20))
+                .font(Constants.Fonts.poppinsSemiBold20)
                 .padding(.leading)
 
             self.notesChartSection
@@ -236,7 +236,7 @@ struct ProfileView: View {
     private var notesChartSection: some View {
         VStack(spacing: 8) {
             Text("Notes Last 5 Weeks")
-                .font(.custom("Poppins-Medium", fixedSize: 16))
+                .font(Constants.Fonts.poppinsMedium16)
                 .foregroundColor(Color(Constants.Colors.black))
 
             Chart {

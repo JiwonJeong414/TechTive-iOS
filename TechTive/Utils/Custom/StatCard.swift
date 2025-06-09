@@ -7,15 +7,15 @@ struct StatCard: View {
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
             Text(self.title)
-                .font(.custom("Poppins-Regular", fixedSize: 14))
+                .font(Constants.Fonts.poppinsRegular14)
                 .foregroundColor(Color(Constants.Colors.black))
                 .multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8)
                 .lineLimit(2)
 
             Text(self.value)
-                .font(.custom("Poppins-SemiBold", fixedSize: 20))
-                .foregroundColor(Color(Constants.Colors.orange))
+                .font(Constants.Fonts.poppinsSemiBold20)
+                .foregroundColor(Color(Constants.Colors.profileOrange))
         }
         .frame(width: 110, height: 110)
         .background(Color(Constants.Colors.lightYellow).opacity(0.4))

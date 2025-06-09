@@ -51,7 +51,7 @@ struct AuthenticationFlow: View {
 
     private var onboardingTitle: some View {
         Text(self.viewModel.onboarding[self.viewModel.currentPage])
-            .font(.custom("Poppins-Medium", fixedSize: 30))
+            .font(Constants.Fonts.poppinsMedium30)
             .bold()
             .foregroundColor(self.viewModel
                 .currentPage == 1 ? Color(Constants.Colors.white) : Color(Constants.Colors.black))
@@ -59,7 +59,7 @@ struct AuthenticationFlow: View {
 
     private var onboardingDescription: some View {
         Text(self.viewModel.onboardingTwo[self.viewModel.currentPage])
-            .font(.custom("Poppins-Regular", fixedSize: 16))
+            .font(Constants.Fonts.poppinsRegular16)
             .multilineTextAlignment(.center)
             .padding(.horizontal, 40)
             .foregroundColor(self.viewModel.currentPage == 1 ? Color(Constants.Colors.white)

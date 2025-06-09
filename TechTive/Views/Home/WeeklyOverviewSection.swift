@@ -57,7 +57,7 @@ struct WeeklyOverviewSection: View {
 
     private func errorView(_: String) -> some View {
         Text("Not Enough Notes")
-            .font(.custom("CourierPrime-Regular", fixedSize: 17))
+            .font(Constants.Fonts.courierPrime17)
             .foregroundColor(Color(Constants.Colors.red))
             .padding()
             .multilineTextAlignment(.center)

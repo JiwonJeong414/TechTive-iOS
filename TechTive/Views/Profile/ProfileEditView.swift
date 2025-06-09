@@ -64,7 +64,7 @@ struct ProfileEditView: View {
         TextField("Change Username", text: self.$viewModel.newUsername)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
-            .font(.custom("Poppins-Regular", size: 16))
+            .font(Constants.Fonts.poppinsRegular16)
             .padding(.horizontal, 20)
     }
 
@@ -72,7 +72,7 @@ struct ProfileEditView: View {
         TextField("Change Email", text: self.$viewModel.newEmail)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
-            .font(.custom("Poppins-Regular", size: 16))
+            .font(Constants.Fonts.poppinsRegular16)
             .keyboardType(.emailAddress)
             .padding(.horizontal, 20)
     }
@@ -81,7 +81,7 @@ struct ProfileEditView: View {
         SecureField("Change Password", text: self.$viewModel.newPassword)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
-            .font(.custom("Poppins-Regular", size: 16))
+            .font(Constants.Fonts.poppinsRegular16)
             .padding(.horizontal, 20)
     }
 
@@ -89,7 +89,7 @@ struct ProfileEditView: View {
         SecureField("Confirm New Password", text: self.$viewModel.confirmPassword)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
-            .font(.custom("Poppins-Regular", size: 16))
+            .font(Constants.Fonts.poppinsRegular16)
             .padding(.horizontal, 20)
     }
 
