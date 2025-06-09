@@ -1,4 +1,5 @@
 import Charts
+import PhotosUI
 import SwiftUI
 
 /// Profile View for TechTive
@@ -10,7 +11,7 @@ struct ProfileView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var profileImage: UIImage?
-    @State private var showImagePicker = false
+    @State private var selectedItem: PhotosPickerItem?
     @State private var selectedImage: UIImage?
     @State private var showDeleteConfirmation = false
 
@@ -101,34 +102,35 @@ struct ProfileView: View {
                     .foregroundColor(.gray)
             }
 
-            self.editProfileImageButton
-        }
-        .sheet(isPresented: self.$showImagePicker) {
-            ImagePicker(
-                selectedImage: self.$selectedImage,
-                authViewModel: self.authViewModel)
-            { success in
-                if success {
-                    self.loadProfilePicture()
+            PhotosPicker(selection: self.$selectedItem, matching: .images) {
+                ZStack {
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 44, height: 44)
+                        .shadow(radius: 4)
+
+                    Image(systemName: "pencil.circle.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.orange)
                 }
             }
-        }
-    }
-
-    private var editProfileImageButton: some View {
-        Button(action: {
-            self.showImagePicker = true
-        }) {
-            ZStack {
-                Circle()
-                    .fill(Color.white)
-                    .frame(width: 44, height: 44)
-                    .shadow(radius: 4)
-
-                Image(systemName: "pencil.circle.fill")
-                    .resizable()
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.orange)
+            .onChange(of: self.selectedItem) { newItem in
+                Task {
+                    if let data = try? await newItem?.loadTransferable(type: Data.self),
+                       let image = UIImage(data: data)
+                    {
+                        selectedImage = image
+                        do {
+                            let success = try await authViewModel.uploadProfilePicture(image: image)
+                            if success {
+                                self.loadProfilePicture()
+                            }
+                        } catch {
+                            print("Error uploading image: \(error)")
+                        }
+                    }
+                }
             }
         }
         .offset(x: 8, y: 8)
@@ -307,30 +309,5 @@ struct ProfileView: View {
                 }
             }
         }
-    }
-}
-
-// MARK: - Stat Card View
-
-struct StatCard: View {
-    let title: String
-    let value: String
-
-    var body: some View {
-        VStack(alignment: .center, spacing: 8) {
-            Text(self.title)
-                .font(.custom("Poppins-Regular", fixedSize: 14))
-                .foregroundColor(.black)
-                .multilineTextAlignment(.center)
-                .minimumScaleFactor(0.8)
-                .lineLimit(2)
-
-            Text(self.value)
-                .font(.custom("Poppins-SemiBold", fixedSize: 20))
-                .foregroundColor(.orange)
-        }
-        .frame(width: 110, height: 110)
-        .background(Color.yellow.opacity(0.4))
-        .cornerRadius(12)
     }
 }
