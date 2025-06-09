@@ -48,6 +48,8 @@
 		29A8CDAE2DF732D5008C1027 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDAD2DF732D3008C1027 /* UserProfile.swift */; };
 		29A8CDB02DF733FB008C1027 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDAF2DF733FA008C1027 /* Quote.swift */; };
 		29A8CDB22DF734C8008C1027 /* WeeklyAdviceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */; };
+		29A8CDB42DF75AFC008C1027 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB32DF75AFB008C1027 /* PinView.swift */; };
+		29A8CDB62DF75B19008C1027 /* StickyNoteBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */; };
 		29E214E22CFC1DED00ABD3B9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */; };
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
@@ -114,6 +116,8 @@
 		29A8CDAD2DF732D3008C1027 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		29A8CDAF2DF733FA008C1027 /* Quote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quote.swift; sourceTree = "<group>"; };
 		29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAdviceResponse.swift; sourceTree = "<group>"; };
+		29A8CDB32DF75AFB008C1027 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
+		29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyNoteBackground.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,6 +263,8 @@
 		2969CD2A2DF6112500B3206A /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */,
+				29A8CDB32DF75AFB008C1027 /* PinView.swift */,
 			);
 			path = Custom;
 			sourceTree = "<group>";
@@ -496,6 +502,7 @@
 				2969CCF92DF56C7300B3206A /* SignUpViewModel.swift in Sources */,
 				2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */,
 				2969CCF72DF56C6F00B3206A /* QuoteViewModel.swift in Sources */,
+				29A8CDB62DF75B19008C1027 /* StickyNoteBackground.swift in Sources */,
 				2969CD062DF56D7400B3206A /* ImagePicker.swift in Sources */,
 				2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */,
 				2969CD332DF6116700B3206A /* DummyData.swift in Sources */,
@@ -515,6 +522,7 @@
 				29A8CDB02DF733FB008C1027 /* Quote.swift in Sources */,
 				2969CD182DF56E0500B3206A /* MainView.swift in Sources */,
 				2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */,
+				29A8CDB42DF75AFC008C1027 /* PinView.swift in Sources */,
 				29A8CDB22DF734C8008C1027 /* WeeklyAdviceResponse.swift in Sources */,
 				2969CCF12DF56C5800B3206A /* AuthViewModel.swift in Sources */,
 				2969CD302DF6115200B3206A /* Constants.swift in Sources */,

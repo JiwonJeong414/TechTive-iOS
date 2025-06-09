@@ -28,11 +28,7 @@ struct MainView: View {
                     VStack(spacing: 20) {
                         self.headerSection
 
-                        Spacer(minLength: 8)
-
                         self.weeklyOverviewSection
-
-                        Spacer(minLength: 8)
 
                         self.notesSection
                     }
