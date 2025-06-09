@@ -92,4 +92,10 @@ extension Date {
         formatter.dateFormat = format
         return formatter.date(from: dateString)
     }
+
+    /// Returns the start of the week for this date
+    var startOfWeek: Date? {
+        let calendar = Calendar.current
+        return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))
+    }
 }

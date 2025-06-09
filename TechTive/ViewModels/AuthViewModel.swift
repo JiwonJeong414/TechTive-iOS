@@ -11,7 +11,10 @@ import FirebaseFirestore
 import GoogleSignIn
 import SwiftUI
 
+/// ViewModel responsible for handling authentication and user management
 @MainActor class AuthViewModel: ObservableObject {
+    // MARK: - Published Properties
+
     @Published var isAuthenticated = false
     @Published var isSecondState = false
     @Published var errorMessage = ""
@@ -22,12 +25,16 @@ import SwiftUI
     @Published var currentUserEmail = ""
     @Published var profilePictureURL: String?
     @Published var isLoadingUserInfo = false
-    @Published var isInitializing = true // Start with true
+    @Published var isInitializing = true
     @Published var profileImage: UIImage?
+
+    // MARK: - Private Properties
 
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
+
+    // MARK: - Initialization
 
     init() {
         self.isInitializing = true
@@ -36,10 +43,8 @@ import SwiftUI
             Task { @MainActor in
                 if user != nil {
                     authViewModel?.isLoadingUserInfo = true
-                    // Don't set isAuthenticated yet
                     await authViewModel?.fetchUserInfo()
                     await authViewModel?.fetchProfilePicture()
-                    // Now set both flags
                     await MainActor.run {
                         authViewModel?.isAuthenticated = true
                         authViewModel?.isLoadingUserInfo = false
@@ -62,6 +67,9 @@ import SwiftUI
         }
     }
 
+    // MARK: - Authentication Methods
+
+    /// Signs up a new user with email and password
     func signUp(email: String, password: String, name: String) async {
         self.isLoading = true
         do {
@@ -79,7 +87,6 @@ import SwiftUI
 
             self.isLoading = false
             self.isAuthenticated = true
-            // Removed fetchUserInfo() since stateListener handles it
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -89,6 +96,7 @@ import SwiftUI
         }
     }
 
+    /// Logs in a user with email and password
     func login(email: String, password: String) async {
         // Input validation
         guard !email.isEmpty else {
@@ -151,6 +159,7 @@ import SwiftUI
         }
     }
 
+    /// Signs out the current user
     func signOut() {
         do {
             try self.auth.signOut()
@@ -166,200 +175,7 @@ import SwiftUI
         }
     }
 
-    func getCurrentUserId() -> String? {
-        return self.auth.currentUser?.uid
-    }
-
-    func uploadProfilePicture(image _: UIImage) async throws -> Bool {
-        // print("🔄 Starting profile picture upload")
-
-        // let token = try await getAuthToken()
-
-        // guard let apiURL = URL(string: "http://34.21.62.193/api/pfp/") else {
-        //     print("❌ Invalid URL")
-        //     throw URLError(.badURL)
-        // }
-
-        // // Compress image before upload
-        // let maxSizeKB = 1024 // 1MB
-        // var compression: CGFloat = 1.0
-        // var imageData = image.jpegData(compressionQuality: compression)!
-
-        // while imageData.count / 1024 > maxSizeKB && compression > 0.1 {
-        //     compression -= 0.1
-        //     if let compressedData = image.jpegData(compressionQuality: compression) {
-        //         imageData = compressedData
-        //     }
-        // }
-
-        // print("📤 Compressed image size: \(imageData.count / 1024)KB")
-
-        // let headers: HTTPHeaders = [
-        //     "Authorization": "Bearer \(token)",
-        //     "Content-Type": "multipart/form-data"
-        // ]
-
-        // return try await withCheckedThrowingContinuation { continuation in
-        //     AF.upload(multipartFormData: { multipartFormData in
-        //         multipartFormData.append(
-        //             imageData,
-        //             withName: "ImageFile", // Changed from "image" to "ImageFile"
-        //             fileName: "profile.jpg",
-        //             mimeType: "image/jpeg")
-        //     }, to: apiURL, headers: headers)
-        //         .validate()
-        //         .responseString { response in
-        //             print("📥 Raw response: \(response.value ?? "no response")")
-        //             print("📥 Response status code: \(response.response?.statusCode ?? -1)")
-        //         }
-        //         .responseDecodable(of: ProfilePictureResponse.self) { response in
-        //             switch response.result {
-        //                 case let .success(profileResponse):
-        //                     print("✅ Profile picture URL: \(profileResponse.link)")
-        //                     Task {
-        //                         do {
-        //                             try await self.storeProfilePictureURL(imageUrl: profileResponse.link)
-        //                             continuation.resume(returning: true)
-        //                         } catch {
-        //                             print("❌ Error storing profile URL: \(error)")
-        //                             continuation.resume(throwing: error)
-        //                         }
-        //                     }
-        //                 case let .failure(error):
-        //                     print("❌ Upload failed: \(error.localizedDescription)")
-        //                     if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
-        //                         print("❌ Server response: \(responseString)")
-        //                     }
-        //                     continuation.resume(throwing: error)
-        //             }
-        //         }
-        // }
-        return false
-    }
-
-    private func storeProfilePictureURL(imageUrl _: String) async throws {
-        // guard let userId = getCurrentUserId() else { return }
-
-        // try await self.db.collection("users").document(userId).updateData([
-        //     "profilePictureURL": imageUrl
-        // ])
-
-        // await MainActor.run {
-        //     self.profilePictureURL = imageUrl
-        // }
-    }
-
-    func fetchProfilePicture() async {
-        // guard let userId = getCurrentUserId() else { return }
-        // do {
-        //     let document = try await db.collection("users").document(userId).getDocument()
-        //     if let data = document.data(), let url = data["profilePictureURL"] as? String {
-        //         self.profilePictureURL = url
-        //     }
-        // } catch {
-        //     print("Error fetching profile picture: \(error)")
-        // }
-    }
-
-    func fetchUserInfo() async {
-        guard let currentUser = auth.currentUser else {
-            print("No current user logged in.")
-            return
-        }
-
-        do {
-            let document = try await db.collection("users").document(currentUser.uid).getDocument()
-
-            guard let data = document.data() else {
-                print("No user data found for UID: \(currentUser.uid) at \(Date())")
-                return
-            }
-
-            await MainActor.run {
-                self.currentUserName = data["name"] as? String ?? ""
-                self.currentUserEmail = data["email"] as? String ?? ""
-                self.profilePictureURL = data["profilePictureURL"] as? String
-                print("User info fetched: \(self.currentUserName), \(self.currentUserEmail) at \(Date())")
-            }
-        } catch {
-            print(
-                "Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
-        }
-    }
-
-    func getAuthToken() async throws -> String {
-        guard let currentUser = auth.currentUser else {
-            throw URLError(.userAuthenticationRequired)
-        }
-
-        return try await withCheckedThrowingContinuation { continuation in
-            currentUser.getIDToken { token, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                } else if let token = token {
-                    continuation.resume(returning: token)
-                } else {
-                    continuation.resume(throwing: URLError(.userAuthenticationRequired))
-                }
-            }
-        }
-    }
-
-    func updateUsername(newUsername: String) async -> (Bool, String?) {
-        guard let userId = getCurrentUserId() else { return (false, "No user logged in") }
-
-        do {
-            let data: [String: Any] = ["name": newUsername]
-            try await self.db.collection("users").document(userId).updateData(data)
-            await MainActor.run {
-                self.currentUserName = newUsername
-            }
-            return (true, nil)
-        } catch {
-            return (false, error.localizedDescription)
-        }
-    }
-
-    func updateEmail(newEmail: String) async throws {
-        guard let user = auth.currentUser else { throw NSError(
-            domain: "",
-            code: -1,
-            userInfo: [NSLocalizedDescriptionKey: "No user logged in"]) }
-
-        try await user.sendEmailVerification(beforeUpdatingEmail: newEmail)
-        self.currentUserEmail = newEmail
-    }
-
-    func updatePassword(newPassword: String) async throws {
-        guard let user = auth.currentUser else { throw NSError(
-            domain: "",
-            code: -1,
-            userInfo: [NSLocalizedDescriptionKey: "No user logged in"]) }
-        try await user.updatePassword(to: newPassword)
-    }
-
-    func deleteUser() async throws {
-        guard let user = auth.currentUser,
-              let userId = getCurrentUserId() else
-        {
-            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No authenticated user found."])
-        }
-
-        // Delete user Firestore data first
-        try await self.db.collection("users").document(userId).delete()
-
-        // Delete authentication record
-        try await user.delete()
-
-        await MainActor.run {
-            self.isAuthenticated = false
-            self.currentUserEmail = ""
-            self.currentUserName = ""
-            self.profilePictureURL = nil
-        }
-        print("User deleted successfully.")
-    }
-
+    /// Signs in with Google
     func signInWithGoogle() async {
         guard let clientID = FirebaseApp.app()?.options.clientID else { return }
 
@@ -414,6 +230,74 @@ import SwiftUI
         }
     }
 
+    // MARK: - User Management Methods
+
+    /// Updates the username for the current user
+    func updateUsername(newUsername: String) async -> (Bool, String?) {
+        guard let userId = getCurrentUserId() else { return (false, "No user logged in") }
+
+        do {
+            let data: [String: Any] = ["name": newUsername]
+            try await self.db.collection("users").document(userId).updateData(data)
+            await MainActor.run {
+                self.currentUserName = newUsername
+            }
+            return (true, nil)
+        } catch {
+            return (false, error.localizedDescription)
+        }
+    }
+
+    /// Updates the email for the current user
+    func updateEmail(newEmail: String) async throws {
+        guard let user = auth.currentUser else {
+            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+        }
+
+        try await user.sendEmailVerification(beforeUpdatingEmail: newEmail)
+        self.currentUserEmail = newEmail
+    }
+
+    /// Updates the password for the current user
+    func updatePassword(newPassword: String) async throws {
+        guard let user = auth.currentUser else {
+            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No user logged in"])
+        }
+        try await user.updatePassword(to: newPassword)
+    }
+
+    /// Deletes the current user account
+    func deleteUser() async throws {
+        guard let user = auth.currentUser,
+              let userId = getCurrentUserId() else
+        {
+            throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No authenticated user found."])
+        }
+
+        // Delete user Firestore data first
+        try await self.db.collection("users").document(userId).delete()
+
+        // Delete authentication record
+        try await user.delete()
+
+        await MainActor.run {
+            self.isAuthenticated = false
+            self.currentUserEmail = ""
+            self.currentUserName = ""
+            self.profilePictureURL = nil
+        }
+        print("User deleted successfully.")
+    }
+
+    // MARK: - Profile Picture Methods
+
+    /// Uploads a profile picture for the current user
+    func uploadProfilePicture(image _: UIImage) async throws -> Bool {
+        // Implementation commented out for now
+        return false
+    }
+
+    /// Loads the profile picture for the current user
     func loadProfilePicture() async {
         await self.fetchProfilePicture()
         if let urlString = profilePictureURL, let url = URL(string: urlString) {
@@ -429,9 +313,65 @@ import SwiftUI
             }
         }
     }
-}
 
-struct ProfilePictureResponse: Codable {
-    let link: String
-    let message: String
+    // MARK: - Helper Methods
+
+    /// Gets the current user's ID
+    func getCurrentUserId() -> String? {
+        return self.auth.currentUser?.uid
+    }
+
+    /// Gets the authentication token for the current user
+    func getAuthToken() async throws -> String {
+        guard let currentUser = auth.currentUser else {
+            throw URLError(.userAuthenticationRequired)
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            currentUser.getIDToken { token, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else if let token = token {
+                    continuation.resume(returning: token)
+                } else {
+                    continuation.resume(throwing: URLError(.userAuthenticationRequired))
+                }
+            }
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func storeProfilePictureURL(imageUrl _: String) async throws {
+        // Implementation commented out for now
+    }
+
+    private func fetchProfilePicture() async {
+        // Implementation commented out for now
+    }
+
+    private func fetchUserInfo() async {
+        guard let currentUser = auth.currentUser else {
+            print("No current user logged in.")
+            return
+        }
+
+        do {
+            let document = try await db.collection("users").document(currentUser.uid).getDocument()
+
+            guard let data = document.data() else {
+                print("No user data found for UID: \(currentUser.uid) at \(Date())")
+                return
+            }
+
+            await MainActor.run {
+                self.currentUserName = data["name"] as? String ?? ""
+                self.currentUserEmail = data["email"] as? String ?? ""
+                self.profilePictureURL = data["profilePictureURL"] as? String
+                print("User info fetched: \(self.currentUserName), \(self.currentUserEmail) at \(Date())")
+            }
+        } catch {
+            print("Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
+        }
+    }
 }

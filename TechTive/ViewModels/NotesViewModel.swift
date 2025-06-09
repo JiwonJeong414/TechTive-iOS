@@ -1,15 +1,18 @@
 import SwiftUI
 
-struct NotesResponse: Codable {
-    let posts: [Note]
-}
-
+/// ViewModel responsible for managing notes in the app
 class NotesViewModel: ObservableObject {
+    // MARK: - Published Properties
+
     @Published var notes: [Note] = []
     @Published var isLoading = false
     @Published var error: Error?
 
+    // MARK: - Dependencies
+
     weak var authViewModel: AuthViewModel?
+
+    // MARK: - Initialization
 
     init(authViewModel: AuthViewModel? = nil) {
         self.authViewModel = authViewModel
@@ -19,6 +22,9 @@ class NotesViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Public Methods
+
+    /// Calculates the number of notes per week for the last 5 weeks
     func notesPerWeek() -> [(week: String, count: Int)] {
         let calendar = Calendar.current
         var weeklyCounts: [(week: String, count: Int)] = []
@@ -34,6 +40,7 @@ class NotesViewModel: ObservableObject {
         return weeklyCounts.reversed()
     }
 
+    /// Calculates the longest streak of consecutive weeks with notes
     func calculateLongestStreak() -> Int {
         let calendar = Calendar.current
         var currentStreak = 0
@@ -67,6 +74,7 @@ class NotesViewModel: ObservableObject {
         return longestStreak
     }
 
+    /// Fetches notes from the API
     func fetchNotes() async {
         await MainActor.run { self.isLoading = true }
 
@@ -78,11 +86,13 @@ class NotesViewModel: ObservableObject {
         }
     }
 
+    /// Adds a new note to the collection
     func addNewNote(_ note: Note) {
         self.notes.insert(note, at: 0)
         self.saveNotes()
     }
 
+    /// Updates an existing note
     func updateNote(_ updatedNote: Note) {
         if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
             self.notes[index] = updatedNote
@@ -90,22 +100,7 @@ class NotesViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Persistence
-
-    private func saveNotes() {
-        if let encoded = try? JSONEncoder().encode(notes) {
-            UserDefaults.standard.set(encoded, forKey: "savedNotes")
-        }
-    }
-
-    private func loadNotes() {
-        if let savedNotes = UserDefaults.standard.data(forKey: "savedNotes"),
-           let decodedNotes = try? JSONDecoder().decode([Note].self, from: savedNotes)
-        {
-            self.notes = decodedNotes
-        }
-    }
-
+    /// Posts a new note to the API
     @MainActor func postNote(content: String, formatting: [Note.TextFormatting]) async throws {
         // Create a new note with dummy data
         let newNote = Note(
@@ -127,11 +122,22 @@ class NotesViewModel: ObservableObject {
             self.saveNotes()
         }
     }
-}
 
-extension Date {
-    var startOfWeek: Date? {
-        let calendar = Calendar.current
-        return calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))
+    // MARK: - Private Methods
+
+    /// Saves notes to UserDefaults
+    private func saveNotes() {
+        if let encoded = try? JSONEncoder().encode(notes) {
+            UserDefaults.standard.set(encoded, forKey: "savedNotes")
+        }
+    }
+
+    /// Loads notes from UserDefaults
+    private func loadNotes() {
+        if let savedNotes = UserDefaults.standard.data(forKey: "savedNotes"),
+           let decodedNotes = try? JSONDecoder().decode([Note].self, from: savedNotes)
+        {
+            self.notes = decodedNotes
+        }
     }
 }
