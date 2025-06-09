@@ -5,7 +5,7 @@ struct ProfileEditView: View {
     // MARK: - Properties
 
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: ProfileViewModel
+    @ObservedObject var viewModel: ProfileView.ViewModel
 
     private let darkPurple = Color(Constants.Colors.darkPurple)
 
