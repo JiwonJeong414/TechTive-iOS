@@ -7,16 +7,7 @@ struct NoteCard: View {
     let note: Note
     let index: Int
     @ObservedObject var noteViewModel: NotesViewModel
-
-    @State private var trapezoidPosition: CGFloat = 0
-    @State private var offset: CGFloat = 0
-    @State private var showingGraph = false
-    @State private var hasAppeared = false
-
-    // MARK: - Constants
-
-    private let animationSpeed: CGFloat = 2.0
-    private let startingOffset: CGFloat = 0
+    @StateObject private var viewModel: NoteCardViewModel
 
     // MARK: - Formatters
 
@@ -26,34 +17,13 @@ struct NoteCard: View {
         return formatter
     }()
 
-    // MARK: - Helper Methods
+    // MARK: - Init
 
-    private func calculateOffset() -> CGFloat {
-        let baseOffset = CGFloat(index * 50 + 11)
-        let screenHeight = UIScreen.main.bounds.height
-        let adjustedPosition = self.trapezoidPosition * self.animationSpeed
-        let scrollProgress = min(max(adjustedPosition / screenHeight, 0), 1)
-        let maxMovement: CGFloat = 400
-        return (baseOffset + self.startingOffset) - ((1 - scrollProgress) * maxMovement)
-    }
-
-    private func backgroundForIndex(_ index: Int) -> Color {
-        switch index % 3 {
-            case 0: return Color(Constants.Colors.purple)
-            case 1: return Color(Constants.Colors.lightOrange)
-            case 2: return Color(Constants.Colors.lightYellow)
-            default: return Color(Constants.Colors.lightYellow)
-        }
-    }
-
-    private var isEmotionLoading: Bool {
-        return self.note.angerValue == 0 &&
-            self.note.disgustValue == 0 &&
-            self.note.fearValue == 0 &&
-            self.note.joyValue == 0 &&
-            self.note.neutralValue == 0 &&
-            self.note.sadnessValue == 0 &&
-            self.note.surpriseValue == 0
+    init(note: Note, index: Int, noteViewModel: NotesViewModel) {
+        self.note = note
+        self.index = index
+        self.noteViewModel = noteViewModel
+        _viewModel = StateObject(wrappedValue: NoteCardViewModel(note: note, index: index))
     }
 
     // MARK: - UI
@@ -71,19 +41,15 @@ struct NoteCard: View {
                 .padding(.vertical, 12)
             }
             .frame(height: 105)
-            .background(self.backgroundForIndex(self.index))
-            .offset(x: self.offset)
+            .background(self.viewModel.backgroundForIndex())
+            .offset(x: self.viewModel.offset)
             .onAppear {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.hasAppeared = true
-                }
+                self.viewModel.appear()
             }
             .onChange(of: self.noteViewModel.notes.count) { _, _ in
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.trapezoidPosition = mainGeo.frame(in: .global).minY
-                }
+                self.viewModel.updateTrapezoidPosition(mainGeo.frame(in: .global).minY)
             }
-            .popover(isPresented: self.$showingGraph) {
+            .popover(isPresented: self.$viewModel.showingGraph) {
                 GraphView(note: self.note)
                     .frame(width: 300, height: 300)
                     .presentationCompactAdaptation(.popover)
@@ -117,13 +83,13 @@ struct NoteCard: View {
 
     private var emotionButton: some View {
         Button(action: {
-            self.showingGraph = true
+            self.viewModel.showingGraph = true
         }) {
             HStack(spacing: 4) {
-                Text(self.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
+                Text(self.viewModel.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
                     .font(.custom("Poppins-Regular", fixedSize: 12))
                     .foregroundColor(Color(Constants.Colors.darkPurple))
-                if self.isEmotionLoading {
+                if self.viewModel.isEmotionLoading {
                     Image(systemName: "clock")
                         .font(.system(size: 10))
                         .foregroundColor(Color(Constants.Colors.darkPurple))
@@ -139,21 +105,19 @@ struct NoteCard: View {
 
     private var trapezoidView: some View {
         TrapezoidShape()
-            .fill(self.backgroundForIndex(self.index))
+            .fill(self.viewModel.backgroundForIndex())
             .frame(width: 40, height: 10)
             .overlay(
                 GeometryReader { geometry in
                     Color.clear
                         .onAppear {
-                            self.trapezoidPosition = geometry.frame(in: .global).minY
+                            self.viewModel.updateTrapezoidPosition(geometry.frame(in: .global).minY)
                         }
                         .onChange(of: geometry.frame(in: .global).minY) { _, newValue in
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                self.trapezoidPosition = newValue
-                            }
+                            self.viewModel.updateTrapezoidPosition(newValue)
                         }
                 })
-            .offset(x: self.calculateOffset(), y: -47)
+            .offset(x: self.viewModel.calculateOffset(), y: -47)
             .id("trapezoid-\(self.note.id)")
     }
 }

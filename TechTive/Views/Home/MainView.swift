@@ -6,18 +6,11 @@ struct MainView: View {
     // MARK: - Properties
 
     @EnvironmentObject var authViewModel: AuthViewModel
-
     @StateObject private var notesViewModel = NotesViewModel()
-    @StateObject private var viewModel = QuoteViewModel()
+    @StateObject private var quoteViewModel = QuoteViewModel()
+    @StateObject private var viewModel = MainViewModel()
 
     @State private var profileImage: UIImage?
-
-    @State private var showAddNote = false
-    @State private var showHeader = false
-    @State private var showQuote = false
-    @State private var showWeekly = false
-    @State private var showNotes = false
-    @State private var showAddButton = false
 
     // MARK: - UI
 
@@ -27,9 +20,7 @@ struct MainView: View {
                 ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 20) {
                         self.headerSection
-
                         self.weeklyOverviewSection
-
                         self.notesSection
                     }
                 }
@@ -37,18 +28,14 @@ struct MainView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .overlay(self.floatingActionButton)
-                .sheet(isPresented: self.$showAddNote) {
+                .sheet(isPresented: self.$viewModel.showAddNote) {
                     AddNotesView()
                         .environmentObject(self.notesViewModel)
                         .environmentObject(self.authViewModel)
                 }
                 .onAppear {
                     Task { await self.authViewModel.loadProfilePicture() }
-                    withAnimation(.easeIn(duration: 0.6)) { self.showHeader = true }
-                    withAnimation(.easeIn(duration: 0.6).delay(0.3)) { self.showQuote = true }
-                    withAnimation(.easeIn(duration: 0.6).delay(0.6)) { self.showWeekly = true }
-                    withAnimation(.easeIn(duration: 0.6).delay(0.9)) { self.showNotes = true }
-                    withAnimation(.spring(response: 0.6, dampingFraction: 0.7).delay(1.2)) { self.showAddButton = true }
+                    self.viewModel.startAnimations()
                 }
             }
         }
@@ -84,25 +71,25 @@ struct MainView: View {
                     }
                 }
             }
-            .opacity(self.showHeader ? 1 : 0)
+            .opacity(self.viewModel.showHeader ? 1 : 0)
 
-            Text(self.viewModel.quote)
+            Text(self.quoteViewModel.quote)
                 .font(.custom("Poppins-Regular", fixedSize: 16))
                 .foregroundColor(Color(Constants.Colors.orange))
-                .opacity(self.showQuote ? 1 : 0)
+                .opacity(self.viewModel.showQuote ? 1 : 0)
                 .padding(.top, 2)
         }
         .padding(.horizontal)
         .padding(.top, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
-            self.viewModel.fetchQuote()
+            self.quoteViewModel.fetchQuote()
         }
     }
 
     private var weeklyOverviewSection: some View {
         WeeklyOverviewSection()
-            .opacity(self.showWeekly ? 1 : 0)
+            .opacity(self.viewModel.showWeekly ? 1 : 0)
             .padding(.horizontal)
     }
 
@@ -117,12 +104,12 @@ struct MainView: View {
             NotesFeedSection()
                 .environmentObject(self.notesViewModel)
         }
-        .opacity(self.showNotes ? 1 : 0)
+        .opacity(self.viewModel.showNotes ? 1 : 0)
     }
 
     private var floatingActionButton: some View {
         GeometryReader { geometry in
-            Button(action: { self.showAddNote = true }) {
+            Button(action: { self.viewModel.toggleAddNote() }) {
                 Image(systemName: "plus")
                     .font(.system(size: 24, weight: .medium))
                     .foregroundColor(.white)
@@ -134,10 +121,10 @@ struct MainView: View {
                         radius: 4,
                         y: 2)
             }
-            .scaleEffect(self.showAddButton ? 1 : 0, anchor: .center)
+            .scaleEffect(self.viewModel.showAddButton ? 1 : 0, anchor: .center)
             .animation(
                 .spring(response: 0.6, dampingFraction: 0.75, blendDuration: 0.5).delay(1.2),
-                value: self.showAddButton)
+                value: self.viewModel.showAddButton)
             .offset(
                 x: geometry.size.width - 85,
                 y: geometry.size.height - 65)

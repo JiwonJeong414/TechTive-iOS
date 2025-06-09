@@ -6,22 +6,12 @@ struct NotesFeedSection: View {
 
     @EnvironmentObject var notesViewModel: NotesViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var selectedNote: Note? = nil
-    @State private var showingEditor = false
-    @State private var timer: Timer? = nil
-    @State private var refreshTrigger = false
+    @StateObject private var viewModel: NotesFeedViewModel
 
-    // MARK: - Helper Methods
+    // MARK: - Init
 
-    private func bottomColor(_ count: Int) -> Color {
-        guard count > 0 else { return .clear }
-        let lastIndex = count - 1
-        switch lastIndex % 3 {
-            case 0: return Color(Constants.Colors.purple)
-            case 1: return Color(Constants.Colors.lightOrange)
-            case 2: return Color(Constants.Colors.lightYellow)
-            default: return .clear
-        }
+    init() {
+        _viewModel = StateObject(wrappedValue: NotesFeedViewModel(notesViewModel: NotesViewModel()))
     }
 
     // MARK: - UI
@@ -32,15 +22,14 @@ struct NotesFeedSection: View {
             self.bottomRectangle
         }
         .padding(.vertical, 10)
-        .sheet(item: self.$selectedNote) { note in
+        .sheet(item: self.$viewModel.selectedNote) { note in
             AddNotesView(note: note)
                 .environmentObject(self.notesViewModel)
                 .environmentObject(self.authViewModel)
         }
-        .onChange(of: self.refreshTrigger) {
+        .onChange(of: self.viewModel.refreshTrigger) {
             Task {
-                try? await Task.sleep(for: .seconds(2))
-                await self.notesViewModel.fetchNotes()
+                await self.viewModel.refreshNotes()
             }
         }
         .onAppear {
@@ -57,8 +46,7 @@ struct NotesFeedSection: View {
                     .padding(.top, CGFloat(index) * 100)
                     .zIndex(Double(index))
                     .onTapGesture {
-                        self.selectedNote = note
-                        self.showingEditor = true
+                        self.viewModel.selectNote(note)
                     }
             }
         }
@@ -67,7 +55,7 @@ struct NotesFeedSection: View {
 
     private var bottomRectangle: some View {
         Rectangle()
-            .fill(self.bottomColor(self.notesViewModel.notes.count))
+            .fill(self.viewModel.bottomColor(for: self.notesViewModel.notes.count))
             .frame(height: 100)
             .offset(y: 95)
     }
