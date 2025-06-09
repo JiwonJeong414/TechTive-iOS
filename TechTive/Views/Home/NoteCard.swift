@@ -9,14 +9,6 @@ struct NoteCard: View {
     @ObservedObject var noteViewModel: NotesViewModel
     @StateObject private var viewModel: NoteCardViewModel
 
-    // MARK: - Formatters
-
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M/d/yyyy"
-        return formatter
-    }()
-
     // MARK: - Init
 
     init(note: Note, index: Int, noteViewModel: NotesViewModel) {
@@ -71,7 +63,7 @@ struct NoteCard: View {
 
     private var noteFooter: some View {
         HStack {
-            Text(self.dateFormatter.string(from: self.note.timestamp))
+            Text(self.note.timestamp.shortDateString)
                 .font(.custom("Poppins-Regular", fixedSize: 14))
                 .foregroundColor(Color(Constants.Colors.darkPurple))
 

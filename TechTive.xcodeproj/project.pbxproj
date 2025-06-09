@@ -60,6 +60,7 @@
 		29A8CDC82DF7754B008C1027 /* NotesFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC72DF77549008C1027 /* NotesFeedViewModel.swift */; };
 		29A8CDCA2DF77672008C1027 /* AuthenticationFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC92DF77660008C1027 /* AuthenticationFlowViewModel.swift */; };
 		29A8CDCC2DF77794008C1027 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDCB2DF77793008C1027 /* ProfileViewModel.swift */; };
+		29A8CDD62DF77EB1008C1027 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDD52DF77EAC008C1027 /* Date+Extension.swift */; };
 		29E214E22CFC1DED00ABD3B9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */; };
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
@@ -138,6 +139,7 @@
 		29A8CDC72DF77549008C1027 /* NotesFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesFeedViewModel.swift; sourceTree = "<group>"; };
 		29A8CDC92DF77660008C1027 /* AuthenticationFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFlowViewModel.swift; sourceTree = "<group>"; };
 		29A8CDCB2DF77793008C1027 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		29A8CDD52DF77EAC008C1027 /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +304,7 @@
 		2969CD2C2DF6113D00B3206A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				29A8CDD52DF77EAC008C1027 /* Date+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -538,6 +541,7 @@
 				2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */,
 				2969CD332DF6116700B3206A /* DummyData.swift in Sources */,
 				2969CD142DF56DE900B3206A /* LoginView.swift in Sources */,
+				29A8CDD62DF77EB1008C1027 /* Date+Extension.swift in Sources */,
 				2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */,
 				2969CD0C2DF56DC900B3206A /* SpiderGraphView.swift in Sources */,
 				29A8CDCC2DF77794008C1027 /* ProfileViewModel.swift in Sources */,

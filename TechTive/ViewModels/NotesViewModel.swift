@@ -27,7 +27,7 @@ class NotesViewModel: ObservableObject {
             let startOfWeek = calendar.date(byAdding: .weekOfYear, value: -i, to: Date())?.startOfWeek ?? Date()
             let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek) ?? Date()
             let count = self.notes.filter { $0.timestamp >= startOfWeek && $0.timestamp < endOfWeek }.count
-            let weekLabel = DateFormatter.localizedString(from: startOfWeek, dateStyle: .short, timeStyle: .none)
+            let weekLabel = startOfWeek.localizedShortDate
             weeklyCounts.append((week: weekLabel, count: count))
         }
 
@@ -45,9 +45,7 @@ class NotesViewModel: ObservableObject {
 
         // Check for consecutive weeks
         while currentDate > Date().addingTimeInterval(-365 * 24 * 60 * 60) { // Look back up to 1 year
-            let startOfWeek = calendar.date(from: calendar.dateComponents(
-                [.yearForWeekOfYear, .weekOfYear],
-                from: currentDate)) ?? currentDate
+            let startOfWeek = currentDate.startOfWeek ?? currentDate
             let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek) ?? currentDate
 
             // Check if there are any notes in this week
