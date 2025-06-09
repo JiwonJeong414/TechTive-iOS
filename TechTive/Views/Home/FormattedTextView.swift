@@ -1,6 +1,9 @@
 import SwiftUI
 
+/// This is a custom text view that allows for formatted text with custom fonts and colors.
 struct FormattedTextView: UIViewRepresentable {
+    // MARK: - Properties
+
     @Binding var attributedText: NSAttributedString
     @Binding var selectedRange: NSRange
 
