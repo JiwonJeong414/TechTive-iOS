@@ -52,6 +52,9 @@
 		29A8CDB62DF75B19008C1027 /* StickyNoteBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */; };
 		29A8CDB82DF7698B008C1027 /* TrapezoidShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */; };
 		29A8CDBA2DF76997008C1027 /* EmotionsGraphModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */; };
+		29A8CDBC2DF76B7B008C1027 /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDBB2DF76B79008C1027 /* GraphView.swift */; };
+		29A8CDBE2DF76B81008C1027 /* Polygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDBD2DF76B7E008C1027 /* Polygon.swift */; };
+		29A8CDC02DF76ED7008C1027 /* CustomTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDBF2DF76ED3008C1027 /* CustomTextFieldStyle.swift */; };
 		29E214E22CFC1DED00ABD3B9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */; };
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
@@ -122,6 +125,9 @@
 		29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyNoteBackground.swift; sourceTree = "<group>"; };
 		29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrapezoidShape.swift; sourceTree = "<group>"; };
 		29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionsGraphModal.swift; sourceTree = "<group>"; };
+		29A8CDBB2DF76B79008C1027 /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		29A8CDBD2DF76B7E008C1027 /* Polygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polygon.swift; sourceTree = "<group>"; };
+		29A8CDBF2DF76ED3008C1027 /* CustomTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFieldStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,6 +273,9 @@
 		2969CD2A2DF6112500B3206A /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				29A8CDBF2DF76ED3008C1027 /* CustomTextFieldStyle.swift */,
+				29A8CDBD2DF76B7E008C1027 /* Polygon.swift */,
+				29A8CDBB2DF76B79008C1027 /* GraphView.swift */,
 				29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */,
 				29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */,
 				29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */,
@@ -516,10 +525,12 @@
 				2969CD142DF56DE900B3206A /* LoginView.swift in Sources */,
 				2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */,
 				2969CD0C2DF56DC900B3206A /* SpiderGraphView.swift in Sources */,
+				29A8CDBC2DF76B7B008C1027 /* GraphView.swift in Sources */,
 				29A8CDAE2DF732D5008C1027 /* UserProfile.swift in Sources */,
 				2969CD0D2DF56DC900B3206A /* NoteCard.swift in Sources */,
 				2969CD122DF56DDF00B3206A /* AuthenticationFlow.swift in Sources */,
 				2969CD0E2DF56DC900B3206A /* NotesFeedSection.swift in Sources */,
+				29A8CDC02DF76ED7008C1027 /* CustomTextFieldStyle.swift in Sources */,
 				2969CCF32DF56C6400B3206A /* LoginViewModel.swift in Sources */,
 				29A8CDB82DF7698B008C1027 /* TrapezoidShape.swift in Sources */,
 				2969CD222DF56E1B00B3206A /* ProfileView.swift in Sources */,
@@ -531,6 +542,7 @@
 				2969CD182DF56E0500B3206A /* MainView.swift in Sources */,
 				2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */,
 				29A8CDB42DF75AFC008C1027 /* PinView.swift in Sources */,
+				29A8CDBE2DF76B81008C1027 /* Polygon.swift in Sources */,
 				29A8CDB22DF734C8008C1027 /* WeeklyAdviceResponse.swift in Sources */,
 				2969CCF12DF56C5800B3206A /* AuthViewModel.swift in Sources */,
 				2969CD302DF6115200B3206A /* Constants.swift in Sources */,
