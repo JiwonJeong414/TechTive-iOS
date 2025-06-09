@@ -4,26 +4,14 @@ import SwiftUI
 struct AuthenticationFlow: View {
     // MARK: - Properties
 
+    @StateObject private var viewModel = AuthenticationFlowViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var showSignUp = false
-    @State private var currentPage = 0
-
-    private let backgrounds = [Color(hex: "F3E5F5"), Color(hex: "E65100"), Color(hex: "FFF3E0")]
-    private let images = ["pipe", "magnifying", "robot"]
-    private let onboarding = ["Your Private ", "Understand Patterns", "Your Perspective"]
-    private let onboardingTwo = [
-        "Express yourself freely without the pressure of social media. Your thoughts stay completely private and secure.",
-        "Our AI analyzes your entries to help you gain insights into your emotions and personality trends over time.",
-        "Start your journey of self-discovery and growth!"
-    ]
-    private let sizex: [CGFloat] = [244, 168.94, 148].map { CGFloat($0) }
-    private let sizey: [CGFloat] = [132, 183, 264].map { CGFloat($0) }
 
     // MARK: - UI
 
     var body: some View {
         VStack {
-            if self.currentPage < 3 {
+            if self.viewModel.currentPage < 3 {
                 self.onboardingView
             } else {
                 self.loginView
@@ -35,7 +23,7 @@ struct AuthenticationFlow: View {
 
     private var onboardingView: some View {
         ZStack {
-            self.backgrounds[self.currentPage]
+            self.viewModel.backgrounds[self.viewModel.currentPage]
                 .ignoresSafeArea()
 
             VStack {
@@ -51,31 +39,33 @@ struct AuthenticationFlow: View {
     }
 
     private var onboardingImage: some View {
-        Image(self.images[self.currentPage])
+        Image(self.viewModel.images[self.viewModel.currentPage])
             .resizable()
             .scaledToFit()
-            .frame(width: self.sizex[self.currentPage], height: self.sizey[self.currentPage])
-            .foregroundColor(self.currentPage == 1 ? .white : .orange)
+            .frame(
+                width: self.viewModel.sizex[self.viewModel.currentPage],
+                height: self.viewModel.sizey[self.viewModel.currentPage])
+            .foregroundColor(self.viewModel.currentPage == 1 ? .white : .orange)
     }
 
     private var onboardingTitle: some View {
-        Text(self.onboarding[self.currentPage])
+        Text(self.viewModel.onboarding[self.viewModel.currentPage])
             .font(.custom("Poppins-Medium", fixedSize: 30))
             .bold()
-            .foregroundColor(self.currentPage == 1 ? .white : .black)
+            .foregroundColor(self.viewModel.currentPage == 1 ? .white : .black)
     }
 
     private var onboardingDescription: some View {
-        Text(self.onboardingTwo[self.currentPage])
+        Text(self.viewModel.onboardingTwo[self.viewModel.currentPage])
             .font(.custom("Poppins-Regular", fixedSize: 16))
             .multilineTextAlignment(.center)
             .padding(.horizontal, 40)
-            .foregroundColor(self.currentPage == 1 ? .white.opacity(0.8) : .gray)
+            .foregroundColor(self.viewModel.currentPage == 1 ? .white.opacity(0.8) : .gray)
     }
 
     private var navigationButtons: some View {
         HStack {
-            if self.currentPage < 2 {
+            if self.viewModel.currentPage < 2 {
                 self.skipButton
                 Spacer()
                 self.nextButton
@@ -89,30 +79,24 @@ struct AuthenticationFlow: View {
 
     private var skipButton: some View {
         Button("Skip") {
-            withAnimation {
-                self.currentPage = 3
-            }
+            self.viewModel.skipToLogin()
         }
-        .foregroundColor(self.currentPage == 1 ? .white : .gray)
+        .foregroundColor(self.viewModel.currentPage == 1 ? .white : .gray)
     }
 
     private var nextButton: some View {
         Button {
-            withAnimation {
-                self.currentPage += 1
-            }
+            self.viewModel.moveToNextPage()
         } label: {
             Text("Next")
-                .foregroundColor(self.currentPage == 1 ? .white : .gray)
+                .foregroundColor(self.viewModel.currentPage == 1 ? .white : .gray)
                 .fontWeight(.semibold)
         }
     }
 
     private var getStartedButton: some View {
         Button {
-            withAnimation {
-                self.currentPage += 1
-            }
+            self.viewModel.moveToNextPage()
         } label: {
             Text("Get Started")
                 .frame(maxWidth: .infinity)

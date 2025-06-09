@@ -58,6 +58,7 @@
 		29A8CDC42DF7750E008C1027 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC32DF7750D008C1027 /* MainViewModel.swift */; };
 		29A8CDC62DF7752B008C1027 /* NoteCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC52DF7752A008C1027 /* NoteCardViewModel.swift */; };
 		29A8CDC82DF7754B008C1027 /* NotesFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC72DF77549008C1027 /* NotesFeedViewModel.swift */; };
+		29A8CDCA2DF77672008C1027 /* AuthenticationFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDC92DF77660008C1027 /* AuthenticationFlowViewModel.swift */; };
 		29E214E22CFC1DED00ABD3B9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */; };
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
@@ -134,6 +135,7 @@
 		29A8CDC32DF7750D008C1027 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		29A8CDC52DF7752A008C1027 /* NoteCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCardViewModel.swift; sourceTree = "<group>"; };
 		29A8CDC72DF77549008C1027 /* NotesFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesFeedViewModel.swift; sourceTree = "<group>"; };
+		29A8CDC92DF77660008C1027 /* AuthenticationFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationFlowViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 		2969CCEF2DF56BFB00B3206A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				29A8CDC92DF77660008C1027 /* AuthenticationFlowViewModel.swift */,
 				29A8CDC72DF77549008C1027 /* NotesFeedViewModel.swift */,
 				29A8CDC32DF7750D008C1027 /* MainViewModel.swift */,
 				29A8CDC52DF7752A008C1027 /* NoteCardViewModel.swift */,
@@ -558,6 +561,7 @@
 				2969CCF12DF56C5800B3206A /* AuthViewModel.swift in Sources */,
 				2969CD302DF6115200B3206A /* Constants.swift in Sources */,
 				29A8CDC42DF7750E008C1027 /* MainViewModel.swift in Sources */,
+				29A8CDCA2DF77672008C1027 /* AuthenticationFlowViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

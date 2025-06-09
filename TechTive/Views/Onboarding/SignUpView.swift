@@ -4,20 +4,14 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-import FirebaseAuth
 import SwiftUI
 
 /// A view that handles user registration with email and password
 struct SignUpView: View {
     // MARK: - Properties
 
-    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject private var viewModel = SignUpViewModel()
     @Environment(\.dismiss) var dismiss
-
-    @State private var name = ""
-    @State private var email = ""
-    @State private var password = ""
-    @State private var confirmPassword = ""
 
     private let backgroundColor = Color(Constants.Colors.darkPurple)
     private let cardBackground = Color(Constants.Colors.backgroundColor)
@@ -35,10 +29,12 @@ struct SignUpView: View {
                 }
             }
         }
-        .alert("Error", isPresented: self.$authViewModel.showError) {
-            Button("OK", role: .cancel) {}
+        .alert("Error", isPresented: self.$viewModel.showError) {
+            Button("OK", role: .cancel) {
+                self.viewModel.clearError()
+            }
         } message: {
-            Text(self.authViewModel.errorMessage)
+            Text(self.viewModel.errorMessage)
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -80,20 +76,20 @@ struct SignUpView: View {
 
     private var inputFields: some View {
         VStack(spacing: 16) {
-            TextField("Name", text: self.$name)
+            TextField("Name", text: self.$viewModel.name)
                 .textFieldStyle(CustomTextFieldStyle())
                 .autocapitalization(.none)
 
-            TextField("Email", text: self.$email)
+            TextField("Email", text: self.$viewModel.email)
                 .textFieldStyle(CustomTextFieldStyle())
                 .autocapitalization(.none)
                 .keyboardType(.emailAddress)
 
-            SecureField("Password", text: self.$password)
+            SecureField("Password", text: self.$viewModel.password)
                 .textFieldStyle(CustomTextFieldStyle())
                 .textContentType(.oneTimeCode)
 
-            SecureField("Confirm Password", text: self.$confirmPassword)
+            SecureField("Confirm Password", text: self.$viewModel.confirmPassword)
                 .textFieldStyle(CustomTextFieldStyle())
                 .textContentType(.oneTimeCode)
         }
@@ -101,8 +97,8 @@ struct SignUpView: View {
 
     private var errorMessage: some View {
         Group {
-            if !self.authViewModel.errorMessage.isEmpty {
-                Text(self.authViewModel.errorMessage)
+            if !self.viewModel.errorMessage.isEmpty {
+                Text(self.viewModel.errorMessage)
                     .foregroundColor(.red)
                     .font(.system(size: 14))
                     .multilineTextAlignment(.center)
@@ -112,25 +108,17 @@ struct SignUpView: View {
 
     private var signUpButton: some View {
         Button(action: {
-            if self.password == self.confirmPassword {
-                Task {
-                    await self.authViewModel.signUp(
-                        email: self.email,
-                        password: self.password,
-                        name: self.name)
-                }
-            } else {
-                self.authViewModel.errorMessage = "Passwords don't match"
-                self.authViewModel.showError = true
+            Task {
+                await self.viewModel.signUp()
             }
         }) {
             ZStack {
                 Text("Sign Up")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(.white)
-                    .opacity(self.authViewModel.isLoading ? 0 : 1)
+                    .opacity(self.viewModel.isLoading ? 0 : 1)
 
-                if self.authViewModel.isLoading {
+                if self.viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
@@ -140,7 +128,7 @@ struct SignUpView: View {
             .background(self.accentColor)
             .cornerRadius(25)
         }
-        .disabled(self.authViewModel.isLoading)
+        .disabled(self.viewModel.isLoading)
     }
 
     private var loginLink: some View {

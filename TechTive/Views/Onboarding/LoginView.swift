@@ -4,18 +4,14 @@
 //
 //  Created by jiwon jeong on 11/25/24.
 //
-import FirebaseAuth
-import GoogleSignIn
 import SwiftUI
 
 /// A view that handles user authentication through email/password and Google Sign-In
 struct LoginView: View {
     // MARK: - Properties
 
+    @StateObject private var viewModel = LoginViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
-    @State private var email = ""
-    @State private var password = ""
-    @State private var isPasswordVisible = false
 
     private let backgroundColor = Color(Constants.Colors.darkPurple)
     private let cardBackground = Constants.Colors.backgroundColor
@@ -33,12 +29,12 @@ struct LoginView: View {
                 }
             }
         }
-        .alert("Error", isPresented: self.$authViewModel.showError) {
+        .alert("Error", isPresented: self.$viewModel.showError) {
             Button("OK", role: .cancel) {
-                self.authViewModel.errorMessage = ""
+                self.viewModel.clearError()
             }
         } message: {
-            Text(self.authViewModel.errorMessage)
+            Text(self.viewModel.errorMessage)
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -82,37 +78,37 @@ struct LoginView: View {
 
     private var inputFields: some View {
         VStack(spacing: 16) {
-            TextField("Email", text: self.$email)
+            TextField("Email", text: self.$viewModel.email)
                 .textFieldStyle(CustomTextFieldStyle())
                 .autocapitalization(.none)
                 .keyboardType(.emailAddress)
                 .textContentType(.emailAddress)
-                .disabled(self.authViewModel.isLoading)
+                .disabled(self.viewModel.isLoading)
 
             HStack {
-                if self.isPasswordVisible {
-                    TextField("Password", text: self.$password)
+                if self.viewModel.isPasswordVisible {
+                    TextField("Password", text: self.$viewModel.password)
                         .textFieldStyle(CustomTextFieldStyle())
                 } else {
-                    SecureField("Password", text: self.$password)
+                    SecureField("Password", text: self.$viewModel.password)
                         .textFieldStyle(CustomTextFieldStyle())
                 }
 
                 Button(action: {
-                    self.isPasswordVisible.toggle()
+                    self.viewModel.togglePasswordVisibility()
                 }) {
-                    Image(systemName: self.isPasswordVisible ? "eye.slash.fill" : "eye.fill")
+                    Image(systemName: self.viewModel.isPasswordVisible ? "eye.slash.fill" : "eye.fill")
                         .foregroundColor(.gray)
                 }
-                .disabled(self.authViewModel.isLoading)
+                .disabled(self.viewModel.isLoading)
             }
         }
     }
 
     private var errorMessage: some View {
         Group {
-            if !self.authViewModel.errorMessage.isEmpty {
-                Text(self.authViewModel.errorMessage)
+            if !self.viewModel.errorMessage.isEmpty {
+                Text(self.viewModel.errorMessage)
                     .foregroundColor(.red)
                     .font(.system(size: 14))
                     .multilineTextAlignment(.center)
@@ -123,16 +119,16 @@ struct LoginView: View {
     private var loginButton: some View {
         Button(action: {
             Task {
-                await self.authViewModel.login(email: self.email, password: self.password)
+                await self.viewModel.login()
             }
         }) {
             ZStack {
                 Text("Login")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(.white)
-                    .opacity(self.authViewModel.isLoading ? 0 : 1)
+                    .opacity(self.viewModel.isLoading ? 0 : 1)
 
-                if self.authViewModel.isLoading {
+                if self.viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
@@ -142,7 +138,7 @@ struct LoginView: View {
             .background(Color(self.accentColor))
             .cornerRadius(25)
         }
-        .disabled(self.authViewModel.isLoading)
+        .disabled(self.viewModel.isLoading)
     }
 
     private var divider: some View {
@@ -183,7 +179,7 @@ struct LoginView: View {
                 RoundedRectangle(cornerRadius: 25)
                     .stroke(Color.gray.opacity(0.2), lineWidth: 1))
         }
-        .disabled(self.authViewModel.isLoading)
+        .disabled(self.viewModel.isLoading)
     }
 
     private var signUpLink: some View {
