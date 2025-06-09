@@ -1,3 +1,4 @@
+import Inject
 import SwiftUI
 
 /// Main View of TechTive

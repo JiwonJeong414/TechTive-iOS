@@ -53,12 +53,12 @@ class NotesViewModel: ObservableObject {
 
             let url = "http://34.21.62.193/api/posts/"
             let token = try await authViewModel.getAuthToken()
-            print("Debug - Token received:", token)
+//            print("Debug - Token received:", token)
 
             let headers: HTTPHeaders = [
                 "Authorization": "Bearer \(token)"
             ]
-            print("Debug - Request headers:", headers)
+//            print("Debug - Request headers:", headers)
 
             let response = try await AF.request(
                 url,

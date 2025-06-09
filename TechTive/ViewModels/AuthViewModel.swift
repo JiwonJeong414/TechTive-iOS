@@ -170,109 +170,108 @@ import SwiftUI
         return self.auth.currentUser?.uid
     }
 
-    func uploadProfilePicture(image: UIImage) async throws -> Bool {
-        print("🔄 Starting profile picture upload")
+    func uploadProfilePicture(image _: UIImage) async throws -> Bool {
+        // print("🔄 Starting profile picture upload")
 
-        let token = try await getAuthToken()
+        // let token = try await getAuthToken()
 
-        guard let apiURL = URL(string: "http://34.21.62.193/api/pfp/") else {
-            print("❌ Invalid URL")
-            throw URLError(.badURL)
-        }
+        // guard let apiURL = URL(string: "http://34.21.62.193/api/pfp/") else {
+        //     print("❌ Invalid URL")
+        //     throw URLError(.badURL)
+        // }
 
-        // Compress image before upload
-        let maxSizeKB = 1024 // 1MB
-        var compression: CGFloat = 1.0
-        var imageData = image.jpegData(compressionQuality: compression)!
+        // // Compress image before upload
+        // let maxSizeKB = 1024 // 1MB
+        // var compression: CGFloat = 1.0
+        // var imageData = image.jpegData(compressionQuality: compression)!
 
-        while imageData.count / 1024 > maxSizeKB && compression > 0.1 {
-            compression -= 0.1
-            if let compressedData = image.jpegData(compressionQuality: compression) {
-                imageData = compressedData
-            }
-        }
+        // while imageData.count / 1024 > maxSizeKB && compression > 0.1 {
+        //     compression -= 0.1
+        //     if let compressedData = image.jpegData(compressionQuality: compression) {
+        //         imageData = compressedData
+        //     }
+        // }
 
-        print("📤 Compressed image size: \(imageData.count / 1024)KB")
+        // print("📤 Compressed image size: \(imageData.count / 1024)KB")
 
-        let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(token)",
-            "Content-Type": "multipart/form-data"
-        ]
+        // let headers: HTTPHeaders = [
+        //     "Authorization": "Bearer \(token)",
+        //     "Content-Type": "multipart/form-data"
+        // ]
 
-        return try await withCheckedThrowingContinuation { continuation in
-            AF.upload(multipartFormData: { multipartFormData in
-                multipartFormData.append(
-                    imageData,
-                    withName: "ImageFile", // Changed from "image" to "ImageFile"
-                    fileName: "profile.jpg",
-                    mimeType: "image/jpeg")
-            }, to: apiURL, headers: headers)
-                .validate()
-                .responseString { response in
-                    print("📥 Raw response: \(response.value ?? "no response")")
-                    print("📥 Response status code: \(response.response?.statusCode ?? -1)")
-                }
-                .responseDecodable(of: ProfilePictureResponse.self) { response in
-                    switch response.result {
-                        case let .success(profileResponse):
-                            print("✅ Profile picture URL: \(profileResponse.link)")
-                            Task {
-                                do {
-                                    try await self.storeProfilePictureURL(imageUrl: profileResponse.link)
-                                    continuation.resume(returning: true)
-                                } catch {
-                                    print("❌ Error storing profile URL: \(error)")
-                                    continuation.resume(throwing: error)
-                                }
-                            }
-                        case let .failure(error):
-                            print("❌ Upload failed: \(error.localizedDescription)")
-                            if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
-                                print("❌ Server response: \(responseString)")
-                            }
-                            continuation.resume(throwing: error)
-                    }
-                }
-        }
+        // return try await withCheckedThrowingContinuation { continuation in
+        //     AF.upload(multipartFormData: { multipartFormData in
+        //         multipartFormData.append(
+        //             imageData,
+        //             withName: "ImageFile", // Changed from "image" to "ImageFile"
+        //             fileName: "profile.jpg",
+        //             mimeType: "image/jpeg")
+        //     }, to: apiURL, headers: headers)
+        //         .validate()
+        //         .responseString { response in
+        //             print("📥 Raw response: \(response.value ?? "no response")")
+        //             print("📥 Response status code: \(response.response?.statusCode ?? -1)")
+        //         }
+        //         .responseDecodable(of: ProfilePictureResponse.self) { response in
+        //             switch response.result {
+        //                 case let .success(profileResponse):
+        //                     print("✅ Profile picture URL: \(profileResponse.link)")
+        //                     Task {
+        //                         do {
+        //                             try await self.storeProfilePictureURL(imageUrl: profileResponse.link)
+        //                             continuation.resume(returning: true)
+        //                         } catch {
+        //                             print("❌ Error storing profile URL: \(error)")
+        //                             continuation.resume(throwing: error)
+        //                         }
+        //                     }
+        //                 case let .failure(error):
+        //                     print("❌ Upload failed: \(error.localizedDescription)")
+        //                     if let data = response.data, let responseString = String(data: data, encoding: .utf8) {
+        //                         print("❌ Server response: \(responseString)")
+        //                     }
+        //                     continuation.resume(throwing: error)
+        //             }
+        //         }
+        // }
+        return false
     }
 
-    private func storeProfilePictureURL(imageUrl: String) async throws {
-        guard let userId = getCurrentUserId() else { return }
+    private func storeProfilePictureURL(imageUrl _: String) async throws {
+        // guard let userId = getCurrentUserId() else { return }
 
-        try await self.db.collection("users").document(userId).updateData([
-            "profilePictureURL": imageUrl
-        ])
+        // try await self.db.collection("users").document(userId).updateData([
+        //     "profilePictureURL": imageUrl
+        // ])
 
-        await MainActor.run {
-            self.profilePictureURL = imageUrl
-        }
+        // await MainActor.run {
+        //     self.profilePictureURL = imageUrl
+        // }
     }
 
     func fetchProfilePicture() async {
-        guard let userId = getCurrentUserId() else { return }
-        do {
-            let document = try await db.collection("users").document(userId).getDocument()
-            if let data = document.data(), let url = data["profilePictureURL"] as? String {
-                self.profilePictureURL = url
-            }
-        } catch {
-            print("Error fetching profile picture: \(error)")
-        }
+        // guard let userId = getCurrentUserId() else { return }
+        // do {
+        //     let document = try await db.collection("users").document(userId).getDocument()
+        //     if let data = document.data(), let url = data["profilePictureURL"] as? String {
+        //         self.profilePictureURL = url
+        //     }
+        // } catch {
+        //     print("Error fetching profile picture: \(error)")
+        // }
     }
 
     func fetchUserInfo() async {
         guard let currentUser = auth.currentUser else {
-            print("🔴 No current user logged in.")
+            print("No current user logged in.")
             return
         }
-
-        print("🟢 Fetching user info for UID: \(currentUser.uid) at \(Date())")
 
         do {
             let document = try await db.collection("users").document(currentUser.uid).getDocument()
 
             guard let data = document.data() else {
-                print("❌ No user data found for UID: \(currentUser.uid) at \(Date())")
+                print("No user data found for UID: \(currentUser.uid) at \(Date())")
                 return
             }
 
@@ -280,11 +279,11 @@ import SwiftUI
                 self.currentUserName = data["name"] as? String ?? ""
                 self.currentUserEmail = data["email"] as? String ?? ""
                 self.profilePictureURL = data["profilePictureURL"] as? String
-                print("✅ User info fetched: \(self.currentUserName), \(self.currentUserEmail) at \(Date())")
+                print("User info fetched: \(self.currentUserName), \(self.currentUserEmail) at \(Date())")
             }
         } catch {
             print(
-                "❌ Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
+                "Error fetching user document for UID \(currentUser.uid) at \(Date()): \(error.localizedDescription)")
         }
     }
 
@@ -358,7 +357,7 @@ import SwiftUI
             self.currentUserName = ""
             self.profilePictureURL = nil
         }
-        print("✅ User deleted successfully.")
+        print("User deleted successfully.")
     }
 
     func signInWithGoogle() async {
