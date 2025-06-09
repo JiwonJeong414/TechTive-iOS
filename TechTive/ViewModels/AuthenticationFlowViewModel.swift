@@ -6,7 +6,11 @@ extension AuthenticationFlow {
         @Published var showSignUp = false
 
         // Onboarding data
-        let backgrounds = [Color(hex: "F3E5F5"), Color(hex: "E65100"), Color(hex: "FFF3E0")]
+        let backgrounds = [
+            Color(Constants.Colors.lightPurple),
+            Color(Constants.Colors.deepOrange),
+            Color(Constants.Colors.warmOrange)
+        ]
         let images = ["pipe", "magnifying", "robot"]
         let onboarding = ["Your Private ", "Understand Patterns", "Your Perspective"]
         let onboardingTwo = [

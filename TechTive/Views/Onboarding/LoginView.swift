@@ -125,7 +125,7 @@ struct LoginView: View {
             ZStack {
                 Text("Login")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(Constants.Colors.white))
                     .opacity(self.viewModel.isLoading ? 0 : 1)
 
                 if self.viewModel.isLoading {
@@ -145,13 +145,13 @@ struct LoginView: View {
         HStack {
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(.gray.opacity(0.3))
+                .foregroundColor(Color(Constants.Colors.gray).opacity(0.3))
             Text("OR")
                 .font(.system(size: 14))
-                .foregroundColor(.gray)
+                .foregroundColor(Color(Constants.Colors.gray))
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(.gray.opacity(0.3))
+                .foregroundColor(Color(Constants.Colors.gray).opacity(0.3))
         }
         .padding(.vertical, 10)
     }
@@ -169,15 +169,15 @@ struct LoginView: View {
                     .frame(width: 20, height: 20)
                 Text("Sign in with Google")
                     .font(.system(size: 17, weight: .medium))
-                    .foregroundColor(.black)
+                    .foregroundColor(Color(Constants.Colors.black))
             }
             .frame(maxWidth: .infinity)
             .frame(height: 50)
-            .background(Color.white)
+            .background(Color(Constants.Colors.white))
             .cornerRadius(25)
             .overlay(
                 RoundedRectangle(cornerRadius: 25)
-                    .stroke(Color.gray.opacity(0.2), lineWidth: 1))
+                    .stroke(Color(Constants.Colors.gray).opacity(0.2), lineWidth: 1))
         }
         .disabled(self.viewModel.isLoading)
     }
@@ -185,7 +185,7 @@ struct LoginView: View {
     private var signUpLink: some View {
         HStack(spacing: 4) {
             Text("Don't have an account?")
-                .foregroundColor(.black)
+                .foregroundColor(Color(Constants.Colors.black))
 
             NavigationLink(destination: SignUpView()) {
                 Text("Sign up")

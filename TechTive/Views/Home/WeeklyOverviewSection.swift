@@ -6,8 +6,8 @@ struct WeeklyOverviewSection: View {
 
     @StateObject private var viewModel = ViewModel()
 
-    private let stickyYellow = Color(red: 255 / 255, green: 251 / 255, blue: 181 / 255)
-    private let foldYellow = Color(red: 255 / 255, green: 244 / 255, blue: 120 / 255)
+    private let stickyYellow = Color(Constants.Colors.stickyYellow)
+    private let foldYellow = Color(Constants.Colors.foldYellow)
     private let pinGray = Color.gray.opacity(0.7)
 
     // MARK: - UI
@@ -49,7 +49,7 @@ struct WeeklyOverviewSection: View {
     private func adviceText(_ response: WeeklyAdviceResponse) -> some View {
         Text(response.content)
             .font(.custom("CourierPrime-Regular", fixedSize: 17))
-            .foregroundColor(.black.opacity(0.85))
+            .foregroundColor(Color(Constants.Colors.black).opacity(0.85))
             .multilineTextAlignment(.center)
             .padding(.horizontal, 24)
             .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
@@ -58,7 +58,7 @@ struct WeeklyOverviewSection: View {
     private func errorView(_: String) -> some View {
         Text("Not Enough Notes")
             .font(.custom("CourierPrime-Regular", fixedSize: 17))
-            .foregroundColor(.red)
+            .foregroundColor(Color(Constants.Colors.red))
             .padding()
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)

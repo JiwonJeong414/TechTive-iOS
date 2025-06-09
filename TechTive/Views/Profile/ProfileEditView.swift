@@ -53,7 +53,7 @@ struct ProfileEditView: View {
 
             if !self.viewModel.errorMessage.isEmpty {
                 Text(self.viewModel.errorMessage)
-                    .foregroundColor(.red)
+                    .foregroundColor(Color(Constants.Colors.red))
                     .font(.caption)
                     .padding(.top, 10)
             }
@@ -112,8 +112,8 @@ struct ProfileEditView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
                 .font(.custom("CourierPrime-Regular", fixedSize: 16))
-                .background(Color(hex: "E65100"))
-                .foregroundColor(.white)
+                .background(Color(Constants.Colors.deepOrange))
+                .foregroundColor(Color(Constants.Colors.white))
                 .cornerRadius(10)
         }
     }
@@ -127,8 +127,8 @@ struct ProfileEditView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
                 .font(.custom("CourierPrime-Regular", fixedSize: 16))
-                .background(Color(hex: "F3E5F5"))
-                .foregroundColor(.black)
+                .background(Color(Constants.Colors.lightPurple))
+                .foregroundColor(Color(Constants.Colors.black))
                 .cornerRadius(10)
         }
     }
@@ -139,10 +139,10 @@ struct ProfileEditView: View {
         }) {
             HStack {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.orange)
+                    .foregroundColor(Color(Constants.Colors.orange))
                 Text("Back")
                     .font(.custom("Poppins-Medium", fixedSize: 16))
-                    .foregroundColor(.orange)
+                    .foregroundColor(Color(Constants.Colors.orange))
             }
         }
     }

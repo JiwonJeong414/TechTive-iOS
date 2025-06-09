@@ -22,7 +22,7 @@ struct AddNotesView: View {
         NavigationView {
             VStack(spacing: 0) {
                 self.formattingToolbar
-                Divider().background(Color.orange)
+                Divider().background(Color(Constants.Colors.orange))
                 self.errorSection
                 self.textEditorSection
             }
@@ -99,7 +99,7 @@ struct AddNotesView: View {
                 ProgressView()
                     .scaleEffect(1.5)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black.opacity(0.4))
+                    .background(Color(Constants.Colors.black).opacity(0.4))
             }
         }
     }

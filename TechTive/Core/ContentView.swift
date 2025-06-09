@@ -18,11 +18,11 @@ struct ContentView: View {
                         .scaleEffect(1.5)
                     Text("Loading...")
                         .font(.custom("Poppins-Regular", fixedSize: 16))
-                        .foregroundColor(.gray)
+                        .foregroundColor(Color(Constants.Colors.gray))
                         .padding(.top)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color(.systemBackground))
+                .background(Color(Constants.Colors.backgroundColor))
             } else if self.authViewModel.isAuthenticated {
                 MainView()
             } else if self.authViewModel.isSecondState {

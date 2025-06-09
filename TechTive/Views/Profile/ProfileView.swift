@@ -71,10 +71,10 @@ struct ProfileView: View {
             }) {
                 HStack {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(Constants.Colors.orange))
                     Text("Back")
                         .font(.custom("Poppins-Medium", fixedSize: 16))
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(Constants.Colors.orange))
                 }.padding(.top, 70)
             }
             Spacer()
@@ -100,7 +100,7 @@ struct ProfileView: View {
                 Image(systemName: "person.circle.fill")
                     .resizable()
                     .frame(width: 160, height: 160)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color(Constants.Colors.gray))
             }
 
             PhotosPicker(selection: self.$viewModel.selectedItem, matching: .images) {
@@ -113,7 +113,7 @@ struct ProfileView: View {
                     Image(systemName: "pencil.circle.fill")
                         .resizable()
                         .frame(width: 40, height: 40)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Color(Constants.Colors.orange))
                 }
             }
             .onChange(of: self.viewModel.selectedItem) { newItem in
@@ -209,11 +209,11 @@ struct ProfileView: View {
     private func settingsButtonRow(title: String, isDestructive: Bool = false) -> some View {
         HStack {
             Text(title)
-                .foregroundColor(isDestructive ? .red : .black)
+                .foregroundColor(isDestructive ? Color(Constants.Colors.orange) : Color(Constants.Colors.black))
                 .font(.custom("CourierPrime-Regular", fixedSize: 16))
             Spacer()
             Image(systemName: "chevron.right")
-                .foregroundColor(.orange)
+                .foregroundColor(Color(Constants.Colors.orange))
         }
         .padding()
         .frame(maxWidth: .infinity)
@@ -237,14 +237,14 @@ struct ProfileView: View {
         VStack(spacing: 8) {
             Text("Notes Last 5 Weeks")
                 .font(.custom("Poppins-Medium", fixedSize: 16))
-                .foregroundColor(.black)
+                .foregroundColor(Color(Constants.Colors.black))
 
             Chart {
                 ForEach(self.viewModel.notesPerWeek, id: \.week) { data in
                     BarMark(
                         x: .value("Week", data.week),
                         y: .value("Count", data.count))
-                        .foregroundStyle(Color.orange)
+                        .foregroundStyle(Color(Constants.Colors.orange))
                 }
             }
             .frame(height: 200)

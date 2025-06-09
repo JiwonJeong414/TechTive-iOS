@@ -112,7 +112,7 @@ struct MainView: View {
             Button(action: { self.viewModel.toggleAddNote() }) {
                 Image(systemName: "plus")
                     .font(.system(size: 24, weight: .medium))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(Constants.Colors.white))
                     .frame(width: 56, height: 56)
                     .background(Color(Constants.Colors.orange))
                     .clipShape(Circle())

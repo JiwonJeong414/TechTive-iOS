@@ -45,14 +45,16 @@ struct AuthenticationFlow: View {
             .frame(
                 width: self.viewModel.sizex[self.viewModel.currentPage],
                 height: self.viewModel.sizey[self.viewModel.currentPage])
-            .foregroundColor(self.viewModel.currentPage == 1 ? .white : .orange)
+            .foregroundColor(self.viewModel
+                .currentPage == 1 ? Color(Constants.Colors.white) : Color(Constants.Colors.orange))
     }
 
     private var onboardingTitle: some View {
         Text(self.viewModel.onboarding[self.viewModel.currentPage])
             .font(.custom("Poppins-Medium", fixedSize: 30))
             .bold()
-            .foregroundColor(self.viewModel.currentPage == 1 ? .white : .black)
+            .foregroundColor(self.viewModel
+                .currentPage == 1 ? Color(Constants.Colors.white) : Color(Constants.Colors.black))
     }
 
     private var onboardingDescription: some View {
@@ -60,7 +62,8 @@ struct AuthenticationFlow: View {
             .font(.custom("Poppins-Regular", fixedSize: 16))
             .multilineTextAlignment(.center)
             .padding(.horizontal, 40)
-            .foregroundColor(self.viewModel.currentPage == 1 ? .white.opacity(0.8) : .gray)
+            .foregroundColor(self.viewModel.currentPage == 1 ? Color(Constants.Colors.white)
+                .opacity(0.8) : Color(Constants.Colors.gray))
     }
 
     private var navigationButtons: some View {
@@ -81,7 +84,7 @@ struct AuthenticationFlow: View {
         Button("Skip") {
             self.viewModel.skipToLogin()
         }
-        .foregroundColor(self.viewModel.currentPage == 1 ? .white : .gray)
+        .foregroundColor(self.viewModel.currentPage == 1 ? Color(Constants.Colors.white) : Color(Constants.Colors.gray))
     }
 
     private var nextButton: some View {
@@ -89,7 +92,8 @@ struct AuthenticationFlow: View {
             self.viewModel.moveToNextPage()
         } label: {
             Text("Next")
-                .foregroundColor(self.viewModel.currentPage == 1 ? .white : .gray)
+                .foregroundColor(self.viewModel
+                    .currentPage == 1 ? Color(Constants.Colors.white) : Color(Constants.Colors.gray))
                 .fontWeight(.semibold)
         }
     }
@@ -102,8 +106,8 @@ struct AuthenticationFlow: View {
                 .frame(maxWidth: .infinity)
                 .padding()
                 .font(.custom("Poppins-Regular", fixedSize: 16))
-                .background(Color(hex: "F3E5F5"))
-                .foregroundColor(.black)
+                .background(Color(Constants.Colors.lightPurple))
+                .foregroundColor(Color(Constants.Colors.black))
                 .cornerRadius(10)
         }
         .padding(.horizontal)
