@@ -1,119 +1,32 @@
 import SwiftUI
 
+/// A card view that displays a single note with its content, date, and emotion analysis
 struct NoteCard: View {
+    // MARK: - Properties
+
     let note: Note
     let index: Int
-    @State private var trapezoidPosition: CGFloat = 0
     @ObservedObject var noteViewModel: NotesViewModel
+
+    @State private var trapezoidPosition: CGFloat = 0
     @State private var offset: CGFloat = 0
     @State private var showingGraph = false
     @State private var hasAppeared = false
 
+    // MARK: - Constants
+
     private let animationSpeed: CGFloat = 2.0
     private let startingOffset: CGFloat = 0
 
-    private var isEmotionLoading: Bool {
-        return self.note.angerValue == 0 &&
-            self.note.disgustValue == 0 &&
-            self.note.fearValue == 0 &&
-            self.note.joyValue == 0 &&
-            self.note.neutralValue == 0 &&
-            self.note.sadnessValue == 0 &&
-            self.note.surpriseValue == 0
-    }
+    // MARK: - Formatters
 
-    let dateFormatter: DateFormatter = {
+    private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "M/d/yyyy"
         return formatter
     }()
 
-    var body: some View {
-        GeometryReader { mainGeo in
-            HStack(spacing: 0) {
-                TrapezoidShape()
-                    .fill(self.backgroundForIndex(self.index))
-                    .frame(width: 40, height: 10)
-                    .overlay(
-                        GeometryReader { geometry in
-                            Color.clear
-                                .onAppear {
-                                    // Set initial position
-                                    self.trapezoidPosition = geometry.frame(in: .global).minY
-                                }
-                                .onChange(of: geometry.frame(in: .global).minY) { _, newValue in
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        self.trapezoidPosition = newValue
-                                    }
-                                }
-                        })
-                    .offset(x: self.calculateOffset(), y: -47)
-                    .id("trapezoid-\(self.note.id)") // Add unique ID for updates
-
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        Text(self.note.content)
-                            .font(.custom("CourierPrime-Regular", fixedSize: 18))
-                            .foregroundColor(Color(Constants.Colors.orange))
-                            .lineLimit(1)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(Color(Constants.Colors.orange))
-                    }
-
-                    HStack {
-                        Text(self.dateFormatter.string(from: self.note.timestamp))
-                            .font(.custom("Poppins-Regular", fixedSize: 14))
-                            .foregroundColor(Color(Constants.Colors.darkPurple))
-
-                        Spacer()
-
-                        Button(action: {
-                            self.showingGraph = true
-                        }) {
-                            HStack(spacing: 4) {
-                                Text(self.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
-                                    .font(.custom("Poppins-Regular", fixedSize: 12))
-                                    .foregroundColor(Color(Constants.Colors.darkPurple))
-                                if self.isEmotionLoading {
-                                    Image(systemName: "clock")
-                                        .font(.system(size: 10))
-                                        .foregroundColor(Color(Constants.Colors.darkPurple))
-                                }
-                            }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal, 8)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(Constants.Colors.darkPurple).opacity(0.1)))
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-            }
-            .frame(height: 105)
-            .background(self.backgroundForIndex(self.index))
-            .offset(x: self.offset)
-            .onAppear {
-                // Ensure initial position is set
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.hasAppeared = true
-                }
-            }
-            .onChange(of: self.noteViewModel.notes.count) { _, _ in
-                // Update when notes collection changes
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    self.trapezoidPosition = mainGeo.frame(in: .global).minY
-                }
-            }
-            .popover(isPresented: self.$showingGraph) {
-                GraphView(note: self.note)
-                    .frame(width: 300, height: 300)
-                    .presentationCompactAdaptation(.popover)
-            }
-        }
-    }
+    // MARK: - Helper Methods
 
     private func calculateOffset() -> CGFloat {
         let baseOffset = CGFloat(index * 50 + 11)
@@ -132,43 +45,115 @@ struct NoteCard: View {
             default: return Color(Constants.Colors.lightYellow)
         }
     }
-}
 
-struct EmotionsGraphModal: View {
-    @Environment(\.dismiss) var dismiss
-    let note: Note
+    private var isEmotionLoading: Bool {
+        return self.note.angerValue == 0 &&
+            self.note.disgustValue == 0 &&
+            self.note.fearValue == 0 &&
+            self.note.joyValue == 0 &&
+            self.note.neutralValue == 0 &&
+            self.note.sadnessValue == 0 &&
+            self.note.surpriseValue == 0
+    }
+
+    // MARK: - UI
 
     var body: some View {
-        NavigationView {
-            GraphView(note: self.note)
-                .navigationBarItems(
-                    trailing: Button("Done") {
-                        self.dismiss()
-                    })
+        GeometryReader { mainGeo in
+            HStack(spacing: 0) {
+                self.trapezoidView
+
+                VStack(alignment: .leading, spacing: 4) {
+                    self.noteContent
+                    self.noteFooter
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            }
+            .frame(height: 105)
+            .background(self.backgroundForIndex(self.index))
+            .offset(x: self.offset)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.hasAppeared = true
+                }
+            }
+            .onChange(of: self.noteViewModel.notes.count) { _, _ in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    self.trapezoidPosition = mainGeo.frame(in: .global).minY
+                }
+            }
+            .popover(isPresented: self.$showingGraph) {
+                GraphView(note: self.note)
+                    .frame(width: 300, height: 300)
+                    .presentationCompactAdaptation(.popover)
+            }
         }
     }
-}
 
-struct TrapezoidShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
+    private var noteContent: some View {
+        HStack {
+            Text(self.note.content)
+                .font(.custom("CourierPrime-Regular", fixedSize: 18))
+                .foregroundColor(Color(Constants.Colors.orange))
+                .lineLimit(1)
+            Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundColor(Color(Constants.Colors.orange))
+        }
+    }
 
-        let inset: CGFloat = 25
-        let height: CGFloat = -15
-        let baseWidth: CGFloat = 30
+    private var noteFooter: some View {
+        HStack {
+            Text(self.dateFormatter.string(from: self.note.timestamp))
+                .font(.custom("Poppins-Regular", fixedSize: 14))
+                .foregroundColor(Color(Constants.Colors.darkPurple))
 
-        // Top base (wider)
-        path.move(to: CGPoint(x: rect.midX - baseWidth, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.midX + baseWidth, y: rect.minY))
+            Spacer()
 
-        // Right diagonal to bottom base
-        path.addLine(to: CGPoint(x: rect.midX + inset, y: rect.minY + height))
+            self.emotionButton
+        }
+    }
 
-        // Bottom base (narrower than top but wider than before)
-        path.addLine(to: CGPoint(x: rect.midX - inset, y: rect.minY + height))
+    private var emotionButton: some View {
+        Button(action: {
+            self.showingGraph = true
+        }) {
+            HStack(spacing: 4) {
+                Text(self.isEmotionLoading ? "Loading" : self.note.dominantEmotion.emotion)
+                    .font(.custom("Poppins-Regular", fixedSize: 12))
+                    .foregroundColor(Color(Constants.Colors.darkPurple))
+                if self.isEmotionLoading {
+                    Image(systemName: "clock")
+                        .font(.system(size: 10))
+                        .foregroundColor(Color(Constants.Colors.darkPurple))
+                }
+            }
+            .padding(.vertical, 4)
+            .padding(.horizontal, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(Constants.Colors.darkPurple).opacity(0.1)))
+        }
+    }
 
-        path.closeSubpath()
-
-        return path
+    private var trapezoidView: some View {
+        TrapezoidShape()
+            .fill(self.backgroundForIndex(self.index))
+            .frame(width: 40, height: 10)
+            .overlay(
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear {
+                            self.trapezoidPosition = geometry.frame(in: .global).minY
+                        }
+                        .onChange(of: geometry.frame(in: .global).minY) { _, newValue in
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                self.trapezoidPosition = newValue
+                            }
+                        }
+                })
+            .offset(x: self.calculateOffset(), y: -47)
+            .id("trapezoid-\(self.note.id)")
     }
 }

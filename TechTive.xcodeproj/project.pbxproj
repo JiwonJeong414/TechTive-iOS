@@ -50,6 +50,8 @@
 		29A8CDB22DF734C8008C1027 /* WeeklyAdviceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */; };
 		29A8CDB42DF75AFC008C1027 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB32DF75AFB008C1027 /* PinView.swift */; };
 		29A8CDB62DF75B19008C1027 /* StickyNoteBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */; };
+		29A8CDB82DF7698B008C1027 /* TrapezoidShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */; };
+		29A8CDBA2DF76997008C1027 /* EmotionsGraphModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */; };
 		29E214E22CFC1DED00ABD3B9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */; };
 		29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */; };
 		29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */; };
@@ -118,6 +120,8 @@
 		29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyAdviceResponse.swift; sourceTree = "<group>"; };
 		29A8CDB32DF75AFB008C1027 /* PinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
 		29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickyNoteBackground.swift; sourceTree = "<group>"; };
+		29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrapezoidShape.swift; sourceTree = "<group>"; };
+		29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionsGraphModal.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,6 +267,8 @@
 		2969CD2A2DF6112500B3206A /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				29A8CDB92DF76992008C1027 /* EmotionsGraphModal.swift */,
+				29A8CDB72DF76987008C1027 /* TrapezoidShape.swift */,
 				29A8CDB52DF75B15008C1027 /* StickyNoteBackground.swift */,
 				29A8CDB32DF75AFB008C1027 /* PinView.swift */,
 			);
@@ -496,6 +502,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29A8CDBA2DF76997008C1027 /* EmotionsGraphModal.swift in Sources */,
 				2978DF722CF4366C00013C36 /* ContentView.swift in Sources */,
 				2969CCFB2DF56C7800B3206A /* WeeklyAdviceViewModel.swift in Sources */,
 				2969CCFE2DF56CCA00B3206A /* Note.swift in Sources */,
@@ -514,6 +521,7 @@
 				2969CD122DF56DDF00B3206A /* AuthenticationFlow.swift in Sources */,
 				2969CD0E2DF56DC900B3206A /* NotesFeedSection.swift in Sources */,
 				2969CCF32DF56C6400B3206A /* LoginViewModel.swift in Sources */,
+				29A8CDB82DF7698B008C1027 /* TrapezoidShape.swift in Sources */,
 				2969CD222DF56E1B00B3206A /* ProfileView.swift in Sources */,
 				2969CD232DF56E1B00B3206A /* ProfileEditView.swift in Sources */,
 				2969CCF52DF56C6A00B3206A /* NotesViewModel.swift in Sources */,

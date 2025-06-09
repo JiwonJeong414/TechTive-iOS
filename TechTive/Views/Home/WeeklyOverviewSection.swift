@@ -22,7 +22,11 @@ struct WeeklyOverviewSection: View {
                 PinView(pinColor: self.pinGray)
                     .padding(.top, 8)
 
+                Spacer(minLength: 0)
+
                 self.contentSection
+
+                Spacer(minLength: 0)
             }
             .frame(height: 180)
         }
