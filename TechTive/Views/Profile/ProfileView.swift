@@ -7,13 +7,13 @@ struct ProfileView: View {
     // MARK: - Properties
 
     @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: ProfileViewModel
+    @StateObject private var viewModel: ViewModel
 
     private let buttonColor = Color(Constants.Colors.lightYellow)
     private let purpleColor = Color(Constants.Colors.purple)
 
     init(authViewModel: AuthViewModel, notesViewModel: NotesViewModel) {
-        _viewModel = StateObject(wrappedValue: ProfileViewModel(
+        _viewModel = StateObject(wrappedValue: ViewModel(
             authViewModel: authViewModel,
             notesViewModel: notesViewModel))
     }

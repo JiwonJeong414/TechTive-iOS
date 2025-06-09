@@ -4,7 +4,7 @@ import SwiftUI
 struct WeeklyOverviewSection: View {
     // MARK: - Properties
 
-    @StateObject private var viewModel = WeeklyAdviceViewModel()
+    @StateObject private var viewModel = ViewModel()
 
     private let stickyYellow = Color(red: 255 / 255, green: 251 / 255, blue: 181 / 255)
     private let foldYellow = Color(red: 255 / 255, green: 244 / 255, blue: 120 / 255)

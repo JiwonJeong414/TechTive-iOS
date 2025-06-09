@@ -6,12 +6,12 @@ struct NotesFeedSection: View {
 
     @EnvironmentObject var notesViewModel: NotesViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var viewModel: NotesFeedViewModel
+    @StateObject private var viewModel: ViewModel
 
     // MARK: - Init
 
     init() {
-        _viewModel = StateObject(wrappedValue: NotesFeedViewModel(notesViewModel: NotesViewModel()))
+        _viewModel = StateObject(wrappedValue: ViewModel(notesViewModel: NotesViewModel()))
     }
 
     // MARK: - UI

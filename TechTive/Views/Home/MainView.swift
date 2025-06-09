@@ -8,7 +8,7 @@ struct MainView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var notesViewModel = NotesViewModel()
     @StateObject private var quoteViewModel = QuoteViewModel()
-    @StateObject private var viewModel = MainViewModel()
+    @StateObject private var viewModel = ViewModel()
 
     @State private var profileImage: UIImage?
 

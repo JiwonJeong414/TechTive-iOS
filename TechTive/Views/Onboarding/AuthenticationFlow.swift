@@ -4,7 +4,7 @@ import SwiftUI
 struct AuthenticationFlow: View {
     // MARK: - Properties
 
-    @StateObject private var viewModel = AuthenticationFlowViewModel()
+    @StateObject private var viewModel = ViewModel()
     @EnvironmentObject var authViewModel: AuthViewModel
 
     // MARK: - UI

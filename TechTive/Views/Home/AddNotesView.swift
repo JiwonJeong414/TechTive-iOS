@@ -8,12 +8,12 @@ struct AddNotesView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var notesViewModel: NotesViewModel
-    @StateObject private var viewModel: AddNotesViewModel
+    @StateObject private var viewModel: ViewModel
 
     // Passing down the specific note to edit
 
     init(note: Note? = nil) {
-        _viewModel = StateObject(wrappedValue: AddNotesViewModel(note: note))
+        _viewModel = StateObject(wrappedValue: ViewModel(note: note))
     }
 
     // MARK: - UI
