@@ -54,9 +54,9 @@ struct MainView: View {
                     .font(.custom("Poppins-SemiBold", fixedSize: 32))
                     .foregroundColor(Color(Constants.Colors.darkPurple))
                 Spacer()
-                NavigationLink(destination: ProfileView()
-                    .environmentObject(self.authViewModel)
-                    .environmentObject(self.notesViewModel))
+                NavigationLink(destination: ProfileView(
+                    authViewModel: self.authViewModel,
+                    notesViewModel: self.notesViewModel))
                 {
                     if let profileImage = authViewModel.profileImage {
                         Image(uiImage: profileImage)

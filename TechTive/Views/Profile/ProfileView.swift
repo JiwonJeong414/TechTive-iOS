@@ -6,17 +6,17 @@ import SwiftUI
 struct ProfileView: View {
     // MARK: - Properties
 
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @EnvironmentObject var notesViewModel: NotesViewModel
     @Environment(\.dismiss) var dismiss
-
-    @State private var profileImage: UIImage?
-    @State private var selectedItem: PhotosPickerItem?
-    @State private var selectedImage: UIImage?
-    @State private var showDeleteConfirmation = false
+    @StateObject private var viewModel: ProfileViewModel
 
     private let buttonColor = Color(Constants.Colors.lightYellow)
     private let purpleColor = Color(Constants.Colors.purple)
+
+    init(authViewModel: AuthViewModel, notesViewModel: NotesViewModel) {
+        _viewModel = StateObject(wrappedValue: ProfileViewModel(
+            authViewModel: authViewModel,
+            notesViewModel: notesViewModel))
+    }
 
     // MARK: - Body
 
@@ -30,9 +30,11 @@ struct ProfileView: View {
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
         .onAppear {
-            self.loadProfilePicture()
+            Task {
+                await self.viewModel.loadProfilePicture()
+            }
         }
-        .onChange(of: self.authViewModel.isAuthenticated) { isAuthenticated in
+        .onChange(of: self.viewModel.isAuthenticated) { isAuthenticated in
             if !isAuthenticated {
                 self.dismiss()
             }
@@ -65,7 +67,6 @@ struct ProfileView: View {
     private var backButton: some View {
         HStack {
             Button(action: {
-                print("Dismiss tapped")
                 self.dismiss()
             }) {
                 HStack {
@@ -83,13 +84,13 @@ struct ProfileView: View {
 
     private var profileImageSection: some View {
         ZStack(alignment: .bottomTrailing) {
-            if let selectedImage = selectedImage {
+            if let selectedImage = viewModel.selectedImage {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 160, height: 160)
                     .clipShape(Circle())
-            } else if let profileImage = profileImage {
+            } else if let profileImage = viewModel.profileImage {
                 Image(uiImage: profileImage)
                     .resizable()
                     .scaledToFill()
@@ -102,7 +103,7 @@ struct ProfileView: View {
                     .foregroundColor(.gray)
             }
 
-            PhotosPicker(selection: self.$selectedItem, matching: .images) {
+            PhotosPicker(selection: self.$viewModel.selectedItem, matching: .images) {
                 ZStack {
                     Circle()
                         .fill(Color.white)
@@ -115,21 +116,9 @@ struct ProfileView: View {
                         .foregroundColor(.orange)
                 }
             }
-            .onChange(of: self.selectedItem) { newItem in
+            .onChange(of: self.viewModel.selectedItem) { newItem in
                 Task {
-                    if let data = try? await newItem?.loadTransferable(type: Data.self),
-                       let image = UIImage(data: data)
-                    {
-                        selectedImage = image
-                        do {
-                            let success = try await authViewModel.uploadProfilePicture(image: image)
-                            if success {
-                                self.loadProfilePicture()
-                            }
-                        } catch {
-                            print("Error uploading image: \(error)")
-                        }
-                    }
+                    await self.viewModel.handleImageSelection(newItem)
                 }
             }
         }
@@ -138,11 +127,11 @@ struct ProfileView: View {
 
     private var userInfoSection: some View {
         VStack {
-            Text(self.authViewModel.currentUserName)
+            Text(self.viewModel.currentUserName)
                 .font(.custom("Poppins-Medium", fixedSize: 24))
                 .foregroundColor(Color(Constants.Colors.darkPurple))
 
-            Text(self.authViewModel.currentUserEmail)
+            Text(self.viewModel.currentUserEmail)
                 .font(.custom("Poppins-Medium", fixedSize: 16))
                 .foregroundColor(Color(Constants.Colors.darkPurple))
                 .padding(.bottom, 32)
@@ -181,17 +170,14 @@ struct ProfileView: View {
 
     private var profileSettingsButtons: some View {
         VStack(spacing: 0) {
-            NavigationLink(destination: ProfileEditView()
-                .environmentObject(self.authViewModel)
-                .environmentObject(self.notesViewModel))
-            {
+            NavigationLink(destination: ProfileEditView(viewModel: self.viewModel)) {
                 self.settingsButtonRow(title: "Edit Profile")
             }
 
             Divider().background(Color.orange)
 
             Button(action: {
-                self.authViewModel.signOut()
+                self.viewModel.signOut()
             }) {
                 self.settingsButtonRow(title: "Logout")
             }
@@ -199,16 +185,16 @@ struct ProfileView: View {
             Divider().background(Color.orange)
 
             Button(action: {
-                self.showDeleteConfirmation = true
+                self.viewModel.showDeleteConfirmation = true
             }) {
                 self.settingsButtonRow(title: "Delete Account", isDestructive: true)
             }
-            .alert("Are you sure?", isPresented: self.$showDeleteConfirmation) {
+            .alert("Are you sure?", isPresented: self.$viewModel.showDeleteConfirmation) {
                 Button("Cancel", role: .cancel) {}
                 Button("Delete", role: .destructive) {
                     Task {
                         do {
-                            try await self.authViewModel.deleteUser()
+                            try await self.viewModel.deleteAccount()
                         } catch {
                             print("delete account error")
                         }
@@ -254,7 +240,7 @@ struct ProfileView: View {
                 .foregroundColor(.black)
 
             Chart {
-                ForEach(self.notesViewModel.notesPerWeek(), id: \.week) { data in
+                ForEach(self.viewModel.notesPerWeek, id: \.week) { data in
                     BarMark(
                         x: .value("Week", data.week),
                         y: .value("Count", data.count))
@@ -274,40 +260,16 @@ struct ProfileView: View {
         HStack(spacing: 16) {
             StatCard(
                 title: "Total Notes",
-                value: "\(self.notesViewModel.notes.count)")
+                value: "\(self.viewModel.totalNotes)")
 
             StatCard(
                 title: "Average Notes/Week",
-                value: String(
-                    format: "%.1f",
-                    self.notesViewModel.notes.isEmpty ? 0 : Double(self.notesViewModel.notes.count) / 7.0))
+                value: String(format: "%.1f", self.viewModel.averageNotesPerWeek))
 
             StatCard(
                 title: "Longest Streak",
-                value: "\(self.notesViewModel.calculateLongestStreak()) Weeks")
+                value: "\(self.viewModel.longestStreak) Weeks")
         }
         .padding(.horizontal, 20)
-    }
-
-    // MARK: - Methods
-
-    private func loadProfilePicture() {
-        Task {
-            await self.authViewModel.fetchProfilePicture()
-            if let urlString = authViewModel.profilePictureURL,
-               let url = URL(string: urlString)
-            {
-                do {
-                    let (data, _) = try await URLSession.shared.data(from: url)
-                    if let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.profileImage = image
-                        }
-                    }
-                } catch {
-                    print("Error loading profile picture: \(error)")
-                }
-            }
-        }
     }
 }

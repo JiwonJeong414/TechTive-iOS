@@ -4,16 +4,8 @@ import SwiftUI
 struct ProfileEditView: View {
     // MARK: - Properties
 
-    @EnvironmentObject var authViewModel: AuthViewModel
-    @EnvironmentObject var notesViewModel: NotesViewModel
     @Environment(\.presentationMode) var presentationMode
-
-    @State private var newUsername = ""
-    @State private var newEmail = ""
-    @State private var newPassword = ""
-    @State private var confirmPassword = ""
-    @State private var showSuccessMessage = false
-    @State private var errorMessage = ""
+    @ObservedObject var viewModel: ProfileViewModel
 
     private let darkPurple = Color(Constants.Colors.darkPurple)
 
@@ -31,7 +23,7 @@ struct ProfileEditView: View {
         }
         .background(Color(Constants.Colors.backgroundColor))
         .ignoresSafeArea()
-        .alert(isPresented: self.$showSuccessMessage) {
+        .alert(isPresented: self.$viewModel.showSuccessMessage) {
             Alert(
                 title: Text("Success"),
                 message: Text("Profile updated successfully!"),
@@ -59,8 +51,8 @@ struct ProfileEditView: View {
             self.passwordField
             self.confirmPasswordField
 
-            if !self.errorMessage.isEmpty {
-                Text(self.errorMessage)
+            if !self.viewModel.errorMessage.isEmpty {
+                Text(self.viewModel.errorMessage)
                     .foregroundColor(.red)
                     .font(.caption)
                     .padding(.top, 10)
@@ -69,7 +61,7 @@ struct ProfileEditView: View {
     }
 
     private var usernameField: some View {
-        TextField("Change Username", text: self.$newUsername)
+        TextField("Change Username", text: self.$viewModel.newUsername)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
             .font(.custom("Poppins-Regular", size: 16))
@@ -77,7 +69,7 @@ struct ProfileEditView: View {
     }
 
     private var emailField: some View {
-        TextField("Change Email", text: self.$newEmail)
+        TextField("Change Email", text: self.$viewModel.newEmail)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
             .font(.custom("Poppins-Regular", size: 16))
@@ -86,7 +78,7 @@ struct ProfileEditView: View {
     }
 
     private var passwordField: some View {
-        SecureField("Change Password", text: self.$newPassword)
+        SecureField("Change Password", text: self.$viewModel.newPassword)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
             .font(.custom("Poppins-Regular", size: 16))
@@ -94,7 +86,7 @@ struct ProfileEditView: View {
     }
 
     private var confirmPasswordField: some View {
-        SecureField("Confirm New Password", text: self.$confirmPassword)
+        SecureField("Confirm New Password", text: self.$viewModel.confirmPassword)
             .textFieldStyle(CustomTextFieldStyle())
             .autocapitalization(.none)
             .font(.custom("Poppins-Regular", size: 16))
@@ -113,7 +105,7 @@ struct ProfileEditView: View {
     private var saveButton: some View {
         Button(action: {
             Task {
-                await self.handleSaveChanges()
+                await self.viewModel.handleSaveChanges()
             }
         }) {
             Text("Save Changes")
@@ -128,7 +120,7 @@ struct ProfileEditView: View {
 
     private var cancelButton: some View {
         Button(action: {
-            self.resetFields()
+            self.viewModel.resetFields()
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Text("Cancel")
@@ -153,60 +145,5 @@ struct ProfileEditView: View {
                     .foregroundColor(.orange)
             }
         }
-    }
-
-    // MARK: - Methods
-
-    private func handleSaveChanges() async {
-        // Validate input fields
-        if self.newPassword != self.confirmPassword {
-            self.errorMessage = "Passwords do not match"
-            return
-        }
-        if self.newEmail.isEmpty && self.newUsername.isEmpty && self.newPassword.isEmpty {
-            self.errorMessage = "Please fill in at least one field"
-            return
-        }
-
-        self.errorMessage = ""
-
-        // Update user information using AuthViewModel
-        if !self.newUsername.isEmpty {
-            let (_, error) = await authViewModel.updateUsername(newUsername: self.newUsername)
-            if let error = error {
-                self.errorMessage = error
-                return
-            }
-        }
-
-        if !self.newEmail.isEmpty {
-            do {
-                try await self.authViewModel.updateEmail(newEmail: self.newEmail)
-            } catch {
-                self.errorMessage = error.localizedDescription
-                return
-            }
-        }
-
-        if !self.newPassword.isEmpty {
-            do {
-                try await self.authViewModel.updatePassword(newPassword: self.newPassword)
-            } catch {
-                self.errorMessage = error.localizedDescription
-                return
-            }
-        }
-
-        // Show success message and reset fields
-        self.showSuccessMessage = true
-        self.resetFields()
-    }
-
-    private func resetFields() {
-        self.newUsername = ""
-        self.newEmail = ""
-        self.newPassword = ""
-        self.confirmPassword = ""
-        self.errorMessage = ""
     }
 }
