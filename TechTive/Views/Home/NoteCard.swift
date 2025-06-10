@@ -41,9 +41,10 @@ struct NoteCard: View {
             .onChange(of: self.noteViewModel.notes.count) { _, _ in
                 self.viewModel.updateTrapezoidPosition(mainGeo.frame(in: .global).minY)
             }
-            .popover(isPresented: self.$viewModel.showingGraph) {
-                GraphView(note: self.note)
-                    .presentationCompactAdaptation(.popover)
+            .sheet(isPresented: self.$viewModel.showingGraph) {
+                CustomGraphSheet(note: self.note, isPresented: self.$viewModel.showingGraph)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
             }
         }
     }

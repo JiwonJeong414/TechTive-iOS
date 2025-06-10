@@ -116,7 +116,7 @@ struct SpiderGraphView: View {
     }
 
     private func calculatePosition(center: CGPoint, size: CGFloat, angle: Double) -> CGPoint {
-        let offset = size + 20
+        let offset = size + 10
         let x = center.x + offset * cos(angle)
         let y = center.y + offset * sin(angle)
         return CGPoint(x: x, y: y)
