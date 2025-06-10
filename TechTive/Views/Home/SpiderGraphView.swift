@@ -10,7 +10,10 @@ struct SpiderGraphView: View {
     // MARK: - Constants
 
     private let accentColor = Color(Constants.Colors.orange)
-    private let Background = Color(Constants.Colors.lightYellow)
+    private let backgroundGradient = LinearGradient(
+        gradient: Gradient(colors: [Color(Constants.Colors.lightYellow), Color(Constants.Colors.backgroundColor)]),
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing)
     private let sides = 7
 
     // MARK: - Computed Properties
@@ -27,16 +30,27 @@ struct SpiderGraphView: View {
             let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
 
             ZStack {
-                self.Background.ignoresSafeArea()
-
-                if self.isLoading {
+                self.backgroundGradient
+                    .ignoresSafeArea()
+                if self.values.count != self.sides || self.labels.count != self.sides {
+                    VStack {
+                        Text("Graph data error")
+                            .foregroundColor(.red)
+                        Text("Please contact support.")
+                            .font(.caption)
+                    }
+                } else if self.isLoading {
                     self.loadingView
                 } else {
                     self.graphContent(size: size, center: center)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .cornerRadius(25)
+            .cornerRadius(30)
+            .overlay(
+                RoundedRectangle(cornerRadius: 30)
+                    .stroke(Color.gray.opacity(0.15), lineWidth: 1))
+            .shadow(color: Color.black.opacity(0.07), radius: 8, x: 0, y: 4)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -65,7 +79,8 @@ struct SpiderGraphView: View {
     @ViewBuilder private func spiderGrid(size: CGFloat, center: CGPoint) -> some View {
         ForEach(1 ... 5, id: \.self) { level in
             Polygon(sides: self.sides, scale: Double(level) / 5.0)
-                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                .foregroundColor(Color.gray.opacity(0.18))
                 .frame(width: size * 2, height: size * 2)
                 .position(center)
         }
@@ -74,10 +89,8 @@ struct SpiderGraphView: View {
     @ViewBuilder private func dataPolygon(size: CGFloat, center: CGPoint) -> some View {
         if self.values.count == self.sides {
             Polygon(sides: self.sides, values: self.values)
-                .fill(self.accentColor.opacity(0.3))
-                .overlay(
-                    Polygon(sides: self.sides, values: self.values)
-                        .stroke(self.accentColor, lineWidth: 2))
+                .fill(self.accentColor.opacity(0.35))
+                .shadow(color: self.accentColor.opacity(0.18), radius: 10, x: 0, y: 6)
                 .frame(width: size * 2, height: size * 2)
                 .position(center)
         }
@@ -89,8 +102,9 @@ struct SpiderGraphView: View {
             let position = self.calculatePosition(center: center, size: size, angle: angle)
 
             Text(self.labels[i])
-                .font(.caption)
-                .foregroundColor(.black)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.black.opacity(0.85))
+                .shadow(color: .white.opacity(0.7), radius: 2, x: 0, y: 1)
                 .position(x: position.x, y: position.y)
         }
     }

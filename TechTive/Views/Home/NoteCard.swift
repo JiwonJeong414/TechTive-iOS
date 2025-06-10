@@ -43,7 +43,6 @@ struct NoteCard: View {
             }
             .popover(isPresented: self.$viewModel.showingGraph) {
                 GraphView(note: self.note)
-                    .frame(width: 300, height: 300)
                     .presentationCompactAdaptation(.popover)
             }
         }

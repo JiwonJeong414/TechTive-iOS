@@ -49,8 +49,6 @@ struct GraphView: View {
                     values: self.emotionValues,
                     labels: self.emotionLabels)
                     .frame(width: 300, height: 300)
-                    .padding()
-                    .background(self.cardBackground)
             }
         }
     }

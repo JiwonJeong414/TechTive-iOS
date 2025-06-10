@@ -342,11 +342,11 @@ import SwiftUI
 
     // MARK: - Private Methods
 
-    private func storeProfilePictureURL(imageUrl _: String) async throws {
+    func storeProfilePictureURL(imageUrl _: String) async throws {
         // Implementation commented out for now
     }
 
-    private func fetchProfilePicture() async {
+    func fetchProfilePicture() async {
         // Implementation commented out for now
     }
 
