@@ -282,6 +282,7 @@ import SwiftUI
 
         await MainActor.run {
             self.isAuthenticated = false
+            self.isSecondState = true
             self.currentUserEmail = ""
             self.currentUserName = ""
             self.profilePictureURL = nil
@@ -319,6 +320,25 @@ import SwiftUI
     /// Gets the current user's ID
     func getCurrentUserId() -> String? {
         return self.auth.currentUser?.uid
+    }
+
+    /// Checks if there is a valid authenticated user
+    func checkAuthentication() async {
+        if let user = auth.currentUser {
+            await MainActor.run {
+                self.isAuthenticated = true
+                self.isSecondState = false
+            }
+            await self.fetchUserInfo()
+        } else {
+            await MainActor.run {
+                self.isAuthenticated = false
+                self.isSecondState = true
+                self.currentUserEmail = ""
+                self.currentUserName = ""
+                self.profilePictureURL = nil
+            }
+        }
     }
 
     /// Gets the authentication token for the current user

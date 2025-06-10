@@ -31,6 +31,11 @@ struct ProfileView: View {
         .ignoresSafeArea(.all, edges: .top)
         .onAppear {
             Task {
+                await self.viewModel.checkAuthentication()
+                if !self.viewModel.isAuthenticated {
+                    self.dismiss()
+                    return
+                }
                 await self.viewModel.loadProfilePicture()
             }
         }

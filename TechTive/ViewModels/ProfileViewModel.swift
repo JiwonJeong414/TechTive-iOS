@@ -48,6 +48,10 @@ extension ProfileView {
             }
         }
 
+        func checkAuthentication() async {
+            await self.authViewModel.checkAuthentication()
+        }
+
         func handleImageSelection(_ newItem: PhotosPickerItem?) async {
             if let data = try? await newItem?.loadTransferable(type: Data.self),
                let image = UIImage(data: data)
