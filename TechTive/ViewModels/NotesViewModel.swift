@@ -95,7 +95,10 @@ class NotesViewModel: ObservableObject {
                 self.objectWillChange.send()
             }
         } catch {
-            print("❌ Failed to fetch notes: \(error.localizedDescription)")
+            // Only print error if it's not a cancellation
+            if !error.localizedDescription.contains("cancelled") {
+                print("❌ Failed to fetch notes: \(error.localizedDescription)")
+            }
             await MainActor.run {
                 self.error = error
                 self.isLoading = false

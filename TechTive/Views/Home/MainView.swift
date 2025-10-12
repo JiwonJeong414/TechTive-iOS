@@ -10,6 +10,8 @@ struct MainView: View {
     @StateObject private var viewModel = ViewModel()
 
     @State private var profileImage: UIImage?
+    @State private var isRefreshing = false
+    @State private var refreshWeeklyAdvice = UUID()
 
     // MARK: - Initialization
 
@@ -35,6 +37,9 @@ struct MainView: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbarBackground(.hidden, for: .navigationBar)
                 .overlay(self.floatingActionButton)
+                .refreshable {
+                    await self.refreshAllContent()
+                }
                 .sheet(isPresented: self.$viewModel.showAddNote) {
                     AddNotesView()
                         .environmentObject(self.notesViewModel)
@@ -104,6 +109,7 @@ struct MainView: View {
         WeeklyOverviewSection()
             .opacity(self.viewModel.showWeekly ? 1 : 0)
             .padding(.horizontal)
+            .id(self.refreshWeeklyAdvice)
     }
 
     private var notesSection: some View {
@@ -142,5 +148,42 @@ struct MainView: View {
                 x: geometry.size.width - 85,
                 y: geometry.size.height - 65)
         }
+    }
+
+    // MARK: - Private Methods
+
+    private func refreshAllContent() async {
+        // Prevent multiple simultaneous refresh requests
+        guard !self.isRefreshing else { return }
+
+        self.isRefreshing = true
+        defer { isRefreshing = false }
+
+        // Add longer delay to let any existing requests finish
+        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay
+
+        // Run requests with error handling to ignore cancellation errors
+        do {
+            await self.quoteViewModel.fetchQuoteFromAPI()
+        } catch {
+            if !error.localizedDescription.contains("cancelled") {
+                print("❌ Error refreshing quote: \(error)")
+            }
+        }
+
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 second delay
+
+        do {
+            await self.notesViewModel.fetchNotes()
+        } catch {
+            if !error.localizedDescription.contains("cancelled") {
+                print("❌ Error refreshing notes: \(error)")
+            }
+        }
+
+        try? await Task.sleep(nanoseconds: 200_000_000) // 0.2 second delay
+
+        // Trigger weekly advice refresh last
+        self.refreshWeeklyAdvice = UUID()
     }
 }

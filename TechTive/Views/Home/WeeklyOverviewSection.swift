@@ -16,21 +16,17 @@ struct WeeklyOverviewSection: View {
     var body: some View {
         ZStack {
             StickyNoteBackground(stickyColor: self.stickyYellow, foldColor: self.foldYellow)
-                .frame(height: 180)
                 .shadow(color: Color.black.opacity(0.12), radius: 4, x: 0, y: 2)
 
             VStack(spacing: 0) {
                 PinView(pinColor: self.pinGray)
                     .padding(.top, 8)
 
-                Spacer(minLength: 0)
-
                 self.contentSection
-
-                Spacer(minLength: 0)
+                    .padding(.bottom, 16)
             }
-            .frame(height: 180)
         }
+        .frame(minHeight: 160)
         .padding(.horizontal, 24)
         .task {
             self.viewModel.setAuthViewModel(self.authViewModel)
@@ -61,7 +57,7 @@ struct WeeklyOverviewSection: View {
                 .lineLimit(nil)
         }
         .padding(.horizontal, 20)
-        .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     private func errorView(_: String) -> some View {
