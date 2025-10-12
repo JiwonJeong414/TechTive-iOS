@@ -1,5 +1,5 @@
 {
-  "originHash" : "079c37436efcc5c116facea49e6db1f5a0db54dfdc4fa6b9e7023a4e6ef9bb35",
+  "originHash" : "c129a02ec0cf1ba135de67c589c1f22bda7c9ccca82bf3496b5d91089ac40577",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -107,15 +107,6 @@
       "state" : {
         "revision" : "5d7d66f647400952b1758b230e019b07c0b4b22a",
         "version" : "4.1.1"
-      }
-    },
-    {
-      "identity" : "inject",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/krzysztofzablocki/Inject.git",
-      "state" : {
-        "revision" : "728c56639ecb3df441d51d5bc6747329afabcfc9",
-        "version" : "1.5.2"
       }
     },
     {

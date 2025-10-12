@@ -44,7 +44,6 @@
 		2978DF812CF4366D00013C36 /* TechTiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF802CF4366D00013C36 /* TechTiveTests.swift */; };
 		2978DF8B2CF4366D00013C36 /* TechTiveUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8A2CF4366D00013C36 /* TechTiveUITests.swift */; };
 		2978DF8D2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF8C2CF4366D00013C36 /* TechTiveUITestsLaunchTests.swift */; };
-		2991D9F22DF5049D005FFCDC /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = 2991D9F12DF5049D005FFCDC /* Inject */; };
 		29A8CDAE2DF732D5008C1027 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDAD2DF732D3008C1027 /* UserProfile.swift */; };
 		29A8CDB02DF733FB008C1027 /* Quote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDAF2DF733FA008C1027 /* Quote.swift */; };
 		29A8CDB22DF734C8008C1027 /* WeeklyAdviceResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */; };
@@ -158,7 +157,6 @@
 				29E214F12CFC268300ABD3B9 /* FirebaseCore in Frameworks */,
 				29E214E82CFC1F8400ABD3B9 /* FirebaseAnalytics in Frameworks */,
 				29E214E42CFC1DED00ABD3B9 /* FirebaseFirestore in Frameworks */,
-				2991D9F22DF5049D005FFCDC /* Inject in Frameworks */,
 				2969CCED2DF5565800B3206A /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -410,7 +408,6 @@
 				29E214E32CFC1DED00ABD3B9 /* FirebaseFirestore */,
 				29E214E72CFC1F8400ABD3B9 /* FirebaseAnalytics */,
 				29E214F02CFC268300ABD3B9 /* FirebaseCore */,
-				2991D9F12DF5049D005FFCDC /* Inject */,
 				2969CCEC2DF5565800B3206A /* GoogleSignIn */,
 			);
 			productName = TechTive;
@@ -488,7 +485,6 @@
 			packageReferences = (
 				29520C212CFADE3D00E0047E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				2991D9F02DF5049D005FFCDC /* XCRemoteSwiftPackageReference "Inject" */,
 				294726EA2DF5535D00850DEC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 2978DF6D2CF4366C00013C36 /* Products */;
@@ -939,14 +935,6 @@
 				minimumVersion = 5.10.2;
 			};
 		};
-		2991D9F02DF5049D005FFCDC /* XCRemoteSwiftPackageReference "Inject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.2;
-			};
-		};
 		29E214E02CFC1DED00ABD3B9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -967,11 +955,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 294726EA2DF5535D00850DEC /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
-		};
-		2991D9F12DF5049D005FFCDC /* Inject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2991D9F02DF5049D005FFCDC /* XCRemoteSwiftPackageReference "Inject" */;
-			productName = Inject;
 		};
 		29E214E12CFC1DED00ABD3B9 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

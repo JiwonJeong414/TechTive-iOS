@@ -4,7 +4,7 @@ import SwiftUI
 enum Constants {
     /// API Configuration
     enum API {
-        static let baseURL = "http://18.191.173.127:5000"
+        static let baseURL = "http://18.224.223.59:5000"
 
         // Notes endpoints
         static let notes = "/api/note/"
