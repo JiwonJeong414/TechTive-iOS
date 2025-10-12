@@ -28,6 +28,7 @@ struct Note: Identifiable, Codable {
             case header
             case bold
             case italic
+            case underline
         }
     }
 
@@ -79,6 +80,11 @@ extension Note {
                     attributedString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 17), range: nsRange)
                 case .italic:
                     attributedString.addAttribute(.font, value: UIFont.italicSystemFont(ofSize: 17), range: nsRange)
+                case .underline:
+                    attributedString.addAttribute(
+                        .underlineStyle,
+                        value: NSUnderlineStyle.single.rawValue,
+                        range: nsRange)
             }
         }
 

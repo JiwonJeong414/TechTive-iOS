@@ -78,11 +78,34 @@ class NotesViewModel: ObservableObject {
     func fetchNotes() async {
         await MainActor.run { self.isLoading = true }
 
-        // Use dummy data instead of making API call
-        await MainActor.run {
-            self.notes = DummyData.shared.notes.sorted { $0.timestamp > $1.timestamp }
-            self.isLoading = false
-            self.objectWillChange.send()
+        do {
+            guard let authViewModel = authViewModel else {
+                throw NetworkError.authenticationFailed
+            }
+
+            let token = try await authViewModel.getAuthToken()
+            let response = try await URLSession.get(
+                endpoint: Constants.API.posts,
+                token: token,
+                responseType: PostsResponse.self)
+
+            await MainActor.run {
+                self.notes = response.posts.sorted { $0.timestamp > $1.timestamp }
+                self.isLoading = false
+                self.objectWillChange.send()
+            }
+        } catch {
+            print("❌ Error fetching notes: \(error)")
+            await MainActor.run {
+                self.error = error
+                self.isLoading = false
+                // If we have no notes and API fails, use dummy data as fallback
+                if self.notes.isEmpty {
+                    print("📝 Using dummy data as fallback for notes")
+                    self.notes = DummyData.shared.notes
+                }
+                self.objectWillChange.send()
+            }
         }
     }
 
@@ -102,23 +125,34 @@ class NotesViewModel: ObservableObject {
 
     /// Posts a new note to the API
     @MainActor func postNote(content: String, formatting: [Note.TextFormatting]) async throws {
-        // Create a new note with dummy data
-        let newNote = Note(
-            id: notes.count + 1,
-            content: content,
-            timestamp: Date(),
-            userID: 1,
-            formatting: formatting,
-            angerValue: 0.1,
-            disgustValue: 0.05,
-            fearValue: 0.1,
-            joyValue: 0.8,
-            neutralValue: 0.3,
-            sadnessValue: 0.1,
-            surpriseValue: 0.2)
+        guard let authViewModel = authViewModel else {
+            throw NetworkError.authenticationFailed
+        }
 
+        let token = try await authViewModel.getAuthToken()
+
+        let parameters: [String: Any] = [
+            "content": content,
+            "formatting": formatting.map { format in
+                [
+                    "range": [
+                        "location": format.range.location,
+                        "length": format.range.length
+                    ],
+                    "type": format.type.rawValue
+                ]
+            }
+        ]
+
+        let response = try await URLSession.post(
+            endpoint: Constants.API.posts,
+            token: token,
+            parameters: parameters,
+            responseType: PostResponse.self)
+
+        // Add the new post to local collection
         await MainActor.run {
-            self.notes.insert(newNote, at: 0)
+            self.notes.insert(response.post, at: 0)
             self.saveNotes()
         }
     }

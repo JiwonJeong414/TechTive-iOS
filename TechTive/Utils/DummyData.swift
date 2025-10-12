@@ -50,11 +50,14 @@ struct DummyData {
     // MARK: - Weekly Advice Data
 
     let weeklyAdvice = WeeklyAdviceResponse(
-        id: 1,
-        content: "Based on your recent entries, you've been showing great progress in managing your emotions. Keep up the positive mindset!",
-        createdAt: "2024-03-25T12:00:00Z",
-        ofWeek: "Week 12",
-        userId: 1)
+        message: "Weekly advice generated successfully",
+        user_id: "1",
+        content: WeeklyAdviceContent(
+            riddle: "What has keys but no locks, space but no room, and you can enter but not go inside?",
+            answer: "A keyboard",
+            advice: "Based on your recent entries, you've been showing great progress in managing your emotions. Keep up the positive mindset!"),
+        created_at: "2024-03-25T12:00:00Z",
+        week_of: "Week 12")
 
     // MARK: - Quote Data
 

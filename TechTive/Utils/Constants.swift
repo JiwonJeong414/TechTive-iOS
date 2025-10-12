@@ -2,6 +2,21 @@ import SwiftUI
 
 /// Constants used in TechTive's design system such as colors, fonts, etc.
 enum Constants {
+    /// API Configuration
+    enum API {
+        static let baseURL = "http://18.191.173.127:5000"
+
+        // Posts endpoints
+        static let posts = "/api/posts/"
+        static let post = "/api/post/"
+
+        // Weekly advice endpoints
+        static let advice = "/api/advice/latest/"
+
+        // Profile picture endpoints
+        static let profilePicture = "/api/pfp/"
+    }
+
     /// Colors used in TechTive's design system
     enum Colors {
         // Primary

@@ -85,8 +85,13 @@ import SwiftUI
 
             try await self.db.collection("users").document(user.uid).setData(userData)
 
-            self.isLoading = false
-            self.isAuthenticated = true
+            // Update local user info
+            await MainActor.run {
+                self.currentUserName = name
+                self.currentUserEmail = email
+                self.isLoading = false
+                self.isAuthenticated = true
+            }
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -292,12 +297,6 @@ import SwiftUI
 
     // MARK: - Profile Picture Methods
 
-    /// Uploads a profile picture for the current user
-    func uploadProfilePicture(image _: UIImage) async throws -> Bool {
-        // Implementation commented out for now
-        return false
-    }
-
     /// Loads the profile picture for the current user
     func loadProfilePicture() async {
         await self.fetchProfilePicture()
@@ -316,6 +315,18 @@ import SwiftUI
     }
 
     // MARK: - Helper Methods
+
+    /// Debug function to print bearer token and UID
+    func printDebugInfo() async {
+        do {
+            let token = try await getAuthToken()
+            let uid = self.getCurrentUserId() ?? "No UID"
+            print("🔑 Bearer Token: \(token)")
+            print("👤 User ID: \(uid)")
+        } catch {
+            print("❌ Error getting debug info: \(error.localizedDescription)")
+        }
+    }
 
     /// Gets the current user's ID
     func getCurrentUserId() -> String? {
@@ -367,7 +378,37 @@ import SwiftUI
     }
 
     func fetchProfilePicture() async {
-        // Implementation commented out for now
+        do {
+            let token = try await getAuthToken()
+            let response = try await URLSession.get(
+                endpoint: Constants.API.profilePicture,
+                token: token,
+                responseType: ProfilePictureResponse.self)
+
+            await MainActor.run {
+                self.profilePictureURL = response.imageURL
+            }
+        } catch {
+            print("❌ Error fetching profile picture URL: \(error)")
+            await MainActor.run {
+                self.profilePictureURL = nil
+            }
+        }
+    }
+
+    func uploadProfilePicture(image: UIImage) async throws -> Bool {
+        let token = try await getAuthToken()
+        let response = try await URLSession.uploadImage(
+            endpoint: Constants.API.profilePicture,
+            token: token,
+            image: image,
+            responseType: ProfilePictureResponse.self)
+
+        await MainActor.run {
+            self.profilePictureURL = response.imageURL
+        }
+
+        return true
     }
 
     private func fetchUserInfo() async {

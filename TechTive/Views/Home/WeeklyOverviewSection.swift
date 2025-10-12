@@ -5,6 +5,7 @@ struct WeeklyOverviewSection: View {
     // MARK: - Properties
 
     @StateObject private var viewModel = ViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
 
     private let stickyYellow = Color(Constants.Colors.stickyYellow)
     private let foldYellow = Color(Constants.Colors.foldYellow)
@@ -32,6 +33,7 @@ struct WeeklyOverviewSection: View {
         }
         .padding(.horizontal, 24)
         .task {
+            self.viewModel.setAuthViewModel(self.authViewModel)
             await self.viewModel.fetchWeeklyAdvice()
         }
     }
@@ -47,12 +49,23 @@ struct WeeklyOverviewSection: View {
     }
 
     private func adviceText(_ response: WeeklyAdviceResponse) -> some View {
-        Text(response.content)
-            .font(.custom("CourierPrime-Regular", fixedSize: 17))
-            .foregroundColor(Color(Constants.Colors.black).opacity(0.85))
-            .multilineTextAlignment(.center)
-            .padding(.horizontal, 24)
-            .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
+        VStack(spacing: 8) {
+            Text("Weekly Riddle")
+                .font(Constants.Fonts.poppinsSemiBold14)
+                .foregroundColor(Color(Constants.Colors.black).opacity(0.9))
+
+            Text(response.safeContent.riddle)
+                .font(.custom("CourierPrime-Regular", fixedSize: 15))
+                .foregroundColor(Color(Constants.Colors.black).opacity(0.8))
+                .multilineTextAlignment(.center)
+
+            Text("Answer: \(response.safeContent.answer)")
+                .font(Constants.Fonts.poppinsMedium14)
+                .foregroundColor(Color(Constants.Colors.orange))
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
     }
 
     private func errorView(_: String) -> some View {

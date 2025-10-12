@@ -41,6 +41,10 @@ struct MainView: View {
         }
         .onAppear {
             self.notesViewModel.authViewModel = self.authViewModel
+            self.quoteViewModel.authViewModel = self.authViewModel
+            Task {
+                await self.authViewModel.printDebugInfo()
+            }
             Task {
                 await self.notesViewModel.fetchNotes()
             }
