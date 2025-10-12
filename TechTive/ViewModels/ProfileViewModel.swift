@@ -33,17 +33,19 @@ extension ProfileView {
         // MARK: - Profile Methods
 
         func loadProfilePicture() async {
-            await self.authViewModel.fetchProfilePicture()
-            if let urlString = authViewModel.profilePictureURL,
-               let url = URL(string: urlString)
-            {
-                do {
-                    let (data, _) = try await URLSession.shared.data(from: url)
-                    if let image = UIImage(data: data) {
-                        self.profileImage = image
-                    }
-                } catch {
-                    print("Error loading profile picture: \(error)")
+            do {
+                let token = try await authViewModel.getAuthToken()
+                let image = try await URLSession.getImage(
+                    endpoint: Constants.API.profilePicture,
+                    token: token)
+
+                await MainActor.run {
+                    self.profileImage = image
+                }
+            } catch {
+                print("❌ Error loading profile picture: \(error)")
+                await MainActor.run {
+                    self.profileImage = nil
                 }
             }
         }
@@ -61,9 +63,13 @@ extension ProfileView {
                     let success = try await authViewModel.uploadProfilePicture(image: image)
                     if success {
                         await self.loadProfilePicture()
+                        // Clear selectedImage after successful upload so profileImage takes precedence
+                        self.selectedImage = nil
                     }
                 } catch {
                     print("Error uploading image: \(error)")
+                    // Clear selectedImage on error too
+                    self.selectedImage = nil
                 }
             }
         }

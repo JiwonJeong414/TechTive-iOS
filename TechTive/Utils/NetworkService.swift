@@ -142,7 +142,7 @@ extension URLSession {
                 multipartFormData: { multipartFormData in
                     multipartFormData.append(
                         imageData,
-                        withName: "ImageFile",
+                        withName: "profile_picture",
                         fileName: "profile.jpg",
                         mimeType: "image/jpeg")
                 },
@@ -150,21 +150,128 @@ extension URLSession {
                 headers: headers)
                 .validate()
                 .responseData { response in
+                    // Debug: Print response details
+                    if let httpResponse = response.response {
+                        print("📤 Image upload response status: \(httpResponse.statusCode)")
+                    }
+
                     switch response.result {
                         case let .success(data):
                             do {
                                 let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                                print("✅ Image upload successful")
                                 continuation.resume(returning: decodedResponse)
                             } catch {
                                 print("❌ Image upload decoding error: \(error)")
+                                if let jsonString = String(data: data, encoding: .utf8) {
+                                    print("❌ Response data: \(jsonString)")
+                                }
                                 continuation.resume(throwing: error)
                             }
                         case let .failure(error):
                             print("❌ Image upload error: \(error)")
+                            if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                                print("❌ Error response data: \(jsonString)")
+                            }
                             continuation.resume(throwing: error)
                     }
                 }
         }
+    }
+
+    /// Upload image with multipart form data using PUT method (for updates)
+    static func uploadImageUpdate<T: Codable>(
+        endpoint: String,
+        token: String,
+        image: UIImage,
+        responseType: T.Type) async throws -> T
+    {
+        let url = Constants.API.baseURL + endpoint
+
+        return try await withCheckedThrowingContinuation { continuation in
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                continuation.resume(throwing: NetworkError.invalidImageData)
+                return
+            }
+
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token)"
+            ]
+
+            AF.upload(
+                multipartFormData: { multipartFormData in
+                    multipartFormData.append(
+                        imageData,
+                        withName: "profile_picture",
+                        fileName: "profile.jpg",
+                        mimeType: "image/jpeg")
+                },
+                to: url,
+                method: .put,
+                headers: headers)
+                .validate()
+                .responseData { response in
+                    // Debug: Print response details
+                    if let httpResponse = response.response {
+                        print("📤 Image update response status: \(httpResponse.statusCode)")
+                    }
+
+                    switch response.result {
+                        case let .success(data):
+                            do {
+                                let decodedResponse = try JSONDecoder().decode(responseType, from: data)
+                                print("✅ Image update successful")
+                                continuation.resume(returning: decodedResponse)
+                            } catch {
+                                print("❌ Image update decoding error: \(error)")
+                                if let jsonString = String(data: data, encoding: .utf8) {
+                                    print("❌ Response data: \(jsonString)")
+                                }
+                                continuation.resume(throwing: error)
+                            }
+                        case let .failure(error):
+                            print("❌ Image update error: \(error)")
+                            if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                                print("❌ Error response data: \(jsonString)")
+                            }
+                            continuation.resume(throwing: error)
+                    }
+                }
+        }
+    }
+
+    /// Load image directly from endpoint
+    static func getImage(
+        endpoint: String,
+        token: String) async throws -> UIImage?
+    {
+        // Add cache-busting parameter to force fresh image
+        let cacheBuster = "?t=\(Int(Date().timeIntervalSince1970))"
+        let url = Constants.API.baseURL + endpoint + cacheBuster
+        var request = URLRequest(url: URL(string: url)!)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("image/jpeg", forHTTPHeaderField: "Accept")
+        request.cachePolicy = .reloadIgnoringLocalCacheData // Force fresh request
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        // Check if response is 404 (no profile picture)
+        if let httpResponse = response as? HTTPURLResponse {
+            if httpResponse.statusCode == 404 {
+                return nil // No profile picture found
+            }
+
+            if httpResponse.statusCode >= 400 {
+                print("❌ HTTP Error \(httpResponse.statusCode) for image endpoint: \(endpoint)")
+                throw NetworkError.invalidResponse
+            }
+        }
+
+        guard let image = UIImage(data: data) else {
+            throw NetworkError.invalidImageData
+        }
+
+        return image
     }
 
     /// Generic GET request that handles 404 as "no data" rather than error

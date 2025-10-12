@@ -50,19 +50,15 @@ struct WeeklyOverviewSection: View {
 
     private func adviceText(_ response: WeeklyAdviceResponse) -> some View {
         VStack(spacing: 8) {
-            Text("Weekly Riddle")
+            Text("Weekly Advice")
                 .font(Constants.Fonts.poppinsSemiBold14)
                 .foregroundColor(Color(Constants.Colors.black).opacity(0.9))
 
-            Text(response.safeContent.riddle)
-                .font(.custom("CourierPrime-Regular", fixedSize: 15))
+            Text(response.content)
+                .font(.custom("CourierPrime-Regular", fixedSize: 14))
                 .foregroundColor(Color(Constants.Colors.black).opacity(0.8))
                 .multilineTextAlignment(.center)
-
-            Text("Answer: \(response.safeContent.answer)")
-                .font(Constants.Fonts.poppinsMedium14)
-                .foregroundColor(Color(Constants.Colors.orange))
-                .multilineTextAlignment(.center)
+                .lineLimit(nil)
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)

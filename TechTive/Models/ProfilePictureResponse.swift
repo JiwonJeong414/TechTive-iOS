@@ -1,24 +1,22 @@
 import Foundation
 
 struct ProfilePictureResponse: Codable {
-    let message: String
-    let link: String?
+    let message: String?
+    let url: String?
+    let filename: String?
 
-    // Alternative field names that might be used by the API
-    private let url: String?
-    private let imageUrl: String?
+    // Alternative field names for GET requests
     private let profilePictureUrl: String?
 
     // Computed property to get the actual URL
     var imageURL: String? {
-        return self.link ?? self.url ?? self.imageUrl ?? self.profilePictureUrl
+        return self.profilePictureUrl ?? self.url
     }
 
     enum CodingKeys: String, CodingKey {
         case message
-        case link
         case url
-        case imageUrl = "image_url"
+        case filename
         case profilePictureUrl = "profile_picture_url"
     }
 }

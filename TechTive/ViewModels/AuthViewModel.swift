@@ -44,7 +44,6 @@ import SwiftUI
                 if user != nil {
                     authViewModel?.isLoadingUserInfo = true
                     await authViewModel?.fetchUserInfo()
-                    await authViewModel?.fetchProfilePicture()
                     await MainActor.run {
                         authViewModel?.isAuthenticated = true
                         authViewModel?.isLoadingUserInfo = false
@@ -299,17 +298,19 @@ import SwiftUI
 
     /// Loads the profile picture for the current user
     func loadProfilePicture() async {
-        await self.fetchProfilePicture()
-        if let urlString = profilePictureURL, let url = URL(string: urlString) {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                if let image = UIImage(data: data) {
-                    await MainActor.run {
-                        self.profileImage = image
-                    }
-                }
-            } catch {
-                print("Error loading profile picture: \(error)")
+        do {
+            let token = try await getAuthToken()
+            let image = try await URLSession.getImage(
+                endpoint: Constants.API.profilePicture,
+                token: token)
+
+            await MainActor.run {
+                self.profileImage = image
+            }
+        } catch {
+            print("❌ Error loading profile picture: \(error)")
+            await MainActor.run {
+                self.profileImage = nil
             }
         }
     }
@@ -377,38 +378,53 @@ import SwiftUI
         // Implementation commented out for now
     }
 
-    func fetchProfilePicture() async {
-        do {
-            let token = try await getAuthToken()
-            let response = try await URLSession.getWith404Handling(
+    func uploadProfilePicture(image: UIImage) async throws -> Bool {
+        let token = try await getAuthToken()
+
+        // Check if user already has a profile picture by trying to load it
+        let hasExistingPicture = await checkIfProfilePictureExists(token: token)
+
+        if hasExistingPicture {
+            // User already has a profile picture, use PUT to update
+            print("ℹ️ User has existing profile picture, updating with PUT...")
+            let response = try await URLSession.uploadImageUpdate(
                 endpoint: Constants.API.profilePicture,
                 token: token,
+                image: image,
                 responseType: ProfilePictureResponse.self)
 
             await MainActor.run {
-                self.profilePictureURL = response?.imageURL
+                self.profilePictureURL = response.imageURL
             }
-        } catch {
-            print("❌ Error fetching profile picture URL: \(error)")
+
+            return true
+        } else {
+            // User doesn't have a profile picture, use POST to create
+            print("ℹ️ No existing profile picture, creating with POST...")
+            let response = try await URLSession.uploadImage(
+                endpoint: Constants.API.profilePicture,
+                token: token,
+                image: image,
+                responseType: ProfilePictureResponse.self)
+
             await MainActor.run {
-                self.profilePictureURL = nil
+                self.profilePictureURL = response.imageURL
             }
+
+            return true
         }
     }
 
-    func uploadProfilePicture(image: UIImage) async throws -> Bool {
-        let token = try await getAuthToken()
-        let response = try await URLSession.uploadImage(
-            endpoint: Constants.API.profilePicture,
-            token: token,
-            image: image,
-            responseType: ProfilePictureResponse.self)
-
-        await MainActor.run {
-            self.profilePictureURL = response.imageURL
+    /// Check if user already has a profile picture by attempting to load it
+    private func checkIfProfilePictureExists(token: String) async -> Bool {
+        do {
+            let _ = try await URLSession.getImage(
+                endpoint: Constants.API.profilePicture,
+                token: token)
+            return true // Image exists
+        } catch {
+            return false // No image or error loading
         }
-
-        return true
     }
 
     private func fetchUserInfo() async {
