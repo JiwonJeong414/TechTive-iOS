@@ -39,11 +39,15 @@ struct FormattedTextView: UIViewRepresentable {
         }
 
         func textViewDidChange(_ textView: UITextView) {
-            self.attributedText.wrappedValue = textView.attributedText
+            DispatchQueue.main.async {
+                self.attributedText.wrappedValue = textView.attributedText
+            }
         }
 
         func textViewDidChangeSelection(_ textView: UITextView) {
-            self.selectedRange.wrappedValue = textView.selectedRange
+            DispatchQueue.main.async {
+                self.selectedRange.wrappedValue = textView.selectedRange
+            }
         }
     }
 }

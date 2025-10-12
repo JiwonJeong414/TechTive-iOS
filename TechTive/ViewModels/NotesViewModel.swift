@@ -124,6 +124,16 @@ class NotesViewModel: ObservableObject {
             }
         ]
 
+        // Debug: Print what we're sending to the backend
+        print("📤 Sending note to backend:")
+        print("   Content: '\(content)'")
+        print("   Formattings: \(formattings.map { "\($0.type.rawValue) at \($0.location) length \($0.length)" })")
+        if let jsonData = try? JSONSerialization.data(withJSONObject: parameters),
+           let jsonString = String(data: jsonData, encoding: .utf8)
+        {
+            print("   JSON: \(jsonString)")
+        }
+
         // Create note via API
         let newNote = try await URLSession.post(
             endpoint: Constants.API.notes,
@@ -131,10 +141,46 @@ class NotesViewModel: ObservableObject {
             parameters: parameters,
             responseType: Note.self)
 
+        // Debug: Check if the created note has emotional analysis data
+        print("📝 Created note emotional data:")
+        print("   Content: '\(newNote.content)'")
+        print("   Joy: \(newNote.joyValue), Neutral: \(newNote.neutralValue)")
+        print("   Dominant: \(newNote.dominantEmotion.emotion)")
+        print(
+            "   All emotions: anger=\(newNote.angerValue), disgust=\(newNote.disgustValue), fear=\(newNote.fearValue), joy=\(newNote.joyValue), neutral=\(newNote.neutralValue), sadness=\(newNote.sadnessValue), surprise=\(newNote.surpriseValue)")
+
         // Add the new note to local collection
         await MainActor.run {
             self.notes.insert(newNote, at: 0)
             self.saveNotes()
+            self.objectWillChange.send() // Force UI update
+        }
+
+        // Refresh notes to get emotional analysis data
+        // The backend might process emotional analysis asynchronously
+        await self.fetchNotes()
+    }
+
+    /// Deletes a note via API
+    @MainActor func deleteNote(id: Int) async throws {
+        guard let authViewModel = authViewModel else {
+            throw NetworkError.authenticationFailed
+        }
+
+        let token = try await authViewModel.getAuthToken()
+
+        // Delete note via API
+        struct EmptyResponse: Codable {}
+        let _: EmptyResponse = try await URLSession.delete(
+            endpoint: "\(Constants.API.notes)\(id)/",
+            token: token,
+            responseType: EmptyResponse.self)
+
+        // Remove the note from local collection
+        await MainActor.run {
+            self.notes.removeAll { $0.id == id }
+            self.saveNotes()
+            self.objectWillChange.send() // Force UI update
         }
     }
 
@@ -148,7 +194,39 @@ class NotesViewModel: ObservableObject {
             responseType: NotesResponse.self)
 
         print("✅ Notes fetched: \(response.notes.count) notes")
-        return response.notes
+
+        // Notes list API doesn't include emotional analysis data
+        // We need to fetch each note individually to get emotional analysis
+        var notesWithEmotions: [Note] = []
+
+        for (index, note) in response.notes.enumerated() {
+            print(
+                "🔄 Fetching emotional analysis for note \(index + 1)/\(response.notes.count): '\(note.content.prefix(20))...'")
+
+            do {
+                // Fetch individual note with emotional analysis
+                let fullNote = try await fetchIndividualNote(id: note.id, token: token)
+                notesWithEmotions.append(fullNote)
+
+                print(
+                    "✅ Note \(index + 1) emotional data: \(fullNote.dominantEmotion.emotion) (\(fullNote.dominantEmotion.value))")
+            } catch {
+                print("❌ Failed to fetch emotional analysis for note \(note.id): \(error.localizedDescription)")
+                // Fallback to note without emotional analysis
+                notesWithEmotions.append(note)
+            }
+        }
+
+        return notesWithEmotions
+    }
+
+    /// Fetches a specific note by ID with emotional analysis
+    private func fetchIndividualNote(id: Int, token: String) async throws -> Note {
+        let note = try await URLSession.get(
+            endpoint: "\(Constants.API.notes)\(id)/",
+            token: token,
+            responseType: Note.self)
+        return note
     }
 
     // MARK: - Private Methods

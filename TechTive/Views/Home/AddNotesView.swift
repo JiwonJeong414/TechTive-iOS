@@ -36,15 +36,30 @@ struct AddNotesView: View {
                     }
                     .foregroundColor(Color(Constants.Colors.orange))
                 }
+
+                // Delete button (only when editing)
+                if self.viewModel.isEditing {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            Task {
+                                await self.viewModel.deleteNote(notesViewModel: self.notesViewModel) {
+                                    self.dismiss()
+                                }
+                            }
+                        }) {
+                            Image(systemName: "trash")
+                                .foregroundColor(.red)
+                        }
+                        .disabled(self.viewModel.isLoading)
+                    }
+                }
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(self.viewModel.isEditing ? "Save" : "Post") {
-                        self.viewModel.isLoading = true
-                        self.viewModel.error = nil
                         Task {
                             await self.viewModel.postNote(notesViewModel: self.notesViewModel) {
                                 self.dismiss()
                             }
-                            self.viewModel.isLoading = false
                         }
                     }
                     .foregroundColor(Color(Constants.Colors.orange))
@@ -59,18 +74,39 @@ struct AddNotesView: View {
 
     private var formattingToolbar: some View {
         HStack(spacing: 16) {
-            Button(action: { self.viewModel.toggleHeader() }) {
+            Button(action: {
+                Task { await self.viewModel.toggleHeader() }
+            }) {
                 Image(systemName: "textformat.size.larger")
-                    .foregroundColor(Color(Constants.Colors.orange))
+                    .foregroundColor(self.viewModel.selectedRange.length > 0 ? Color(Constants.Colors.orange) : Color
+                        .gray)
             }
-            Button(action: { self.viewModel.toggleBold() }) {
+            .disabled(self.viewModel.selectedRange.length == 0)
+
+            Button(action: {
+                Task { await self.viewModel.toggleBold() }
+            }) {
                 Image(systemName: "bold")
-                    .foregroundColor(Color(Constants.Colors.orange))
+                    .foregroundColor(self.viewModel.selectedRange.length > 0 ? Color(Constants.Colors.orange) : Color
+                        .gray)
             }
-            Button(action: { self.viewModel.toggleItalic() }) {
+            .disabled(self.viewModel.selectedRange.length == 0)
+
+            Button(action: {
+                Task { await self.viewModel.toggleItalic() }
+            }) {
                 Image(systemName: "italic")
-                    .foregroundColor(Color(Constants.Colors.orange))
+                    .foregroundColor(self.viewModel.selectedRange.length > 0 ? Color(Constants.Colors.orange) : Color
+                        .gray)
             }
+            .disabled(self.viewModel.selectedRange.length == 0)
+
+            Spacer()
+
+            Text("Select text to format")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .opacity(self.viewModel.selectedRange.length == 0 ? 1.0 : 0.0)
         }
         .padding(.horizontal)
         .padding(.vertical, 8)

@@ -39,6 +39,11 @@ extension AddNotesView {
         // MARK: - Helpers
 
         func postNote(notesViewModel: NotesViewModel, dismiss: @escaping () -> Void) async {
+            await MainActor.run {
+                self.isLoading = true
+                self.error = nil
+            }
+
             var formattingArray: [Note.TextFormatting] = []
             self.attributedText.enumerateAttributes(
                 in: NSRange(location: 0, length: self.attributedText.length))
@@ -64,54 +69,100 @@ extension AddNotesView {
                     }
                 }
             }
+
             do {
                 try await notesViewModel.createNote(content: self.attributedText.string, formattings: formattingArray)
-                dismiss()
+                await MainActor.run {
+                    self.isLoading = false
+                    dismiss()
+                }
             } catch {
-                self.error = "Failed to post note: \(error.localizedDescription)"
+                await MainActor.run {
+                    self.isLoading = false
+                    self.error = "Failed to post note: \(error.localizedDescription)"
+                }
             }
         }
 
-        func toggleHeader() {
-            guard self.selectedRange.length > 0 else { return }
-            let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
-            var isCurrentlyHeader = false
-            if let font = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont {
-                isCurrentlyHeader = font.pointSize >= 24
+        func deleteNote(notesViewModel: NotesViewModel, dismiss: @escaping () -> Void) async {
+            await MainActor.run {
+                self.isLoading = true
+                self.error = nil
             }
-            let newFont = isCurrentlyHeader
-                ? UIFont.systemFont(ofSize: 17)
-                : UIFont.systemFont(ofSize: 24, weight: .bold)
-            mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
-            self.attributedText = mutableAttrString
+
+            guard let note = self.note else {
+                await MainActor.run {
+                    self.error = "No note to delete"
+                    self.isLoading = false
+                }
+                return
+            }
+
+            do {
+                try await notesViewModel.deleteNote(id: note.id)
+                await MainActor.run {
+                    self.isLoading = false
+                    dismiss()
+                }
+            } catch {
+                await MainActor.run {
+                    self.error = "Failed to delete note: \(error.localizedDescription)"
+                }
+            }
         }
 
-        func toggleBold() {
-            guard self.selectedRange.length > 0 else { return }
-            let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
-            var isCurrentlyBold = false
-            if let font = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont {
-                isCurrentlyBold = font.fontDescriptor.symbolicTraits.contains(.traitBold)
+        func toggleHeader() async {
+            await MainActor.run {
+                guard self.selectedRange.length > 0 else { return }
+                let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
+                var isCurrentlyHeader = false
+                if let font = attributedText
+                    .attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont
+                {
+                    isCurrentlyHeader = font.pointSize >= 24
+                }
+                let newFont = isCurrentlyHeader
+                    ? UIFont.systemFont(ofSize: 17)
+                    : UIFont.systemFont(ofSize: 24, weight: .bold)
+                mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+                self.attributedText = mutableAttrString
             }
-            let newFont = isCurrentlyBold
-                ? UIFont.systemFont(ofSize: 17)
-                : UIFont.boldSystemFont(ofSize: 17)
-            mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
-            self.attributedText = mutableAttrString
         }
 
-        func toggleItalic() {
-            guard self.selectedRange.length > 0 else { return }
-            let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
-            var isCurrentlyItalic = false
-            if let font = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont {
-                isCurrentlyItalic = font.fontDescriptor.symbolicTraits.contains(.traitItalic)
+        func toggleBold() async {
+            await MainActor.run {
+                guard self.selectedRange.length > 0 else { return }
+                let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
+                var isCurrentlyBold = false
+                if let font = attributedText
+                    .attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont
+                {
+                    isCurrentlyBold = font.fontDescriptor.symbolicTraits.contains(.traitBold)
+                }
+                let newFont = isCurrentlyBold
+                    ? UIFont.systemFont(ofSize: 17)
+                    : UIFont.boldSystemFont(ofSize: 17)
+                mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+                self.attributedText = mutableAttrString
             }
-            let newFont = isCurrentlyItalic
-                ? UIFont.systemFont(ofSize: 17)
-                : UIFont.italicSystemFont(ofSize: 17)
-            mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
-            self.attributedText = mutableAttrString
+        }
+
+        func toggleItalic() async {
+            await MainActor.run {
+                guard self.selectedRange.length > 0 else { return }
+                let mutableAttrString = NSMutableAttributedString(attributedString: attributedText)
+                var isCurrentlyItalic = false
+                if let font = attributedText
+                    .attributes(at: selectedRange.location, effectiveRange: nil)[.font] as? UIFont
+                {
+                    isCurrentlyItalic = font.fontDescriptor.symbolicTraits.contains(.traitItalic)
+                }
+                let newFont = isCurrentlyItalic
+                    ? UIFont.systemFont(ofSize: 17)
+                    : UIFont.italicSystemFont(ofSize: 17)
+                mutableAttrString.addAttribute(.font, value: newFont, range: self.selectedRange)
+                self.attributedText = mutableAttrString
+            }
         }
     }
 }

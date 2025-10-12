@@ -40,6 +40,12 @@ struct NoteCard: View {
             }
             .onChange(of: self.noteViewModel.notes.count) { _, _ in
                 self.viewModel.updateTrapezoidPosition(mainGeo.frame(in: .global).minY)
+                // Update the index when notes change
+                if let newIndex = self.noteViewModel.notes.firstIndex(where: { $0.id == self.note.id }) {
+                    self.viewModel.updateIndex(newIndex)
+                }
+                // Force position update
+                self.viewModel.forceUpdatePosition()
             }
             .sheet(isPresented: self.$viewModel.showingGraph) {
                 CustomGraphSheet(note: self.note, isPresented: self.$viewModel.showingGraph)
