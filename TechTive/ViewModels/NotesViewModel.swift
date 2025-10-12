@@ -104,20 +104,6 @@ class NotesViewModel: ObservableObject {
         }
     }
 
-    /// Adds a new note to the collection
-    func addNewNote(_ note: Note) {
-        self.notes.insert(note, at: 0)
-        self.saveNotes()
-    }
-
-    /// Updates an existing note
-    func updateNote(_ updatedNote: Note) {
-        if let index = notes.firstIndex(where: { $0.id == updatedNote.id }) {
-            self.notes[index] = updatedNote
-            self.saveNotes()
-        }
-    }
-
     /// Creates a new note via API
     @MainActor func createNote(content: String, formattings: [Note.TextFormatting]) async throws {
         guard let authViewModel = authViewModel else {
@@ -125,45 +111,29 @@ class NotesViewModel: ObservableObject {
         }
 
         let token = try await authViewModel.getAuthToken()
-        let newNote = try await createNoteAPI(content: content, formattings: formattings, token: token)
+
+        // Prepare parameters for API call
+        let parameters: [String: Any] = [
+            "content": content,
+            "formattings": formattings.map { format in
+                [
+                    "type": format.type.rawValue,
+                    "location": format.location,
+                    "length": format.length
+                ]
+            }
+        ]
+
+        // Create note via API
+        let newNote = try await URLSession.post(
+            endpoint: Constants.API.notes,
+            token: token,
+            parameters: parameters,
+            responseType: Note.self)
 
         // Add the new note to local collection
         await MainActor.run {
             self.notes.insert(newNote, at: 0)
-            self.saveNotes()
-        }
-    }
-
-    /// Updates an existing note via API
-    @MainActor func updateNoteAPI(id: Int, content: String, formattings: [Note.TextFormatting]) async throws {
-        guard let authViewModel = authViewModel else {
-            throw NetworkError.authenticationFailed
-        }
-
-        let token = try await authViewModel.getAuthToken()
-        let updatedNote = try await updateNoteAPI(id: id, content: content, formattings: formattings, token: token)
-
-        // Update the note in local collection
-        await MainActor.run {
-            if let index = self.notes.firstIndex(where: { $0.id == id }) {
-                self.notes[index] = updatedNote
-                self.saveNotes()
-            }
-        }
-    }
-
-    /// Deletes a note via API
-    @MainActor func deleteNoteAPI(id: Int) async throws {
-        guard let authViewModel = authViewModel else {
-            throw NetworkError.authenticationFailed
-        }
-
-        let token = try await authViewModel.getAuthToken()
-        try await self.deleteNoteAPI(id: id, token: token)
-
-        // Remove the note from local collection
-        await MainActor.run {
-            self.notes.removeAll { $0.id == id }
             self.saveNotes()
         }
     }
@@ -179,69 +149,6 @@ class NotesViewModel: ObservableObject {
 
         print("✅ Notes fetched: \(response.notes.count) notes")
         return response.notes
-    }
-
-    /// Creates a new note via API
-    private func createNoteAPI(
-        content: String,
-        formattings: [Note.TextFormatting],
-        token: String) async throws -> Note
-    {
-        let parameters: [String: Any] = [
-            "content": content,
-            "formattings": formattings.map { format in
-                [
-                    "type": format.type.rawValue,
-                    "location": format.location,
-                    "length": format.length
-                ]
-            }
-        ]
-
-        // Create note API returns the note directly, not wrapped in a response object
-        let note = try await URLSession.post(
-            endpoint: Constants.API.notes,
-            token: token,
-            parameters: parameters,
-            responseType: Note.self)
-        return note
-    }
-
-    /// Updates an existing note via API
-    private func updateNoteAPI(
-        id: Int,
-        content: String,
-        formattings: [Note.TextFormatting],
-        token: String) async throws -> Note
-    {
-        let parameters: [String: Any] = [
-            "content": content,
-            "formattings": formattings.map { format in
-                [
-                    "type": format.type.rawValue,
-                    "location": format.location,
-                    "length": format.length
-                ]
-            }
-        ]
-
-        // Update note API returns the note directly, not wrapped in a response object
-        let note = try await URLSession.put(
-            endpoint: "\(Constants.API.notes)\(id)/",
-            token: token,
-            parameters: parameters,
-            responseType: Note.self)
-        return note
-    }
-
-    /// Deletes a note by ID via API
-    private func deleteNoteAPI(id: Int, token: String) async throws {
-        struct EmptyResponse: Codable {}
-
-        let _: EmptyResponse = try await URLSession.delete(
-            endpoint: "\(Constants.API.notes)\(id)/",
-            token: token,
-            responseType: EmptyResponse.self)
     }
 
     // MARK: - Private Methods
