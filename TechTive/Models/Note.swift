@@ -5,7 +5,7 @@ struct Note: Identifiable, Codable {
     let content: String
     let timestamp: Date
     let userID: Int
-    let formatting: [TextFormatting]
+    let formattings: [TextFormatting]
 
     let angerValue: Double
     let disgustValue: Double
@@ -17,12 +17,8 @@ struct Note: Identifiable, Codable {
 
     struct TextFormatting: Codable {
         let type: FormattingType
-        let range: Range
-
-        struct Range: Codable {
-            let location: Int
-            let length: Int
-        }
+        let location: Int
+        let length: Int
 
         enum FormattingType: String, Codable {
             case header
@@ -37,7 +33,7 @@ struct Note: Identifiable, Codable {
         case content
         case timestamp = "created_at"
         case userID = "user_id"
-        case formatting
+        case formattings
         case angerValue = "anger_value"
         case disgustValue = "disgust_value"
         case fearValue = "fear_value"
@@ -59,16 +55,16 @@ extension Note {
             value: paragraphStyle,
             range: NSRange(location: 0, length: self.content.count))
 
-        for format in self.formatting {
+        for format in self.formattings {
             // Validate the formatting range
-            let start = format.range.location
-            let end = start + format.range.length
+            let start = format.location
+            let end = start + format.length
             guard start >= 0, end <= self.content.count else {
                 // Skip this formatting if it's invalid
                 continue
             }
 
-            let nsRange = NSRange(location: start, length: format.range.length)
+            let nsRange = NSRange(location: start, length: format.length)
 
             switch format.type {
                 case .header:

@@ -6,9 +6,9 @@ enum Constants {
     enum API {
         static let baseURL = "http://18.191.173.127:5000"
 
-        // Posts endpoints
-        static let posts = "/api/posts/"
-        static let post = "/api/post/"
+        // Notes endpoints
+        static let notes = "/api/note/"
+        static let note = "/api/note/"
 
         // Weekly advice endpoints
         static let advice = "/api/advice/latest/"

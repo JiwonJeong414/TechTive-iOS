@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		293EBC8B2E9B7EFF006DE9EA /* PostsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293EBC8A2E9B7EEC006DE9EA /* PostsResponse.swift */; };
 		293EBC8D2E9B7F15006DE9EA /* ProfilePictureResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293EBC8C2E9B7F10006DE9EA /* ProfilePictureResponse.swift */; };
 		293EBC8F2E9B7F24006DE9EA /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 293EBC8E2E9B7F20006DE9EA /* NetworkService.swift */; };
 		29520C182CFA797400E0047E /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 29520C162CFA797400E0047E /* Poppins-Regular.ttf */; };
@@ -90,7 +89,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		293EBC8A2E9B7EEC006DE9EA /* PostsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsResponse.swift; sourceTree = "<group>"; };
 		293EBC8C2E9B7F10006DE9EA /* ProfilePictureResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePictureResponse.swift; sourceTree = "<group>"; };
 		293EBC8E2E9B7F20006DE9EA /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		29520C162CFA797400E0047E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				293EBC8C2E9B7F10006DE9EA /* ProfilePictureResponse.swift */,
-				293EBC8A2E9B7EEC006DE9EA /* PostsResponse.swift */,
 				29A8CDD72DF7A091008C1027 /* NotesResponse.swift */,
 				29A8CDB12DF734C3008C1027 /* WeeklyAdviceResponse.swift */,
 				29A8CDAF2DF733FA008C1027 /* Quote.swift */,
@@ -580,7 +577,6 @@
 				2969CD182DF56E0500B3206A /* MainView.swift in Sources */,
 				293EBC8D2E9B7F15006DE9EA /* ProfilePictureResponse.swift in Sources */,
 				29A8CDC22DF773C2008C1027 /* StatCard.swift in Sources */,
-				293EBC8B2E9B7EFF006DE9EA /* PostsResponse.swift in Sources */,
 				2969CD102DF56DD300B3206A /* WeeklyOverviewSection.swift in Sources */,
 				29A8CDC62DF7752B008C1027 /* NoteCardViewModel.swift in Sources */,
 				29A8CDB42DF75AFC008C1027 /* PinView.swift in Sources */,
