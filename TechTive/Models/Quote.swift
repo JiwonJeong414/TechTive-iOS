@@ -2,6 +2,6 @@ import Foundation
 
 struct Quote: Codable {
     let id: Int
-    let quote: String
+    let content: String
     let author: String
 }

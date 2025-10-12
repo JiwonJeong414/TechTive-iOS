@@ -13,10 +13,9 @@ let package = Package(
             targets: ["TechTive"])
     ],
     dependencies: [
-        .package(url: "https://github.com/krzysztofzablocki/Inject.git", from: "1.2.0")
     ],
     targets: [
         .target(
             name: "TechTive",
-            dependencies: ["Inject"])
+            dependencies: [])
     ])

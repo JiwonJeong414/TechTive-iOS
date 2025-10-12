@@ -19,7 +19,7 @@ extension WeeklyOverviewSection {
                 }
 
                 let token = try await authViewModel.getAuthToken()
-                let response = try await URLSession.get(
+                let response = try await URLSession.getWith404Handling(
                     endpoint: Constants.API.advice,
                     token: token,
                     responseType: WeeklyAdviceResponse.self)
@@ -32,9 +32,7 @@ extension WeeklyOverviewSection {
                 print("❌ Error fetching weekly advice: \(error)")
                 await MainActor.run {
                     self.errorMessage = error.localizedDescription
-                    // Use dummy data as fallback
-                    print("📝 Using dummy data as fallback for weekly advice")
-                    self.weeklyAdvice = DummyData.shared.weeklyAdvice
+                    self.weeklyAdvice = nil
                 }
             }
         }

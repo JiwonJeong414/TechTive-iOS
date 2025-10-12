@@ -166,6 +166,88 @@ extension URLSession {
                 }
         }
     }
+
+    /// Generic GET request that handles 404 as "no data" rather than error
+    static func getWith404Handling<T: Codable>(
+        endpoint: String,
+        token: String,
+        responseType: T.Type) async throws -> T?
+    {
+        let url = Constants.API.baseURL + endpoint
+        var request = URLRequest(url: URL(string: url)!)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        // Check if response is HTML (error page)
+        if let httpResponse = response as? HTTPURLResponse {
+            let contentType = httpResponse.allHeaderFields["Content-Type"] as? String ?? ""
+            if contentType.contains("text/html") {
+                print("❌ Server returned HTML instead of JSON for endpoint: \(endpoint)")
+                print("❌ Response status: \(httpResponse.statusCode)")
+                if let htmlString = String(data: data, encoding: .utf8) {
+                    print("❌ HTML response: \(htmlString.prefix(200))...")
+                }
+                throw NetworkError.invalidResponse
+            }
+
+            if httpResponse.statusCode == 404 {
+                // 404 means no data available, return nil instead of throwing error
+                if let errorString = String(data: data, encoding: .utf8) {
+                    print("ℹ️ No data found for endpoint: \(endpoint) - \(errorString)")
+                }
+                return nil
+            }
+
+            if httpResponse.statusCode >= 400 {
+                print("❌ HTTP Error \(httpResponse.statusCode) for endpoint: \(endpoint)")
+                if let errorString = String(data: data, encoding: .utf8) {
+                    print("❌ Error response: \(errorString)")
+                }
+                throw NetworkError.invalidResponse
+            }
+        }
+
+        return try JSONDecoder().decode(responseType, from: data)
+    }
+
+    /// Generic GET request without authentication
+    static func getWithoutAuth<T: Codable>(
+        endpoint: String,
+        responseType: T.Type) async throws -> T
+    {
+        let url = Constants.API.baseURL + endpoint
+        var request = URLRequest(url: URL(string: url)!)
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+
+        // Check if response is HTML (error page)
+        if let httpResponse = response as? HTTPURLResponse {
+            let contentType = httpResponse.allHeaderFields["Content-Type"] as? String ?? ""
+            if contentType.contains("text/html") {
+                print("❌ Server returned HTML instead of JSON for endpoint: \(endpoint)")
+                print("❌ Response status: \(httpResponse.statusCode)")
+                if let htmlString = String(data: data, encoding: .utf8) {
+                    print("❌ HTML response: \(htmlString.prefix(200))...")
+                }
+                throw NetworkError.invalidResponse
+            }
+
+            if httpResponse.statusCode >= 400 {
+                print("❌ HTTP Error \(httpResponse.statusCode) for endpoint: \(endpoint)")
+                if let errorString = String(data: data, encoding: .utf8) {
+                    print("❌ Error response: \(errorString)")
+                }
+                throw NetworkError.invalidResponse
+            }
+        }
+
+        return try JSONDecoder().decode(responseType, from: data)
+    }
 }
 
 // MARK: - Network Error Types
@@ -174,6 +256,7 @@ enum NetworkError: Error {
     case invalidImageData
     case invalidResponse
     case authenticationFailed
+    case noDataAvailable
 
     var localizedDescription: String {
         switch self {
@@ -183,6 +266,8 @@ enum NetworkError: Error {
                 return "Invalid response from server"
             case .authenticationFailed:
                 return "Authentication failed"
+            case .noDataAvailable:
+                return "No data available"
         }
     }
 }

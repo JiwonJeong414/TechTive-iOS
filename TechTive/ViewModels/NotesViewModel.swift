@@ -17,8 +17,11 @@ class NotesViewModel: ObservableObject {
     init(authViewModel: AuthViewModel? = nil) {
         self.authViewModel = authViewModel
         self.loadNotes()
-        Task {
-            await self.fetchNotes()
+        // Only fetch notes if we have an authViewModel
+        if authViewModel != nil {
+            Task {
+                await self.fetchNotes()
+            }
         }
     }
 
@@ -92,15 +95,10 @@ class NotesViewModel: ObservableObject {
                 self.objectWillChange.send()
             }
         } catch {
-            print("❌ Error fetching notes: \(error)")
+            print("❌ Failed to fetch notes: \(error.localizedDescription)")
             await MainActor.run {
                 self.error = error
                 self.isLoading = false
-                // If we have no notes and API fails, use dummy data as fallback
-                if self.notes.isEmpty {
-                    print("📝 Using dummy data as fallback for notes")
-                    self.notes = DummyData.shared.notes
-                }
                 self.objectWillChange.send()
             }
         }
@@ -178,16 +176,9 @@ class NotesViewModel: ObservableObject {
             endpoint: Constants.API.notes,
             token: token,
             responseType: NotesResponse.self)
-        return response.notes
-    }
 
-    /// Fetches a specific note by ID
-    private func fetchNote(id: Int, token: String) async throws -> Note {
-        let response = try await URLSession.get(
-            endpoint: "\(Constants.API.note)\(id)/",
-            token: token,
-            responseType: NoteResponse.self)
-        return response.note
+        print("✅ Notes fetched: \(response.notes.count) notes")
+        return response.notes
     }
 
     /// Creates a new note via API
@@ -207,12 +198,13 @@ class NotesViewModel: ObservableObject {
             }
         ]
 
-        let response = try await URLSession.post(
+        // Create note API returns the note directly, not wrapped in a response object
+        let note = try await URLSession.post(
             endpoint: Constants.API.notes,
             token: token,
             parameters: parameters,
-            responseType: NoteResponse.self)
-        return response.note
+            responseType: Note.self)
+        return note
     }
 
     /// Updates an existing note via API
@@ -233,12 +225,13 @@ class NotesViewModel: ObservableObject {
             }
         ]
 
-        let response = try await URLSession.put(
-            endpoint: "\(Constants.API.note)\(id)/",
+        // Update note API returns the note directly, not wrapped in a response object
+        let note = try await URLSession.put(
+            endpoint: "\(Constants.API.notes)\(id)/",
             token: token,
             parameters: parameters,
-            responseType: NoteResponse.self)
-        return response.note
+            responseType: Note.self)
+        return note
     }
 
     /// Deletes a note by ID via API
@@ -246,7 +239,7 @@ class NotesViewModel: ObservableObject {
         struct EmptyResponse: Codable {}
 
         let _: EmptyResponse = try await URLSession.delete(
-            endpoint: "\(Constants.API.note)\(id)/",
+            endpoint: "\(Constants.API.notes)\(id)/",
             token: token,
             responseType: EmptyResponse.self)
     }

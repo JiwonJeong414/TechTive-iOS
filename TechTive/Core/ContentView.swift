@@ -1,13 +1,8 @@
 import SwiftUI
 
-#if DEBUG
-    import Inject
-#endif
-
 // MARK: - Main App Structure
 
 struct ContentView: View {
-    @ObserveInjection var inject
     @EnvironmentObject var authViewModel: AuthViewModel
 
     var body: some View {
@@ -31,6 +26,5 @@ struct ContentView: View {
                 AuthenticationFlow()
             }
         }
-        .enableInjection()
     }
 }

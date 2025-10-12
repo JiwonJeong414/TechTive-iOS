@@ -7,42 +7,29 @@ class QuoteViewModel: ObservableObject {
     weak var authViewModel: AuthViewModel?
 
     func fetchQuote() {
-        // For now, use dummy data as fallback since we don't have a quotes API endpoint
-        // TODO: Implement real quotes API endpoint
-        let quotes = DummyData.shared.quotes
-        if let randomQuote = quotes.randomElement() {
-            self.quote = "\(randomQuote.quote)\n— \(randomQuote.author)"
-        } else {
-            self.quote = "Failed to fetch quote. Please try again."
+        // Fetch quote from API
+        Task {
+            await self.fetchQuoteFromAPI()
         }
     }
 
-    /// Fetches quote from API (when endpoint is available)
+    /// Fetches quote from API
     func fetchQuoteFromAPI() async {
-        guard let authViewModel = authViewModel else {
-            await MainActor.run {
-                self.quote = "Authentication required"
-            }
-            return
-        }
-
         do {
-            let token = try await authViewModel.getAuthToken()
-            // TODO: Replace with actual quotes endpoint when available
-            // let response = try await URLSession.get(
-            //     endpoint: Constants.API.quotes,
-            //     token: token,
-            //     responseType: QuoteResponse.self
-            // )
+            print("🔍 Fetching quote from: \(Constants.API.baseURL + Constants.API.quotes)")
+            let response = try await URLSession.getWithoutAuth(
+                endpoint: Constants.API.quotes,
+                responseType: Quote.self)
 
-            // For now, fall back to dummy data
+            print("✅ Quote response received: \(response)")
             await MainActor.run {
-                self.fetchQuote()
+                self.quote = "\(response.content)\n— \(response.author)"
+                print("📝 Quote set to: \(self.quote)")
             }
         } catch {
             print("❌ Error fetching quote: \(error)")
             await MainActor.run {
-                self.fetchQuote() // Fallback to dummy data
+                self.quote = "" // Show empty state
             }
         }
     }

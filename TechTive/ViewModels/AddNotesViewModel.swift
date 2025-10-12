@@ -47,22 +47,25 @@ extension AddNotesView {
                     if font.fontDescriptor.symbolicTraits.contains(.traitBold) {
                         formattingArray.append(Note.TextFormatting(
                             type: .bold,
-                            range: .init(location: range.location, length: range.length)))
+                            location: range.location,
+                            length: range.length))
                     }
                     if font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
                         formattingArray.append(Note.TextFormatting(
                             type: .italic,
-                            range: .init(location: range.location, length: range.length)))
+                            location: range.location,
+                            length: range.length))
                     }
                     if font.pointSize >= 24 {
                         formattingArray.append(Note.TextFormatting(
                             type: .header,
-                            range: .init(location: range.location, length: range.length)))
+                            location: range.location,
+                            length: range.length))
                     }
                 }
             }
             do {
-                try await notesViewModel.postNote(content: self.attributedText.string, formatting: formattingArray)
+                try await notesViewModel.createNote(content: self.attributedText.string, formattings: formattingArray)
                 dismiss()
             } catch {
                 self.error = "Failed to post note: \(error.localizedDescription)"

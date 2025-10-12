@@ -8,13 +8,15 @@ enum Constants {
 
         // Notes endpoints
         static let notes = "/api/note/"
-        static let note = "/api/note/"
 
         // Weekly advice endpoints
         static let advice = "/api/advice/latest/"
 
         // Profile picture endpoints
         static let profilePicture = "/api/pfp/"
+
+        // Quotes endpoints
+        static let quotes = "/api/random/quotes/"
     }
 
     /// Colors used in TechTive's design system

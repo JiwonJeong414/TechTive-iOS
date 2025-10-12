@@ -36,7 +36,6 @@
 		2969CD232DF56E1B00B3206A /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD1F2DF56E1B00B3206A /* ProfileEditView.swift */; };
 		2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD252DF56E2000B3206A /* SignUpView.swift */; };
 		2969CD302DF6115200B3206A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD2F2DF6115100B3206A /* Constants.swift */; };
-		2969CD332DF6116700B3206A /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD322DF6116300B3206A /* DummyData.swift */; };
 		2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2969CD342DF64E7100B3206A /* AddNotesViewModel.swift */; };
 		2978DF702CF4366C00013C36 /* TechTiveApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */; };
 		2978DF722CF4366C00013C36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2978DF712CF4366C00013C36 /* ContentView.swift */; };
@@ -117,7 +116,6 @@
 		2969CD212DF56E1B00B3206A /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		2969CD252DF56E2000B3206A /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		2969CD2F2DF6115100B3206A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		2969CD322DF6116300B3206A /* DummyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		2969CD342DF64E7100B3206A /* AddNotesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNotesViewModel.swift; sourceTree = "<group>"; };
 		2978DF6C2CF4366C00013C36 /* TechTive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TechTive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2978DF6F2CF4366C00013C36 /* TechTiveApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechTiveApp.swift; sourceTree = "<group>"; };
@@ -289,7 +287,6 @@
 			isa = PBXGroup;
 			children = (
 				293EBC8E2E9B7F20006DE9EA /* NetworkService.swift */,
-				2969CD322DF6116300B3206A /* DummyData.swift */,
 				2969CD2F2DF6115100B3206A /* Constants.swift */,
 				2969CD2C2DF6113D00B3206A /* Extensions */,
 				2969CD2A2DF6112500B3206A /* Custom */,
@@ -552,7 +549,6 @@
 				2969CCF72DF56C6F00B3206A /* QuoteViewModel.swift in Sources */,
 				29A8CDB62DF75B19008C1027 /* StickyNoteBackground.swift in Sources */,
 				2969CD262DF56E2000B3206A /* SignUpView.swift in Sources */,
-				2969CD332DF6116700B3206A /* DummyData.swift in Sources */,
 				2969CD142DF56DE900B3206A /* LoginView.swift in Sources */,
 				29A8CDD62DF77EB1008C1027 /* Date+Extension.swift in Sources */,
 				2969CD352DF64E7500B3206A /* AddNotesViewModel.swift in Sources */,

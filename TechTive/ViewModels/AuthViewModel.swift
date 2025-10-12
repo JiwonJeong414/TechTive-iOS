@@ -380,13 +380,13 @@ import SwiftUI
     func fetchProfilePicture() async {
         do {
             let token = try await getAuthToken()
-            let response = try await URLSession.get(
+            let response = try await URLSession.getWith404Handling(
                 endpoint: Constants.API.profilePicture,
                 token: token,
                 responseType: ProfilePictureResponse.self)
 
             await MainActor.run {
-                self.profilePictureURL = response.imageURL
+                self.profilePictureURL = response?.imageURL
             }
         } catch {
             print("❌ Error fetching profile picture URL: \(error)")

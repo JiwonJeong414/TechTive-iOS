@@ -41,13 +41,33 @@ struct NotesFeedSection: View {
 
     private var notesStack: some View {
         ZStack(alignment: .top) {
-            ForEach(Array(self.notesViewModel.notes.enumerated()), id: \.element.id) { index, note in
-                NoteCard(note: note, index: index, noteViewModel: self.notesViewModel)
-                    .padding(.top, CGFloat(index) * 100)
-                    .zIndex(Double(index))
-                    .onTapGesture {
-                        self.viewModel.selectNote(note)
-                    }
+            if self.notesViewModel.notes.isEmpty {
+                // Empty state
+                VStack(spacing: 16) {
+                    Image(systemName: "note.text")
+                        .font(.system(size: 48))
+                        .foregroundColor(Color(Constants.Colors.gray).opacity(0.5))
+
+                    Text("No notes yet")
+                        .font(Constants.Fonts.poppinsMedium16)
+                        .foregroundColor(Color(Constants.Colors.gray))
+
+                    Text("Start writing your first note!")
+                        .font(Constants.Fonts.poppinsRegular14)
+                        .foregroundColor(Color(Constants.Colors.gray).opacity(0.7))
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
+            } else {
+                ForEach(Array(self.notesViewModel.notes.enumerated()), id: \.element.id) { index, note in
+                    NoteCard(note: note, index: index, noteViewModel: self.notesViewModel)
+                        .padding(.top, CGFloat(index) * 100)
+                        .zIndex(Double(index))
+                        .onTapGesture {
+                            self.viewModel.selectNote(note)
+                        }
+                }
             }
         }
         .frame(maxWidth: .infinity)

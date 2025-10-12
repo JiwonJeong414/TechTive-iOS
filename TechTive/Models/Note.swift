@@ -4,7 +4,7 @@ struct Note: Identifiable, Codable {
     let id: Int
     let content: String
     let timestamp: Date
-    let userID: Int
+    let userID: Int?
     let formattings: [TextFormatting]
 
     let angerValue: Double
@@ -41,6 +41,34 @@ struct Note: Identifiable, Codable {
         case neutralValue = "neutral_value"
         case sadnessValue = "sadness_value"
         case surpriseValue = "surprise_value"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.content = try container.decode(String.self, forKey: .content)
+        self.userID = try container.decodeIfPresent(Int.self, forKey: .userID)
+        self.formattings = try container.decodeIfPresent([TextFormatting].self, forKey: .formattings) ?? []
+
+        // Make emotion values optional with default values
+        self.angerValue = try container.decodeIfPresent(Double.self, forKey: .angerValue) ?? 0.0
+        self.disgustValue = try container.decodeIfPresent(Double.self, forKey: .disgustValue) ?? 0.0
+        self.fearValue = try container.decodeIfPresent(Double.self, forKey: .fearValue) ?? 0.0
+        self.joyValue = try container.decodeIfPresent(Double.self, forKey: .joyValue) ?? 0.0
+        self.neutralValue = try container.decodeIfPresent(Double.self, forKey: .neutralValue) ?? 1.0
+        self.sadnessValue = try container.decodeIfPresent(Double.self, forKey: .sadnessValue) ?? 0.0
+        self.surpriseValue = try container.decodeIfPresent(Double.self, forKey: .surpriseValue) ?? 0.0
+
+        // Handle timestamp as string and convert to Date
+        let timestampString = try container.decode(String.self, forKey: .timestamp)
+        let formatter = ISO8601DateFormatter()
+        if let date = formatter.date(from: timestampString) {
+            self.timestamp = date
+        } else {
+            // Fallback to current date if parsing fails
+            self.timestamp = Date()
+        }
     }
 }
 

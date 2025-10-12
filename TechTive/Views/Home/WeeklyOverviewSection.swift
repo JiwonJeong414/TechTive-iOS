@@ -44,7 +44,7 @@ struct WeeklyOverviewSection: View {
         } else if let error = viewModel.errorMessage {
             self.errorView(error)
         } else {
-            ProgressView()
+            self.emptyStateView()
         }
     }
 
@@ -75,5 +75,19 @@ struct WeeklyOverviewSection: View {
             .padding()
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
+    }
+
+    private func emptyStateView() -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: "lightbulb")
+                .font(.system(size: 24))
+                .foregroundColor(Color(Constants.Colors.gray).opacity(0.5))
+
+            Text("No weekly advice available")
+                .font(Constants.Fonts.poppinsRegular14)
+                .foregroundColor(Color(Constants.Colors.gray))
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
     }
 }

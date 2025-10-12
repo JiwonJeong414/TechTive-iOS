@@ -2,10 +2,6 @@ import FirebaseCore
 import GoogleSignIn
 import SwiftUI
 
-#if DEBUG
-    import Inject
-#endif
-
 // Test comment for pre-commit hook
 @main struct TechTiveApp: App {
     // MARK: - Properties

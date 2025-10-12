@@ -1,4 +1,3 @@
-import Inject
 import SwiftUI
 
 /// Main View of TechTive
@@ -6,11 +5,19 @@ struct MainView: View {
     // MARK: - Properties
 
     @EnvironmentObject var authViewModel: AuthViewModel
-    @StateObject private var notesViewModel = NotesViewModel()
+    @StateObject private var notesViewModel: NotesViewModel
     @StateObject private var quoteViewModel = QuoteViewModel()
     @StateObject private var viewModel = ViewModel()
 
     @State private var profileImage: UIImage?
+
+    // MARK: - Initialization
+
+    init() {
+        // We need to initialize notesViewModel here, but we don't have access to authViewModel yet
+        // So we'll create it without authViewModel and set it later in onAppear
+        _notesViewModel = StateObject(wrappedValue: NotesViewModel())
+    }
 
     // MARK: - UI
 
@@ -48,6 +55,9 @@ struct MainView: View {
             Task {
                 await self.notesViewModel.fetchNotes()
             }
+            Task {
+                await self.quoteViewModel.fetchQuoteFromAPI()
+            }
         }
     }
 
@@ -77,18 +87,17 @@ struct MainView: View {
             }
             .opacity(self.viewModel.showHeader ? 1 : 0)
 
-            Text(self.quoteViewModel.quote)
-                .font(Constants.Fonts.poppinsRegular16)
-                .foregroundColor(Color(Constants.Colors.orange))
-                .opacity(self.viewModel.showQuote ? 1 : 0)
-                .padding(.top, 2)
+            if !self.quoteViewModel.quote.isEmpty {
+                Text(self.quoteViewModel.quote)
+                    .font(Constants.Fonts.poppinsRegular16)
+                    .foregroundColor(Color(Constants.Colors.orange))
+                    .opacity(self.viewModel.showQuote ? 1 : 0)
+                    .padding(.top, 2)
+            }
         }
         .padding(.horizontal)
         .padding(.top, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .onAppear {
-            self.quoteViewModel.fetchQuote()
-        }
     }
 
     private var weeklyOverviewSection: some View {
