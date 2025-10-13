@@ -1,6 +1,14 @@
+//
+//  TechTiveUITestsLaunchTests.swift
+//  TechTiveUITests
+//
+//  Created by jiwon jeong on 10/13/25.
+//
+
 import XCTest
 
 final class TechTiveUITestsLaunchTests: XCTestCase {
+
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }
@@ -9,6 +17,7 @@ final class TechTiveUITestsLaunchTests: XCTestCase {
         continueAfterFailure = false
     }
 
+    @MainActor
     func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()
