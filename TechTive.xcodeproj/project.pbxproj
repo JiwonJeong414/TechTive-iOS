@@ -12,6 +12,7 @@
 		29F5695F2E9CC86800D4B5E9 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 29F5695E2E9CC86800D4B5E9 /* FirebaseFirestore */; };
 		29F569622E9CC87800D4B5E9 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 29F569612E9CC87800D4B5E9 /* GoogleSignIn */; };
 		29F569652E9CC88300D4B5E9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 29F569642E9CC88300D4B5E9 /* Alamofire */; };
+		29F569D62E9CCBAC00D4B5E9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 29F569D52E9CCBAC00D4B5E9 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,9 +38,22 @@
 		29F569462E9CC7FA00D4B5E9 /* TechTiveUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TechTiveUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		29F569D82E9CCC0200D4B5E9 /* Exceptions for "TechTive" folder in "TechTive" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 29F5692B2E9CC7F900D4B5E9 /* TechTive */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		29F5692E2E9CC7F900D4B5E9 /* TechTive */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				29F569D82E9CCC0200D4B5E9 /* Exceptions for "TechTive" folder in "TechTive" target */,
+			);
 			path = TechTive;
 			sourceTree = "<group>";
 		};
@@ -61,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				29F569652E9CC88300D4B5E9 /* Alamofire in Frameworks */,
+				29F569D62E9CCBAC00D4B5E9 /* FirebaseAuth in Frameworks */,
 				29F5695D2E9CC86800D4B5E9 /* FirebaseCore in Frameworks */,
 				29F569622E9CC87800D4B5E9 /* GoogleSignIn in Frameworks */,
 				29F5695B2E9CC86800D4B5E9 /* FirebaseAnalytics in Frameworks */,
@@ -130,6 +145,7 @@
 				29F5695E2E9CC86800D4B5E9 /* FirebaseFirestore */,
 				29F569612E9CC87800D4B5E9 /* GoogleSignIn */,
 				29F569642E9CC88300D4B5E9 /* Alamofire */,
+				29F569D52E9CCBAC00D4B5E9 /* FirebaseAuth */,
 			);
 			productName = TechTive;
 			productReference = 29F5692C2E9CC7F900D4B5E9 /* TechTive.app */;
@@ -418,15 +434,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = WYL556DMZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechTive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -451,15 +469,17 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"TechTive/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = WYL556DMZP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TechTive/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -642,6 +662,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 29F569632E9CC88300D4B5E9 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		29F569D52E9CCBAC00D4B5E9 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 29F569592E9CC86800D4B5E9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
