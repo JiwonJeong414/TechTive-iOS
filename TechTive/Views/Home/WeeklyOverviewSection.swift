@@ -1,3 +1,8 @@
+//
+//  WeeklyOverviewSection.swift
+//  TechTive
+//
+
 import SwiftUI
 
 /// Generates a Weekly Overview based on journals for the week
@@ -29,7 +34,7 @@ struct WeeklyOverviewSection: View {
         .frame(minHeight: 160)
         .padding(.horizontal, 24)
         .task {
-            self.viewModel.setAuthViewModel(self.authViewModel)
+            // ✅ No need to pass authViewModel anymore
             await self.viewModel.fetchWeeklyAdvice()
         }
     }

@@ -1,3 +1,8 @@
+//
+//  MainView.swift
+//  TechTive
+//
+
 import SwiftUI
 
 /// Main View of TechTive
@@ -16,8 +21,7 @@ struct MainView: View {
     // MARK: - Initialization
 
     init() {
-        // We need to initialize notesViewModel here, but we don't have access to authViewModel yet
-        // So we'll create it without authViewModel and set it later in onAppear
+        // Simple initialization - no authViewModel needed
         _notesViewModel = StateObject(wrappedValue: NotesViewModel())
     }
 
@@ -52,11 +56,17 @@ struct MainView: View {
             }
         }
         .onAppear {
-            self.notesViewModel.authViewModel = self.authViewModel
-            self.quoteViewModel.authViewModel = self.authViewModel
+            // Set token in UserSessionManager once
             Task {
-                await self.authViewModel.printDebugInfo()
+                do {
+                    let token = try await self.authViewModel.getAuthToken()
+                    UserSessionManager.shared.accessToken = token
+                } catch {
+                    print("Failed to get auth token: \(error)")
+                }
             }
+            
+            // Simplified - no need to pass authViewModel around
             Task {
                 await self.notesViewModel.fetchNotes()
             }
@@ -167,7 +177,7 @@ struct MainView: View {
             await self.quoteViewModel.fetchQuoteFromAPI()
         } catch {
             if !error.localizedDescription.contains("cancelled") {
-                print("❌ Error refreshing quote: \(error)")
+                print("Error refreshing quote: \(error)")
             }
         }
 
@@ -177,7 +187,7 @@ struct MainView: View {
             await self.notesViewModel.fetchNotes()
         } catch {
             if !error.localizedDescription.contains("cancelled") {
-                print("❌ Error refreshing notes: \(error)")
+                print("Error refreshing notes: \(error)")
             }
         }
 

@@ -44,6 +44,7 @@ extension AddNotesView {
                 self.error = nil
             }
 
+            // ✅ Convert formattings to the correct format
             var formattingArray: [Note.TextFormatting] = []
             self.attributedText.enumerateAttributes(
                 in: NSRange(location: 0, length: self.attributedText.length))
@@ -71,15 +72,22 @@ extension AddNotesView {
             }
 
             do {
-                try await notesViewModel.createNote(content: self.attributedText.string, formattings: formattingArray)
+                // ✅ Use the correct method signature
+                try await notesViewModel.createNote(
+                    content: self.attributedText.string,
+                    formattings: formattingArray
+                )
+                
                 await MainActor.run {
                     self.isLoading = false
+                    self.error = nil // ✅ Clear any previous errors
                     dismiss()
                 }
             } catch {
                 await MainActor.run {
                     self.isLoading = false
                     self.error = "Failed to post note: \(error.localizedDescription)"
+                    print("❌ Error posting note: \(error)")
                 }
             }
         }

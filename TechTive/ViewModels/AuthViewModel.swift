@@ -1,3 +1,10 @@
+//
+//  AuthViewModel.swift
+//  TechTive
+//
+//  Created by jiwon jeong on 11/25/24.
+//
+
 import Alamofire
 import FirebaseAuth
 import FirebaseCore
@@ -21,14 +28,12 @@ import SwiftUI
     @Published var isLoadingUserInfo = false
     @Published var isInitializing = true
     @Published var profileImage: UIImage?
-    @Published var isLoadingProfileImage = false // Track image loading state
 
     // MARK: - Private Properties
 
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
-    private var imageLoadTask: Task<Void, Never>? // NEW: Track ongoing load task
 
     // MARK: - Initialization
 
@@ -39,6 +44,18 @@ import SwiftUI
             Task { @MainActor in
                 if user != nil {
                     authViewModel?.isLoadingUserInfo = true
+                    
+                    // Set token in UserSessionManager
+                    do {
+                        let token = try await authViewModel?.getAuthToken() ?? ""
+                        UserSessionManager.shared.accessToken = token
+                        if let uid = user?.uid {
+                            UserSessionManager.shared.userID = uid
+                        }
+                    } catch {
+                        print("Error getting token in init: \(error)")
+                    }
+                    
                     await authViewModel?.fetchUserInfo()
                     await MainActor.run {
                         authViewModel?.isAuthenticated = true
@@ -60,7 +77,6 @@ import SwiftUI
         if let listener = stateListener {
             auth.removeStateDidChangeListener(listener)
         }
-        imageLoadTask?.cancel()
     }
 
     // MARK: - Authentication Methods
@@ -80,6 +96,11 @@ import SwiftUI
             ]
 
             try await self.db.collection("users").document(user.uid).setData(userData)
+
+            // Store token in UserSessionManager
+            let token = try await getAuthToken()
+            UserSessionManager.shared.accessToken = token
+            UserSessionManager.shared.userID = user.uid
 
             // Update local user info
             await MainActor.run {
@@ -124,6 +145,12 @@ import SwiftUI
         self.isLoading = true
         do {
             let result = try await auth.signIn(withEmail: email, password: password)
+            
+            // Store token in UserSessionManager
+            let token = try await getAuthToken()
+            UserSessionManager.shared.accessToken = token
+            UserSessionManager.shared.userID = result.user.uid
+            
             self.isLoading = false
 
             // Update user info
@@ -142,18 +169,18 @@ import SwiftUI
                 // Handle specific Firebase Auth errors
                 let errorCode = (error as NSError).code
                 switch errorCode {
-                    case AuthErrorCode.invalidEmail.rawValue:
-                        self.errorMessage = "Invalid email format"
-                    case AuthErrorCode.wrongPassword.rawValue:
-                        self.errorMessage = "Incorrect password"
-                    case AuthErrorCode.userNotFound.rawValue:
-                        self.errorMessage = "No account found with this email"
-                    case AuthErrorCode.userDisabled.rawValue:
-                        self.errorMessage = "This account has been disabled"
-                    case AuthErrorCode.tooManyRequests.rawValue:
-                        self.errorMessage = "Too many attempts. Please try again later"
-                    default:
-                        self.errorMessage = error.localizedDescription
+                case AuthErrorCode.invalidEmail.rawValue:
+                    self.errorMessage = "Invalid email format"
+                case AuthErrorCode.wrongPassword.rawValue:
+                    self.errorMessage = "Incorrect password"
+                case AuthErrorCode.userNotFound.rawValue:
+                    self.errorMessage = "No account found with this email"
+                case AuthErrorCode.userDisabled.rawValue:
+                    self.errorMessage = "This account has been disabled"
+                case AuthErrorCode.tooManyRequests.rawValue:
+                    self.errorMessage = "Too many attempts. Please try again later"
+                default:
+                    self.errorMessage = error.localizedDescription
                 }
                 self.showError = true
             }
@@ -164,16 +191,17 @@ import SwiftUI
     func signOut() {
         do {
             try self.auth.signOut()
+            
+            // Clear UserSessionManager
+            UserSessionManager.shared.logout()
+            
             self.isAuthenticated = false
             self.isSecondState = true
             // Clear user data
             self.currentUserName = ""
             self.currentUserEmail = ""
             self.profilePictureURL = nil
-            self.profileImage = nil // Clear cached image
-            
-            // Cancel any ongoing image load
-            imageLoadTask?.cancel()
+            self.profileImage = nil
         } catch {
             self.errorMessage = "Error signing out"
             self.showError = true
@@ -190,8 +218,8 @@ import SwiftUI
 
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first,
-              let rootViewController = window.rootViewController else
-        {
+              let rootViewController = window.rootViewController
+        else {
             return
         }
 
@@ -223,6 +251,11 @@ import SwiftUI
 
                 try await self.db.collection("users").document(user.uid).setData(userData)
             }
+
+            // Store token in UserSessionManager
+            let token = try await getAuthToken()
+            UserSessionManager.shared.accessToken = token
+            UserSessionManager.shared.userID = user.uid
 
             // Update local user info
             self.currentUserEmail = user.email ?? ""
@@ -274,8 +307,8 @@ import SwiftUI
     /// Deletes the current user account
     func deleteUser() async throws {
         guard let user = auth.currentUser,
-              let userId = getCurrentUserId() else
-        {
+              let userId = getCurrentUserId()
+        else {
             throw NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No authenticated user found."])
         }
 
@@ -285,6 +318,9 @@ import SwiftUI
         // Delete authentication record
         try await user.delete()
 
+        // Clear UserSessionManager
+        UserSessionManager.shared.logout()
+
         await MainActor.run {
             self.isAuthenticated = false
             self.isSecondState = true
@@ -293,86 +329,26 @@ import SwiftUI
             self.profilePictureURL = nil
             self.profileImage = nil
         }
-        
-        // Cancel any ongoing image load
-        imageLoadTask?.cancel()
-        
         print("User deleted successfully.")
     }
 
     // MARK: - Profile Picture Methods
 
     /// Loads the profile picture for the current user
-    func loadProfilePicture(bypassCache: Bool = false) async {
-        // Cancel any existing load task
-        imageLoadTask?.cancel()
-        
-        // Prevent multiple simultaneous loads
-        guard !isLoadingProfileImage else {
-            print("⏳ Already loading profile picture, skipping...")
-            return
-        }
-        
-        print("🔄 loadProfilePicture called with bypassCache: \(bypassCache)")
-        
-        await MainActor.run {
-            self.isLoadingProfileImage = true
-        }
-        
-        defer {
-            Task { @MainActor in
-                print("🏁 loadProfilePicture finishing, setting isLoadingProfileImage = false")
-                self.isLoadingProfileImage = false
+    func loadProfilePicture() async {
+        do {
+            // Use NetworkManager
+            let image = try await NetworkManager.shared.getProfilePicture()
+
+            await MainActor.run {
+                self.profileImage = image
+            }
+        } catch {
+            print("Error loading profile picture: \(error)")
+            await MainActor.run {
+                self.profileImage = nil
             }
         }
-        
-        imageLoadTask = Task.detached(priority: .userInitiated) { [weak self] in
-            do {
-                guard let self = self else {
-                    print("❌ Self is nil in imageLoadTask")
-                    return
-                }
-                
-                print("🔑 Getting auth token...")
-                let token = try await self.getAuthToken()
-                
-                print("🔍 Loading profile picture from: \(Constants.API.baseURL + Constants.API.profilePicture)")
-                print("   bypassCache: \(bypassCache)")
-                
-                // Perform network request on background thread
-                let image = try await URLSession.getImage(
-                    endpoint: Constants.API.profilePicture,
-                    token: token,
-                    bypassCache: bypassCache)
-                
-                // Check if task was cancelled
-                guard !Task.isCancelled else {
-                    print("🚫 Profile picture load cancelled")
-                    return
-                }
-                
-                print("✅ Image received from server")
-                await MainActor.run {
-                    self.profileImage = image
-                    print("✅ Profile picture set in AuthViewModel")
-                }
-            } catch {
-                guard !Task.isCancelled else {
-                    print("🚫 Task cancelled during error handling")
-                    return
-                }
-                
-                print("❌ Error loading profile picture: \(error)")
-                await MainActor.run {
-                    self?.profileImage = nil
-                }
-            }
-        }
-        
-        print("⏳ Awaiting imageLoadTask completion...")
-        // Wait for the task to complete
-        await imageLoadTask?.value
-        print("✅ imageLoadTask completed")
     }
 
     // MARK: - Helper Methods
@@ -385,7 +361,7 @@ import SwiftUI
             print("🔑 Bearer Token: \(token)")
             print("👤 User ID: \(uid)")
         } catch {
-            print("❌ Error getting debug info: \(error.localizedDescription)")
+            print("Error getting debug info: \(error.localizedDescription)")
         }
     }
 
@@ -401,6 +377,16 @@ import SwiftUI
                 self.isAuthenticated = true
                 self.isSecondState = false
             }
+            
+            // Ensure token is in UserSessionManager
+            do {
+                let token = try await getAuthToken()
+                UserSessionManager.shared.accessToken = token
+                UserSessionManager.shared.userID = user.uid
+            } catch {
+                print("Error updating token: \(error)")
+            }
+            
             await self.fetchUserInfo()
         } else {
             await MainActor.run {
@@ -409,57 +395,19 @@ import SwiftUI
                 self.currentUserEmail = ""
                 self.currentUserName = ""
                 self.profilePictureURL = nil
-                self.profileImage = nil
             }
         }
     }
 
     /// Gets the authentication token for the current user
     func getAuthToken() async throws -> String {
-        guard let currentUser = auth.currentUser else {
-            throw URLError(.userAuthenticationRequired)
-        }
-
-        return try await withCheckedThrowingContinuation { continuation in
-            currentUser.getIDToken { token, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                } else if let token = token {
-                    continuation.resume(returning: token)
-                } else {
-                    continuation.resume(throwing: URLError(.userAuthenticationRequired))
-                }
-            }
-        }
+        // Delegate to UserSessionManager
+        let token = try await UserSessionManager.shared.getAuthToken()
+        // Cache it in UserSessionManager (already done in UserSessionManager.getAuthToken())
+        return token
     }
 
     // MARK: - Private Methods
-
-    func storeProfilePictureURL(imageUrl _: String) async throws {
-        // Implementation commented out for now
-    }
-
-    func uploadProfilePicture(image: UIImage) async throws -> Bool {
-        let token = try await getAuthToken()
-
-        print("🔍 Checking if user has existing profile picture...")
-        
-        // Always use PUT to update - simpler logic
-        // The backend will handle whether it's a new picture or update
-        print("📤 Uploading/updating profile picture with PUT...")
-        let response = try await URLSession.uploadImageUpdate(
-            endpoint: Constants.API.profilePicture,
-            token: token,
-            image: image,
-            responseType: ProfilePictureResponse.self)
-
-        await MainActor.run {
-            self.profilePictureURL = response.imageURL
-        }
-
-        print("✅ Profile picture uploaded/updated successfully")
-        return true
-    }
 
     private func fetchUserInfo() async {
         guard let currentUser = auth.currentUser else {
