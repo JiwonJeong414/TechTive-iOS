@@ -125,7 +125,7 @@ class NetworkManager: APIClient {
         return try await get(url: url)
     }
     
-    // MARK: - Profile Picture Methods
+    // Profile Picture
 
     func getProfilePicture() async throws -> UIImage? {
         let url = try constructURL(endpoint: Constants.API.profilePicture)
@@ -175,51 +175,6 @@ class NetworkManager: APIClient {
                     )
                 },
                 to: url,
-                headers: headers
-            )
-            .validate()
-            .responseData { response in
-                switch response.result {
-                case .success(let data):
-                    do {
-                        let decoded = try JSONDecoder().decode(ProfilePictureResponse.self, from: data)
-                        continuation.resume(returning: decoded)
-                    } catch {
-                        continuation.resume(throwing: error)
-                    }
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    func updateProfilePicture(image: UIImage) async throws -> ProfilePictureResponse {
-        let url = Constants.API.baseURL + Constants.API.profilePicture
-        
-        guard let token = UserSessionManager.shared.accessToken else {
-            throw NetworkError.authenticationFailed
-        }
-        
-        return try await withCheckedThrowingContinuation { continuation in
-            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-                continuation.resume(throwing: NetworkError.invalidImageData)
-                return
-            }
-            
-            let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
-            
-            AF.upload(
-                multipartFormData: { multipartFormData in
-                    multipartFormData.append(
-                        imageData,
-                        withName: "profile_picture",
-                        fileName: "profile.jpg",
-                        mimeType: "image/jpeg"
-                    )
-                },
-                to: url,
-                method: .put,  // ✅ Use PUT for updates
                 headers: headers
             )
             .validate()
