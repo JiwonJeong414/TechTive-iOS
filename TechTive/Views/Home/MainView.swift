@@ -34,6 +34,7 @@ struct MainView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .overlay(floatingActionButton)
+            .overlay(loadingOverlay)
             .refreshable {
                 await refreshAllContent()
             }
@@ -159,6 +160,29 @@ struct MainView: View {
                 x: geometry.size.width - 85,
                 y: geometry.size.height - 65
             )
+        }
+    }
+    
+    private var loadingOverlay: some View {
+        Group {
+            if notesViewModel.isLoading && !hasLoadedInitialData {
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .overlay(
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .scaleEffect(1.5)
+                                .foregroundColor(Color(Constants.Colors.orange))
+                            
+                            Text("Loading your notes...")
+                                .font(Constants.Fonts.poppinsMedium16)
+                                .foregroundColor(Color(Constants.Colors.white))
+                        }
+                        .padding(24)
+                        .background(Color(Constants.Colors.darkPurple))
+                        .cornerRadius(12)
+                    )
+            }
         }
     }
     

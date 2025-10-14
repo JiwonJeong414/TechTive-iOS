@@ -58,7 +58,6 @@ struct LoginView: View {
             self.inputFields
             self.errorMessage
             self.loginButton
-            self.divider
             self.googleSignInButton
             self.signUpLink
         }
@@ -139,21 +138,6 @@ struct LoginView: View {
             .cornerRadius(25)
         }
         .disabled(self.viewModel.isLoading)
-    }
-
-    private var divider: some View {
-        HStack {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(Color(Constants.Colors.gray).opacity(0.3))
-            Text("OR")
-                .font(.system(size: 14))
-                .foregroundColor(Color(Constants.Colors.gray))
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(Color(Constants.Colors.gray).opacity(0.3))
-        }
-        .padding(.vertical, 10)
     }
 
     private var googleSignInButton: some View {

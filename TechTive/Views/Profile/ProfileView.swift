@@ -2,7 +2,7 @@
 //  ProfileView.swift
 //  TechTive
 //
-//  Rebuilt from scratch with proper state management
+//  Rebuilt with About Us section and fixed navigation
 //
 
 import Charts
@@ -18,9 +18,15 @@ struct ProfileView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isLoadingPhoto = false
     
+    // Store reference to authViewModel and notesViewModel
+    let authViewModel: AuthViewModel
+    let notesViewModel: NotesViewModel
+    
     // MARK: - Initialization
     
     init(authViewModel: AuthViewModel, notesViewModel: NotesViewModel) {
+        self.authViewModel = authViewModel
+        self.notesViewModel = notesViewModel
         _viewModel = StateObject(wrappedValue: ProfileViewModel(
             authViewModel: authViewModel,
             notesViewModel: notesViewModel
@@ -39,6 +45,12 @@ struct ProfileView: View {
         .background(Color(Constants.Colors.backgroundColor))
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
+        // Watch for auth state changes
+        .onChange(of: authViewModel.isAuthenticated) { _, isAuth in
+            if !isAuth {
+                dismiss()
+            }
+        }
         .task {
             await viewModel.loadProfilePicture()
         }
@@ -78,7 +90,7 @@ struct ProfileView: View {
                     Image(systemName: "chevron.left")
                         .foregroundColor(Color(Constants.Colors.orange))
                     Text("Back")
-                        .font(.custom("Poppins-Medium", fixedSize: 16))
+                        .font(Constants.Fonts.poppinsMedium16)
                         .foregroundColor(Color(Constants.Colors.orange))
                 }
                 .padding(.top, 70)
@@ -131,11 +143,11 @@ struct ProfileView: View {
     private var userInfoView: some View {
         VStack(spacing: 4) {
             Text(viewModel.currentUserName)
-                .font(.custom("Poppins-Medium", fixedSize: 24))
+                .font(Constants.Fonts.poppinsMedium24)
                 .foregroundColor(Color(Constants.Colors.darkPurple))
             
             Text(viewModel.currentUserEmail)
-                .font(.custom("Poppins-Medium", fixedSize: 16))
+                .font(Constants.Fonts.poppinsMedium16)
                 .foregroundColor(Color(Constants.Colors.darkPurple))
                 .padding(.bottom, 32)
         }
@@ -147,18 +159,13 @@ struct ProfileView: View {
         VStack(spacing: 16) {
             settingsSection
             statsSection
+            aboutUsSection
         }
         .padding(.top, 60)
     }
     
     private var settingsSection: some View {
         VStack(spacing: 0) {
-            NavigationLink(destination: ProfileEditView(viewModel: viewModel)) {
-                settingsRow(title: "Edit Profile")
-            }
-            
-            Divider().background(Color(Constants.Colors.orange))
-            
             Button(action: { viewModel.signOut() }) {
                 settingsRow(title: "Logout")
             }
@@ -245,6 +252,76 @@ struct ProfileView: View {
             StatCard(title: "Longest Streak", value: "\(viewModel.longestStreak) Weeks")
         }
         .padding(.horizontal, 20)
+    }
+    
+    // MARK: - About Us Section
+    
+    private var aboutUsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Divider()
+            
+            Text("ABOUT US")
+                .font(Constants.Fonts.poppinsSemiBold20)
+                .padding(.leading)
+            
+            VStack(alignment: .leading, spacing: 20) {
+                aboutCard(
+                    icon: "brain.head.profile",
+                    title: "Your Mental Health Companion",
+                    description: "TechTive uses advanced AI to analyze your emotional patterns and provide personalized insights to support your mental wellness journey."
+                )
+                
+                aboutCard(
+                    icon: "lock.shield",
+                    title: "Privacy First",
+                    description: "Your thoughts are yours alone. All entries are encrypted and stored securely. We never share your data with third parties."
+                )
+                
+                aboutCard(
+                    icon: "chart.line.uptrend.xyaxis",
+                    title: "Track Your Progress",
+                    description: "Watch your emotional patterns evolve over time with beautiful visualizations and weekly insights tailored just for you."
+                )
+                
+                VStack(spacing: 8) {
+                    Text("Made by: Jiwon Jeong, Abrar Amin, George Dong, Seojin Park, Keya Aggarwal")
+                        .font(Constants.Fonts.poppinsRegular14)
+                        .foregroundColor(Color(Constants.Colors.gray))
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Version 2.2.1")
+                        .font(Constants.Fonts.poppinsRegular12)
+                        .foregroundColor(Color(Constants.Colors.gray).opacity(0.7))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 16)
+            }
+            .padding()
+            .background(Color(Constants.Colors.lightYellow).opacity(0.4))
+            .cornerRadius(12)
+            .padding(.horizontal)
+            .padding(.bottom, 40)
+        }
+    }
+    
+    private func aboutCard(icon: String, title: String, description: String) -> some View {
+        HStack(alignment: .top, spacing: 16) {
+            Image(systemName: icon)
+                .font(.system(size: 32))
+                .foregroundColor(Color(Constants.Colors.orange))
+                .frame(width: 44, height: 44)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(Constants.Fonts.poppinsSemiBold16)
+                    .foregroundColor(Color(Constants.Colors.darkPurple))
+                
+                Text(description)
+                    .font(Constants.Fonts.poppinsRegular14)
+                    .foregroundColor(Color(Constants.Colors.black))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
     
     // MARK: - Photo Handling

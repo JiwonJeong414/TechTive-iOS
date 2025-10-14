@@ -57,7 +57,7 @@ struct WeeklyOverviewSection: View {
                 .foregroundColor(Color(Constants.Colors.black).opacity(0.9))
             
             Text(response.content)
-                .font(.custom("CourierPrime-Regular", fixedSize: 14))
+                .font(Constants.Fonts.courierPrime16)
                 .foregroundColor(Color(Constants.Colors.black).opacity(0.8))
                 .multilineTextAlignment(.center)
                 .lineLimit(nil)

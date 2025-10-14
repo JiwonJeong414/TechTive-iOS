@@ -12,7 +12,7 @@ struct ContentView: View {
                     ProgressView()
                         .scaleEffect(1.5)
                     Text("Loading...")
-                        .font(.custom("Poppins-Regular", fixedSize: 16))
+                        .font(Constants.Fonts.poppinsRegular16)
                         .foregroundColor(Color(Constants.Colors.gray))
                         .padding(.top)
                 }
