@@ -65,6 +65,8 @@ final class ProfileViewModel: ObservableObject {
             // Single call - backend handles create or update automatically
             _ = try await NetworkManager.shared.uploadProfilePicture(image: image)
             
+            print("Profile picture uploaded successfully")
+            
             // Reload after successful upload
             await loadProfilePicture()
             
