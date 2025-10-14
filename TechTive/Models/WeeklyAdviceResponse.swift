@@ -8,3 +8,9 @@ struct WeeklyAdviceResponse: Codable {
     let trigger_type: String
     let user_id: Int
 }
+
+struct Quote: Codable {
+    let id: Int
+    let content: String
+    let author: String
+}
