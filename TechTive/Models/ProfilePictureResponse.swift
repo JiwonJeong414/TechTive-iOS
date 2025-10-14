@@ -1,5 +1,10 @@
 import Foundation
 
+struct UserProfile {
+    let id: String
+    let name: String
+}
+
 struct ProfilePictureResponse: Codable {
     let message: String?
     let url: String?
