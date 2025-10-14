@@ -2,6 +2,12 @@ import SwiftUI
 
 class QuoteViewModel: ObservableObject {
     @Published var quote = "Loading..."
+    
+    private var fetchTask: Task<Void, Never>?
+    
+    deinit {
+        fetchTask?.cancel()
+    }
         
     func fetchQuote() {
         Task {
@@ -10,17 +16,34 @@ class QuoteViewModel: ObservableObject {
     }
 
     func fetchQuoteFromAPI() async {
-        do {
-            let response = try await NetworkManager.shared.getRandomQuote()
-            
-            await MainActor.run {
-                self.quote = "\(response.content)\n— \(response.author)"
-            }
-        } catch {
-            print("Error fetching quote: \(error)")
-            await MainActor.run {
-                self.quote = "" // Show empty state
+        // Cancel any existing fetch
+        fetchTask?.cancel()
+        
+        // Create new fetch task
+        fetchTask = Task {
+            do {
+                let response = try await NetworkManager.shared.getRandomQuote()
+                
+                // Check for cancellation before updating UI
+                try Task.checkCancellation()
+                
+                await MainActor.run {
+                    self.quote = "\(response.content)\n— \(response.author)"
+                }
+            } catch is CancellationError {
+                // Silently handle cancellation - don't update quote
+                print("Quote fetch cancelled successfully")
+            } catch {
+                print("Error fetching quote: \(error)")
+                await MainActor.run {
+                    // Keep previous quote or show empty on error
+                    if self.quote == "Loading..." {
+                        self.quote = ""
+                    }
+                }
             }
         }
+        
+        await fetchTask?.value
     }
 }
