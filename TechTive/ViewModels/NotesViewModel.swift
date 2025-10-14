@@ -1,3 +1,8 @@
+//
+//  NotesViewModel.swift
+//  TechTive
+//
+
 import SwiftUI
 
 /// ViewModel responsible for managing notes in the app
@@ -8,17 +13,12 @@ class NotesViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: Error?
 
-    // MARK: - Dependencies
-
-    weak var authViewModel: AuthViewModel?
-
     // MARK: - Initialization
 
-    init(authViewModel: AuthViewModel? = nil) {
-        self.authViewModel = authViewModel
+    init() {
         self.loadNotes()
-        // Only fetch notes if we have an authViewModel
-        if authViewModel != nil {
+        // Fetch notes if user is authenticated
+        if UserSessionManager.shared.accessToken != nil {
             Task {
                 await self.fetchNotes()
             }
@@ -82,22 +82,35 @@ class NotesViewModel: ObservableObject {
         await MainActor.run { self.isLoading = true }
 
         do {
-            guard let authViewModel = authViewModel else {
-                throw NetworkError.authenticationFailed
+            // Simple network call using NetworkManager
+            let response = try await NetworkManager.shared.getNotes()
+
+            // Fetch individual notes with emotional analysis
+            var notesWithEmotions: [Note] = []
+            
+            for (index, note) in response.notes.enumerated() {
+                print("🔄 Fetching emotional analysis for note \(index + 1)/\(response.notes.count)")
+                
+                do {
+                    let fullNote = try await NetworkManager.shared.getNote(id: note.id)
+                    notesWithEmotions.append(fullNote)
+                    print("Note \(index + 1) emotional data: \(fullNote.dominantEmotion.emotion)")
+                } catch {
+                    print("Failed to fetch emotional analysis for note \(note.id): \(error.localizedDescription)")
+                    // Fallback to note without emotional analysis
+                    notesWithEmotions.append(note)
+                }
             }
 
-            let token = try await authViewModel.getAuthToken()
-            let fetchedNotes = try await fetchAllNotes(token: token)
-
             await MainActor.run {
-                self.notes = fetchedNotes.sorted { $0.timestamp > $1.timestamp }
+                self.notes = notesWithEmotions.sorted { $0.timestamp > $1.timestamp }
                 self.isLoading = false
                 self.objectWillChange.send()
             }
         } catch {
             // Only print error if it's not a cancellation
             if !error.localizedDescription.contains("cancelled") {
-                print("❌ Failed to fetch notes: \(error.localizedDescription)")
+                print("Failed to fetch notes: \(error.localizedDescription)")
             }
             await MainActor.run {
                 self.error = error
@@ -109,48 +122,30 @@ class NotesViewModel: ObservableObject {
 
     /// Creates a new note via API
     @MainActor func createNote(content: String, formattings: [Note.TextFormatting]) async throws {
-        guard let authViewModel = authViewModel else {
-            throw NetworkError.authenticationFailed
-        }
-
-        let token = try await authViewModel.getAuthToken()
-
-        // Prepare parameters for API call
-        let parameters: [String: Any] = [
-            "content": content,
-            "formattings": formattings.map { format in
-                [
-                    "type": format.type.rawValue,
-                    "location": format.location,
-                    "length": format.length
-                ]
+        // Create type-safe request body
+        let body = CreateNoteBody(
+            content: content,
+            formattings: formattings.map { format in
+                CreateNoteBody.FormattingData(
+                    type: format.type.rawValue,
+                    location: format.location,
+                    length: format.length
+                )
             }
-        ]
+        )
 
-        // Debug: Print what we're sending to the backend
+        // Debug: Print what we're sending
         print("📤 Sending note to backend:")
         print("   Content: '\(content)'")
         print("   Formattings: \(formattings.map { "\($0.type.rawValue) at \($0.location) length \($0.length)" })")
-        if let jsonData = try? JSONSerialization.data(withJSONObject: parameters),
-           let jsonString = String(data: jsonData, encoding: .utf8)
-        {
-            print("   JSON: \(jsonString)")
-        }
 
-        // Create note via API
-        let newNote = try await URLSession.post(
-            endpoint: Constants.API.notes,
-            token: token,
-            parameters: parameters,
-            responseType: Note.self)
+        // Simple network call using NetworkManager
+        let newNote = try await NetworkManager.shared.createNote(body: body)
 
         // Debug: Check if the created note has emotional analysis data
         print("📝 Created note emotional data:")
         print("   Content: '\(newNote.content)'")
-        print("   Joy: \(newNote.joyValue), Neutral: \(newNote.neutralValue)")
         print("   Dominant: \(newNote.dominantEmotion.emotion)")
-        print(
-            "   All emotions: anger=\(newNote.angerValue), disgust=\(newNote.disgustValue), fear=\(newNote.fearValue), joy=\(newNote.joyValue), neutral=\(newNote.neutralValue), sadness=\(newNote.sadnessValue), surprise=\(newNote.surpriseValue)")
 
         // Add the new note to local collection
         await MainActor.run {
@@ -160,24 +155,13 @@ class NotesViewModel: ObservableObject {
         }
 
         // Refresh notes to get emotional analysis data
-        // The backend might process emotional analysis asynchronously
         await self.fetchNotes()
     }
 
     /// Deletes a note via API
     @MainActor func deleteNote(id: Int) async throws {
-        guard let authViewModel = authViewModel else {
-            throw NetworkError.authenticationFailed
-        }
-
-        let token = try await authViewModel.getAuthToken()
-
-        // Delete note via API
-        struct EmptyResponse: Codable {}
-        let _: EmptyResponse = try await URLSession.delete(
-            endpoint: "\(Constants.API.notes)\(id)/",
-            token: token,
-            responseType: EmptyResponse.self)
+        // Simple network call using NetworkManager
+        try await NetworkManager.shared.deleteNote(id: id)
 
         // Remove the note from local collection
         await MainActor.run {
@@ -185,51 +169,6 @@ class NotesViewModel: ObservableObject {
             self.saveNotes()
             self.objectWillChange.send() // Force UI update
         }
-    }
-
-    // MARK: - API Methods
-
-    /// Fetches all notes from the API
-    private func fetchAllNotes(token: String) async throws -> [Note] {
-        let response = try await URLSession.get(
-            endpoint: Constants.API.notes,
-            token: token,
-            responseType: NotesResponse.self)
-
-        print("✅ Notes fetched: \(response.notes.count) notes")
-
-        // Notes list API doesn't include emotional analysis data
-        // We need to fetch each note individually to get emotional analysis
-        var notesWithEmotions: [Note] = []
-
-        for (index, note) in response.notes.enumerated() {
-            print(
-                "🔄 Fetching emotional analysis for note \(index + 1)/\(response.notes.count): '\(note.content.prefix(20))...'")
-
-            do {
-                // Fetch individual note with emotional analysis
-                let fullNote = try await fetchIndividualNote(id: note.id, token: token)
-                notesWithEmotions.append(fullNote)
-
-                print(
-                    "✅ Note \(index + 1) emotional data: \(fullNote.dominantEmotion.emotion) (\(fullNote.dominantEmotion.value))")
-            } catch {
-                print("❌ Failed to fetch emotional analysis for note \(note.id): \(error.localizedDescription)")
-                // Fallback to note without emotional analysis
-                notesWithEmotions.append(note)
-            }
-        }
-
-        return notesWithEmotions
-    }
-
-    /// Fetches a specific note by ID with emotional analysis
-    private func fetchIndividualNote(id: Int, token: String) async throws -> Note {
-        let note = try await URLSession.get(
-            endpoint: "\(Constants.API.notes)\(id)/",
-            token: token,
-            responseType: Note.self)
-        return note
     }
 
     // MARK: - Private Methods
