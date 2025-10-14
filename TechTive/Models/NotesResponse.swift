@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 /// Notes API response body
 struct CreateNoteBody: Encodable {
