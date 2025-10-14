@@ -1,9 +1,3 @@
-//
-//  AuthViewModel.swift
-//  TechTive
-//
-//  Created by jiwon jeong on 11/25/24.
-//
 import Alamofire
 import FirebaseAuth
 import FirebaseCore
@@ -27,12 +21,14 @@ import SwiftUI
     @Published var isLoadingUserInfo = false
     @Published var isInitializing = true
     @Published var profileImage: UIImage?
+    @Published var isLoadingProfileImage = false // Track image loading state
 
     // MARK: - Private Properties
 
     private var stateListener: AuthStateDidChangeListenerHandle?
     private let auth = Auth.auth()
     private let db = Firestore.firestore()
+    private var imageLoadTask: Task<Void, Never>? // NEW: Track ongoing load task
 
     // MARK: - Initialization
 
@@ -64,6 +60,7 @@ import SwiftUI
         if let listener = stateListener {
             auth.removeStateDidChangeListener(listener)
         }
+        imageLoadTask?.cancel()
     }
 
     // MARK: - Authentication Methods
@@ -173,6 +170,10 @@ import SwiftUI
             self.currentUserName = ""
             self.currentUserEmail = ""
             self.profilePictureURL = nil
+            self.profileImage = nil // Clear cached image
+            
+            // Cancel any ongoing image load
+            imageLoadTask?.cancel()
         } catch {
             self.errorMessage = "Error signing out"
             self.showError = true
@@ -290,29 +291,88 @@ import SwiftUI
             self.currentUserEmail = ""
             self.currentUserName = ""
             self.profilePictureURL = nil
+            self.profileImage = nil
         }
+        
+        // Cancel any ongoing image load
+        imageLoadTask?.cancel()
+        
         print("User deleted successfully.")
     }
 
     // MARK: - Profile Picture Methods
 
     /// Loads the profile picture for the current user
-    func loadProfilePicture() async {
-        do {
-            let token = try await getAuthToken()
-            let image = try await URLSession.getImage(
-                endpoint: Constants.API.profilePicture,
-                token: token)
-
-            await MainActor.run {
-                self.profileImage = image
-            }
-        } catch {
-            print("❌ Error loading profile picture: \(error)")
-            await MainActor.run {
-                self.profileImage = nil
+    func loadProfilePicture(bypassCache: Bool = false) async {
+        // Cancel any existing load task
+        imageLoadTask?.cancel()
+        
+        // Prevent multiple simultaneous loads
+        guard !isLoadingProfileImage else {
+            print("⏳ Already loading profile picture, skipping...")
+            return
+        }
+        
+        print("🔄 loadProfilePicture called with bypassCache: \(bypassCache)")
+        
+        await MainActor.run {
+            self.isLoadingProfileImage = true
+        }
+        
+        defer {
+            Task { @MainActor in
+                print("🏁 loadProfilePicture finishing, setting isLoadingProfileImage = false")
+                self.isLoadingProfileImage = false
             }
         }
+        
+        imageLoadTask = Task.detached(priority: .userInitiated) { [weak self] in
+            do {
+                guard let self = self else {
+                    print("❌ Self is nil in imageLoadTask")
+                    return
+                }
+                
+                print("🔑 Getting auth token...")
+                let token = try await self.getAuthToken()
+                
+                print("🔍 Loading profile picture from: \(Constants.API.baseURL + Constants.API.profilePicture)")
+                print("   bypassCache: \(bypassCache)")
+                
+                // Perform network request on background thread
+                let image = try await URLSession.getImage(
+                    endpoint: Constants.API.profilePicture,
+                    token: token,
+                    bypassCache: bypassCache)
+                
+                // Check if task was cancelled
+                guard !Task.isCancelled else {
+                    print("🚫 Profile picture load cancelled")
+                    return
+                }
+                
+                print("✅ Image received from server")
+                await MainActor.run {
+                    self.profileImage = image
+                    print("✅ Profile picture set in AuthViewModel")
+                }
+            } catch {
+                guard !Task.isCancelled else {
+                    print("🚫 Task cancelled during error handling")
+                    return
+                }
+                
+                print("❌ Error loading profile picture: \(error)")
+                await MainActor.run {
+                    self?.profileImage = nil
+                }
+            }
+        }
+        
+        print("⏳ Awaiting imageLoadTask completion...")
+        // Wait for the task to complete
+        await imageLoadTask?.value
+        print("✅ imageLoadTask completed")
     }
 
     // MARK: - Helper Methods
@@ -349,6 +409,7 @@ import SwiftUI
                 self.currentUserEmail = ""
                 self.currentUserName = ""
                 self.profilePictureURL = nil
+                self.profileImage = nil
             }
         }
     }
@@ -381,50 +442,23 @@ import SwiftUI
     func uploadProfilePicture(image: UIImage) async throws -> Bool {
         let token = try await getAuthToken()
 
-        // Check if user already has a profile picture by trying to load it
-        let hasExistingPicture = await checkIfProfilePictureExists(token: token)
+        print("🔍 Checking if user has existing profile picture...")
+        
+        // Always use PUT to update - simpler logic
+        // The backend will handle whether it's a new picture or update
+        print("📤 Uploading/updating profile picture with PUT...")
+        let response = try await URLSession.uploadImageUpdate(
+            endpoint: Constants.API.profilePicture,
+            token: token,
+            image: image,
+            responseType: ProfilePictureResponse.self)
 
-        if hasExistingPicture {
-            // User already has a profile picture, use PUT to update
-            print("ℹ️ User has existing profile picture, updating with PUT...")
-            let response = try await URLSession.uploadImageUpdate(
-                endpoint: Constants.API.profilePicture,
-                token: token,
-                image: image,
-                responseType: ProfilePictureResponse.self)
-
-            await MainActor.run {
-                self.profilePictureURL = response.imageURL
-            }
-
-            return true
-        } else {
-            // User doesn't have a profile picture, use POST to create
-            print("ℹ️ No existing profile picture, creating with POST...")
-            let response = try await URLSession.uploadImage(
-                endpoint: Constants.API.profilePicture,
-                token: token,
-                image: image,
-                responseType: ProfilePictureResponse.self)
-
-            await MainActor.run {
-                self.profilePictureURL = response.imageURL
-            }
-
-            return true
+        await MainActor.run {
+            self.profilePictureURL = response.imageURL
         }
-    }
 
-    /// Check if user already has a profile picture by attempting to load it
-    private func checkIfProfilePictureExists(token: String) async -> Bool {
-        do {
-            let _ = try await URLSession.getImage(
-                endpoint: Constants.API.profilePicture,
-                token: token)
-            return true // Image exists
-        } catch {
-            return false // No image or error loading
-        }
+        print("✅ Profile picture uploaded/updated successfully")
+        return true
     }
 
     private func fetchUserInfo() async {

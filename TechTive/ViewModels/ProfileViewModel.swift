@@ -5,12 +5,15 @@ extension ProfileView {
     @MainActor class ViewModel: ObservableObject {
         // MARK: - Published Properties
 
-        @Published var profileImage: UIImage?
+        // REMOVED: @Published var profileImage: UIImage?
+        // Use authViewModel.profileImage as single source of truth
+        
         @Published var selectedImage: UIImage?
         @Published var selectedItem: PhotosPickerItem?
         @Published var showDeleteConfirmation = false
         @Published var showSuccessMessage = false
         @Published var errorMessage = ""
+        @Published var isUploadingImage = false
 
         // Profile Edit Properties
         @Published var newUsername = ""
@@ -22,6 +25,8 @@ extension ProfileView {
 
         private let authViewModel: AuthViewModel
         private let notesViewModel: NotesViewModel
+        
+        private var uploadTask: Task<Void, Never>?
 
         // MARK: - Initialization
 
@@ -29,25 +34,16 @@ extension ProfileView {
             self.authViewModel = authViewModel
             self.notesViewModel = notesViewModel
         }
+        
+        deinit {
+            uploadTask?.cancel()
+        }
 
         // MARK: - Profile Methods
 
         func loadProfilePicture() async {
-            do {
-                let token = try await authViewModel.getAuthToken()
-                let image = try await URLSession.getImage(
-                    endpoint: Constants.API.profilePicture,
-                    token: token)
-
-                await MainActor.run {
-                    self.profileImage = image
-                }
-            } catch {
-                print("❌ Error loading profile picture: \(error)")
-                await MainActor.run {
-                    self.profileImage = nil
-                }
-            }
+            // Delegate to AuthViewModel - single source of truth
+            await authViewModel.loadProfilePicture()
         }
 
         func checkAuthentication() async {
@@ -55,23 +51,81 @@ extension ProfileView {
         }
 
         func handleImageSelection(_ newItem: PhotosPickerItem?) async {
-            if let data = try? await newItem?.loadTransferable(type: Data.self),
-               let image = UIImage(data: data)
-            {
+            guard let newItem = newItem else {
+                // User cancelled selection
+                print("ℹ️ Image selection cancelled")
+                return
+            }
+            
+            // Cancel any existing upload
+            uploadTask?.cancel()
+            
+            // Don't await this task - let it run in background
+            uploadTask = Task { @MainActor in
+                print("📸 Starting image selection process...")
+                
+                // Try to load the image data
+                guard let data = try? await newItem.loadTransferable(type: Data.self),
+                      let image = UIImage(data: data) else {
+                    print("❌ Failed to load image data")
+                    return
+                }
+                
+                print("✅ Image data loaded, showing preview")
+                // Show selected image immediately for better UX
                 self.selectedImage = image
+                self.isUploadingImage = true
+                
+                defer {
+                    // Always reset loading state when done
+                    print("🔄 Resetting upload state")
+                    self.isUploadingImage = false
+                }
+                
                 do {
+                    print("📤 Starting upload...")
                     let success = try await authViewModel.uploadProfilePicture(image: image)
+                    
+                    guard !Task.isCancelled else {
+                        print("🚫 Upload cancelled")
+                        self.selectedImage = nil
+                        return
+                    }
+                    
                     if success {
-                        await self.loadProfilePicture()
-                        // Clear selectedImage after successful upload so profileImage takes precedence
+                        print("✅ Upload successful, clearing selected image")
+                        // Clear selected image - this will show the old cached image
+                        self.selectedImage = nil
+                        
+                        print("⏰ Waiting 1 second before reload...")
+                        // Longer delay to ensure server processed the upload
+                        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+                        
+                        print("🔄 Triggering profile picture reload in background...")
+                        // DON'T await - launch in separate task to avoid blocking
+                        Task.detached(priority: .userInitiated) { [weak self] in
+                            guard let self = self else { return }
+                            print("🔄 Background task: calling loadProfilePicture...")
+                            await self.authViewModel.loadProfilePicture(bypassCache: true)
+                            print("✅ Background task: loadProfilePicture completed")
+                        }
+                        print("✅ Reload triggered, continuing...")
+                    } else {
+                        print("❌ Upload returned false")
                         self.selectedImage = nil
                     }
                 } catch {
-                    print("Error uploading image: \(error)")
-                    // Clear selectedImage on error too
+                    guard !Task.isCancelled else {
+                        print("🚫 Upload cancelled")
+                        self.selectedImage = nil
+                        return
+                    }
+                    print("❌ Error uploading image: \(error)")
                     self.selectedImage = nil
                 }
             }
+            
+            // Don't await - let it complete in background
         }
 
         // MARK: - Profile Edit Methods
@@ -138,6 +192,16 @@ extension ProfileView {
         }
 
         // MARK: - Computed Properties
+        
+        var profileImage: UIImage? {
+            // Read from AuthViewModel as single source of truth
+            authViewModel.profileImage
+        }
+        
+        var isLoadingImage: Bool {
+            // Check if AuthViewModel is loading OR we're uploading
+            authViewModel.isLoadingProfileImage || isUploadingImage
+        }
 
         var currentUserName: String {
             self.authViewModel.currentUserName

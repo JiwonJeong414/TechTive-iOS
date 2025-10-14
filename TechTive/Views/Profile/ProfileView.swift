@@ -29,17 +29,19 @@ struct ProfileView: View {
         }
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
-        .onAppear {
+        .task {
+            // Use .task instead of .onAppear for better async handling
+            await self.viewModel.checkAuthentication()
+            if !self.viewModel.isAuthenticated {
+                self.dismiss()
+                return
+            }
+            // Don't await - let it load in background
             Task {
-                await self.viewModel.checkAuthentication()
-                if !self.viewModel.isAuthenticated {
-                    self.dismiss()
-                    return
-                }
                 await self.viewModel.loadProfilePicture()
             }
         }
-        .onChange(of: self.viewModel.isAuthenticated) { isAuthenticated in
+        .onChange(of: self.viewModel.isAuthenticated) { _, isAuthenticated in
             if !isAuthenticated {
                 self.dismiss()
             }
@@ -89,24 +91,53 @@ struct ProfileView: View {
 
     private var profileImageSection: some View {
         ZStack(alignment: .bottomTrailing) {
-            if let selectedImage = viewModel.selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 160, height: 160)
-                    .clipShape(Circle())
-            } else if let profileImage = viewModel.profileImage {
-                Image(uiImage: profileImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 160, height: 160)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .frame(width: 160, height: 160)
-                    .foregroundColor(Color(Constants.Colors.gray))
+            Group {
+                // Show selected image with highest priority (immediate feedback)
+                if let selectedImage = viewModel.selectedImage {
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 160, height: 160)
+                        .clipShape(Circle())
+                }
+                // Show profile image from AuthViewModel (single source of truth)
+                else if let profileImage = viewModel.profileImage {
+                    Image(uiImage: profileImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 160, height: 160)
+                        .clipShape(Circle())
+                }
+                // Default placeholder
+                else {
+                    ZStack {
+                        Circle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 160, height: 160)
+                        
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .frame(width: 160, height: 160)
+                            .foregroundColor(Color(Constants.Colors.gray))
+                    }
+                }
             }
+            .overlay(
+                // Show loading overlay when loading
+                Group {
+                    if viewModel.isLoadingImage {
+                        ZStack {
+                            Circle()
+                                .fill(Color.black.opacity(0.3))
+                                .frame(width: 160, height: 160)
+                            
+                            ProgressView()
+                                .scaleEffect(1.5)
+                                .tint(.white)
+                        }
+                    }
+                }
+            )
 
             PhotosPicker(selection: self.$viewModel.selectedItem, matching: .images) {
                 ZStack {
@@ -121,7 +152,8 @@ struct ProfileView: View {
                         .foregroundColor(Color(Constants.Colors.profileOrange))
                 }
             }
-            .onChange(of: self.viewModel.selectedItem) { newItem in
+            .disabled(viewModel.isLoadingImage) // Disable while loading
+            .onChange(of: self.viewModel.selectedItem) { _, newItem in
                 Task {
                     await self.viewModel.handleImageSelection(newItem)
                 }

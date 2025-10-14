@@ -242,16 +242,23 @@ extension URLSession {
 
     /// Load image directly from endpoint
     static func getImage(
-        endpoint: String,
-        token: String) async throws -> UIImage?
-    {
-        // Add cache-busting parameter to force fresh image
-        let cacheBuster = "?t=\(Int(Date().timeIntervalSince1970))"
+            endpoint: String,
+            token: String,
+            bypassCache: Bool = false) async throws -> UIImage?
+        {
+        // Only add cache-busting when explicitly requested (e.g., after upload)
+        let cacheBuster = bypassCache ? "?t=\(Int(Date().timeIntervalSince1970))" : ""
         let url = Constants.API.baseURL + endpoint + cacheBuster
+        
         var request = URLRequest(url: URL(string: url)!)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("image/jpeg", forHTTPHeaderField: "Accept")
-        request.cachePolicy = .reloadIgnoringLocalCacheData // Force fresh request
+        
+        // Use default cache policy for normal loads, ignore cache only when needed
+        request.cachePolicy = bypassCache ? .reloadIgnoringLocalCacheData : .returnCacheDataElseLoad
+        
+        // Set reasonable timeout
+        request.timeoutInterval = 10.0
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
