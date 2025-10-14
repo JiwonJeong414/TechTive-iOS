@@ -1,224 +1,183 @@
+//
+//  ProfileView.swift
+//  TechTive
+//
+//  Rebuilt from scratch with proper state management
+//
+
 import Charts
 import PhotosUI
 import SwiftUI
 
-/// Profile View for TechTive
 struct ProfileView: View {
+    
     // MARK: - Properties
-
-    @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: ViewModel
-
-    private let buttonColor = Color(Constants.Colors.lightYellow)
-    private let purpleColor = Color(Constants.Colors.purple)
-
+    
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: ProfileViewModel
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var isLoadingPhoto = false
+    
+    // MARK: - Initialization
+    
     init(authViewModel: AuthViewModel, notesViewModel: NotesViewModel) {
-        _viewModel = StateObject(wrappedValue: ViewModel(
+        _viewModel = StateObject(wrappedValue: ProfileViewModel(
             authViewModel: authViewModel,
-            notesViewModel: notesViewModel))
+            notesViewModel: notesViewModel
+        ))
     }
-
+    
     // MARK: - Body
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                self.profileHeaderSection
-                self.profileContentSection
+                profileHeader
+                profileContent
             }
         }
+        .background(Color(Constants.Colors.backgroundColor))
         .navigationBarBackButtonHidden(true)
         .ignoresSafeArea(.all, edges: .top)
         .task {
-            // Use .task instead of .onAppear for better async handling
-            await self.viewModel.checkAuthentication()
-            if !self.viewModel.isAuthenticated {
-                self.dismiss()
-                return
-            }
-            // Load profile picture
-            await self.viewModel.loadProfilePicture()
+            await viewModel.loadProfilePicture()
         }
-        .onChange(of: self.viewModel.isAuthenticated) { oldValue, newValue in
-            // ✅ Fixed: Added oldValue parameter
-            if !newValue {
-                self.dismiss()
-            }
+        .onChange(of: selectedPhotoItem) { _, newItem in
+            guard let newItem else { return }
+            handlePhotoSelection(newItem)
         }
     }
-
-    // MARK: - Components
-
-    private var profileHeaderSection: some View {
+    
+    // MARK: - Header Section
+    
+    private var profileHeader: some View {
         ZStack {
-            GeometryReader { geometry in
-                self.purpleColor
-                    .frame(
-                        width: geometry.size.width,
-                        height: max(0, geometry.size.height + geometry.frame(in: .global).minY))
-                    .offset(y: -geometry.frame(in: .global).minY)
-                    .allowsHitTesting(false)
-            }
-
-            VStack {
-                self.backButton
-                self.profileImageSection
-                self.userInfoSection
+            Color(Constants.Colors.purple)
+                .frame(height: 300)
+            
+            VStack(spacing: 16) {
+                backButton
+                profileImageView
+                userInfoView
             }
             .padding(.horizontal)
         }
         .frame(height: 300)
     }
-
+    
     private var backButton: some View {
         HStack {
-            Button(action: {
-                self.dismiss()
-            }) {
-                HStack {
+            Button(action: { dismiss() }) {
+                HStack(spacing: 4) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(Color(Constants.Colors.orange))
                     Text("Back")
-                        .font(.custom("Poppins-Medium", fixedSize: 16))
-                        .foregroundColor(Color(Constants.Colors.orange))
-                }.padding(.top, 70)
+                        .font(Constants.Fonts.poppinsMedium16)
+                }
+                .foregroundColor(Color(Constants.Colors.orange))
             }
+            .padding(.top, 100)
+            
             Spacer()
         }
-        .padding(.top, 30)
     }
-
-    private var profileImageSection: some View {
+    
+    private var profileImageView: some View {
         ZStack(alignment: .bottomTrailing) {
-            // Show selected image with highest priority (immediate feedback)
-            if let selectedImage = viewModel.selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 160, height: 160)
-                    .clipShape(Circle())
+            Group {
+                if isLoadingPhoto {
+                    ProgressView()
+                        .frame(width: 160, height: 160)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
+                } else if let image = viewModel.profileImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 160, height: 160)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .frame(width: 160, height: 160)
+                        .foregroundColor(Color(Constants.Colors.gray))
+                }
             }
-            // Show profile image (single source of truth)
-            else if let profileImage = viewModel.profileImage {
-                Image(uiImage: profileImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 160, height: 160)
-                    .clipShape(Circle())
-            }
-            // Default placeholder
-            else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .frame(width: 160, height: 160)
-                    .foregroundColor(Color(Constants.Colors.gray))
-            }
-
-            PhotosPicker(selection: self.$viewModel.selectedItem, matching: .images) {
+            
+            PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
                 ZStack {
                     Circle()
                         .fill(Color.white)
                         .frame(width: 44, height: 44)
                         .shadow(radius: 4)
-
+                    
                     Image(systemName: "pencil.circle.fill")
                         .resizable()
                         .frame(width: 40, height: 40)
                         .foregroundColor(Color(Constants.Colors.profileOrange))
                 }
             }
-            .onChange(of: self.viewModel.selectedItem) { oldValue, newItem in
-                // ✅ Fixed: Added oldValue parameter
-                Task {
-                    await self.viewModel.handleImageSelection(newItem)
-                }
-            }
+            .disabled(isLoadingPhoto || viewModel.isProcessing)
         }
-        .offset(x: 8, y: 8)
     }
-
-    private var userInfoSection: some View {
-        VStack {
-            Text(self.viewModel.currentUserName)
-                .font(.custom("Poppins-Medium", fixedSize: 24))
+    
+    private var userInfoView: some View {
+        VStack(spacing: 4) {
+            Text(viewModel.currentUserName)
+                .font(Constants.Fonts.poppinsMedium24)
                 .foregroundColor(Color(Constants.Colors.darkPurple))
-
-            Text(self.viewModel.currentUserEmail)
-                .font(.custom("Poppins-Medium", fixedSize: 16))
+            
+            Text(viewModel.currentUserEmail)
+                .font(Constants.Fonts.poppinsMedium16)
                 .foregroundColor(Color(Constants.Colors.darkPurple))
-                .padding(.bottom, 32)
         }
+        .padding(.bottom, 16)
     }
-
-    private var profileContentSection: some View {
-        ZStack {
-            GeometryReader { geometry in
-                Color(Constants.Colors.lightYellow).opacity(0)
-                    .frame(
-                        width: geometry.size.width,
-                        height: geometry.size.height + geometry.frame(in: .global).minY)
-                    .offset(y: -geometry.frame(in: .global).minY)
-                    .allowsHitTesting(false)
-            }
-
-            VStack(spacing: 0) {
-                self.profileSettingsSection
-                self.statsSection
-            }
+    
+    // MARK: - Content Section
+    
+    private var profileContent: some View {
+        VStack(spacing: 16) {
+            settingsSection
+            statsSection
         }
+        .padding(.top, 60)
     }
-
-    private var profileSettingsSection: some View {
+    
+    private var settingsSection: some View {
         VStack(spacing: 0) {
-            self.profileSettingsButtons
+            NavigationLink(destination: ProfileEditView(viewModel: viewModel)) {
+                settingsRow(title: "Edit Profile")
+            }
+            
+            Divider().background(Color(Constants.Colors.orange))
+            
+            Button(action: { viewModel.signOut() }) {
+                settingsRow(title: "Logout")
+            }
+            
+            Divider().background(Color(Constants.Colors.orange))
+            
+            Button(action: { viewModel.showDeleteConfirmation = true }) {
+                settingsRow(title: "Delete Account", isDestructive: true)
+            }
         }
-        .padding(.horizontal)
-        .background(self.buttonColor)
+        .background(Color(Constants.Colors.lightYellow))
         .cornerRadius(8)
         .frame(width: 380)
-        .padding(.top, 60)
-        .padding(.bottom, 15)
-    }
-
-    private var profileSettingsButtons: some View {
-        VStack(spacing: 0) {
-            NavigationLink(destination: ProfileEditView(viewModel: self.viewModel)) {
-                self.settingsButtonRow(title: "Edit Profile")
-            }
-
-            Divider().background(Color.orange)
-
-            Button(action: {
-                self.viewModel.signOut()
-            }) {
-                self.settingsButtonRow(title: "Logout")
-            }
-
-            Divider().background(Color.orange)
-
-            Button(action: {
-                self.viewModel.showDeleteConfirmation = true
-            }) {
-                self.settingsButtonRow(title: "Delete Account", isDestructive: true)
-            }
-            .alert("Are you sure?", isPresented: self.$viewModel.showDeleteConfirmation) {
-                Button("Cancel", role: .cancel) {}
-                Button("Delete", role: .destructive) {
-                    Task {
-                        do {
-                            try await self.viewModel.deleteAccount()
-                        } catch {
-                            print("delete account error")
-                        }
-                    }
+        .padding(.horizontal)
+        .alert("Are you sure?", isPresented: $viewModel.showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                Task {
+                    try? await viewModel.deleteAccount()
                 }
-            } message: {
-                Text("This action cannot be undone.")
             }
+        } message: {
+            Text("This action cannot be undone.")
         }
     }
-
-    private func settingsButtonRow(title: String, isDestructive: Bool = false) -> some View {
+    
+    private func settingsRow(title: String, isDestructive: Bool = false) -> some View {
         HStack {
             Text(title)
                 .foregroundColor(isDestructive ? Color(Constants.Colors.orange) : Color(Constants.Colors.black))
@@ -229,34 +188,37 @@ struct ProfileView: View {
         }
         .padding()
         .frame(maxWidth: .infinity)
-        .background(self.buttonColor)
+        .background(Color(Constants.Colors.lightYellow))
     }
-
+    
+    // MARK: - Stats Section
+    
     private var statsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Divider()
-
+            
             Text("MY STATS")
                 .font(Constants.Fonts.poppinsSemiBold20)
                 .padding(.leading)
-
-            self.notesChartSection
-            self.statsCardsSection
+            
+            notesChart
+            statsCards
         }
     }
-
-    private var notesChartSection: some View {
+    
+    private var notesChart: some View {
         VStack(spacing: 8) {
             Text("Notes Last 5 Weeks")
                 .font(Constants.Fonts.poppinsMedium16)
                 .foregroundColor(Color(Constants.Colors.black))
-
+            
             Chart {
-                ForEach(self.viewModel.notesPerWeek, id: \.week) { data in
+                ForEach(viewModel.notesPerWeek, id: \.week) { data in
                     BarMark(
                         x: .value("Week", data.week),
-                        y: .value("Count", data.count))
-                        .foregroundStyle(Color(Constants.Colors.orange))
+                        y: .value("Count", data.count)
+                    )
+                    .foregroundStyle(Color(Constants.Colors.orange))
                 }
             }
             .frame(height: 200)
@@ -267,21 +229,35 @@ struct ProfileView: View {
         .cornerRadius(12)
         .padding(.horizontal)
     }
-
-    private var statsCardsSection: some View {
+    
+    private var statsCards: some View {
         HStack(spacing: 16) {
-            StatCard(
-                title: "Total Notes",
-                value: "\(self.viewModel.totalNotes)")
-
-            StatCard(
-                title: "Average Notes/Week",
-                value: String(format: "%.1f", self.viewModel.averageNotesPerWeek))
-
-            StatCard(
-                title: "Longest Streak",
-                value: "\(self.viewModel.longestStreak) Weeks")
+            StatCard(title: "Total Notes", value: "\(viewModel.totalNotes)")
+            StatCard(title: "Average Notes/Week", value: String(format: "%.1f", viewModel.averageNotesPerWeek))
+            StatCard(title: "Longest Streak", value: "\(viewModel.longestStreak) Weeks")
         }
         .padding(.horizontal, 20)
+    }
+    
+    // MARK: - Photo Handling
+    
+    private func handlePhotoSelection(_ item: PhotosPickerItem) {
+        isLoadingPhoto = true
+        
+        Task {
+            defer {
+                Task { @MainActor in
+                    isLoadingPhoto = false
+                    selectedPhotoItem = nil
+                }
+            }
+            
+            guard let data = try? await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else {
+                return
+            }
+            
+            await viewModel.uploadProfilePicture(image)
+        }
     }
 }

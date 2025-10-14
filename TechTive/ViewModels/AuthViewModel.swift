@@ -337,9 +337,9 @@ import SwiftUI
     /// Loads the profile picture for the current user
     func loadProfilePicture() async {
         do {
-            // Use NetworkManager
             let image = try await NetworkManager.shared.getProfilePicture()
-
+            
+            // Only update on main actor
             await MainActor.run {
                 self.profileImage = image
             }
