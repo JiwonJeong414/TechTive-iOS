@@ -49,11 +49,17 @@ struct ProfileView: View {
     }
     
     // MARK: - Header Section
-    
+
     private var profileHeader: some View {
         ZStack {
-            Color(Constants.Colors.purple)
-                .frame(height: 300)
+            GeometryReader { geometry in
+                Color(Constants.Colors.purple)
+                    .frame(
+                        width: geometry.size.width,
+                        height: max(0, geometry.size.height + geometry.frame(in: .global).minY))
+                    .offset(y: -geometry.frame(in: .global).minY)
+                    .allowsHitTesting(false)
+            }
             
             VStack(spacing: 16) {
                 backButton
@@ -64,23 +70,24 @@ struct ProfileView: View {
         }
         .frame(height: 300)
     }
-    
+
     private var backButton: some View {
         HStack {
             Button(action: { dismiss() }) {
                 HStack(spacing: 4) {
                     Image(systemName: "chevron.left")
+                        .foregroundColor(Color(Constants.Colors.orange))
                     Text("Back")
-                        .font(Constants.Fonts.poppinsMedium16)
+                        .font(.custom("Poppins-Medium", fixedSize: 16))
+                        .foregroundColor(Color(Constants.Colors.orange))
                 }
-                .foregroundColor(Color(Constants.Colors.orange))
+                .padding(.top, 70)
             }
-            .padding(.top, 100)
-            
             Spacer()
         }
+        .padding(.top, 30)
     }
-    
+
     private var profileImageView: some View {
         ZStack(alignment: .bottomTrailing) {
             Group {
@@ -118,19 +125,20 @@ struct ProfileView: View {
             }
             .disabled(isLoadingPhoto || viewModel.isProcessing)
         }
+        .offset(x: 8, y: 8)
     }
-    
+
     private var userInfoView: some View {
         VStack(spacing: 4) {
             Text(viewModel.currentUserName)
-                .font(Constants.Fonts.poppinsMedium24)
+                .font(.custom("Poppins-Medium", fixedSize: 24))
                 .foregroundColor(Color(Constants.Colors.darkPurple))
             
             Text(viewModel.currentUserEmail)
-                .font(Constants.Fonts.poppinsMedium16)
+                .font(.custom("Poppins-Medium", fixedSize: 16))
                 .foregroundColor(Color(Constants.Colors.darkPurple))
+                .padding(.bottom, 32)
         }
-        .padding(.bottom, 16)
     }
     
     // MARK: - Content Section
