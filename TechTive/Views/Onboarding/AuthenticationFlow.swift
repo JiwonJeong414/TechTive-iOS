@@ -137,7 +137,7 @@ struct AuthenticationFlow: View {
             Text("Get Started")
                 .frame(maxWidth: .infinity)
                 .padding()
-                .font(.custom("Poppins-Regular", fixedSize: 16))
+                .font(Constants.Fonts.poppinsRegular16)
                 .background(Color(Constants.Colors.lightPurple))
                 .foregroundColor(Color(Constants.Colors.black))
                 .cornerRadius(10)

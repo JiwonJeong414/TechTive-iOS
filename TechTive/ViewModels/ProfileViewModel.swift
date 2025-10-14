@@ -2,7 +2,7 @@
 //  ProfileViewModel.swift
 //  TechTive
 //
-//  Rebuilt from scratch with proper thread safety
+//  Fixed with proper logout and crash prevention
 //
 
 import PhotosUI
@@ -16,14 +16,6 @@ final class ProfileViewModel: ObservableObject {
     @Published var profileImage: UIImage?
     @Published var isLoadingImage = false
     @Published var showDeleteConfirmation = false
-    @Published var showSuccessMessage = false
-    @Published var errorMessage = ""
-    
-    // Edit form state
-    @Published var newUsername = ""
-    @Published var newEmail = ""
-    @Published var newPassword = ""
-    @Published var confirmPassword = ""
     @Published var isProcessing = false
     
     // MARK: - Dependencies
@@ -62,81 +54,12 @@ final class ProfileViewModel: ObservableObject {
         defer { isProcessing = false }
         
         do {
-            // Single call - backend handles create or update automatically
             _ = try await NetworkManager.shared.uploadProfilePicture(image: image)
-            
             print("Profile picture uploaded successfully")
-            
-            // Reload after successful upload
             await loadProfilePicture()
-            
         } catch {
             print("Error uploading profile picture: \(error)")
-            errorMessage = "Failed to upload profile picture"
         }
-    }
-    
-    // MARK: - Profile Edit Methods
-    
-    func saveProfileChanges() async -> Bool {
-        guard !isProcessing else { return false }
-        
-        // Validate
-        if newPassword != confirmPassword {
-            errorMessage = "Passwords do not match"
-            return false
-        }
-        
-        if newEmail.isEmpty && newUsername.isEmpty && newPassword.isEmpty {
-            errorMessage = "Please fill in at least one field"
-            return false
-        }
-        
-        isProcessing = true
-        defer { isProcessing = false }
-        
-        errorMessage = ""
-        
-        // Update username
-        if !newUsername.isEmpty {
-            let (success, error) = await authViewModel.updateUsername(newUsername: newUsername)
-            if !success, let error = error {
-                errorMessage = error
-                return false
-            }
-        }
-        
-        // Update email
-        if !newEmail.isEmpty {
-            do {
-                try await authViewModel.updateEmail(newEmail: newEmail)
-            } catch {
-                errorMessage = error.localizedDescription
-                return false
-            }
-        }
-        
-        // Update password
-        if !newPassword.isEmpty {
-            do {
-                try await authViewModel.updatePassword(newPassword: newPassword)
-            } catch {
-                errorMessage = error.localizedDescription
-                return false
-            }
-        }
-        
-        resetForm()
-        showSuccessMessage = true
-        return true
-    }
-    
-    func resetForm() {
-        newUsername = ""
-        newEmail = ""
-        newPassword = ""
-        confirmPassword = ""
-        errorMessage = ""
     }
     
     // MARK: - Account Actions
@@ -168,10 +91,14 @@ final class ProfileViewModel: ObservableObject {
         authViewModel.isAuthenticated
     }
     
-    // MARK: - Stats Computed Properties
+    // MARK: - Stats Computed Properties (with safety checks)
     
     var notesPerWeek: [(week: String, count: Int)] {
-        notesViewModel.notesPerWeek()
+        // Safely access notes with a check
+        guard !notesViewModel.notes.isEmpty else {
+            return []
+        }
+        return notesViewModel.notesPerWeek()
     }
     
     var totalNotes: Int {
@@ -183,6 +110,9 @@ final class ProfileViewModel: ObservableObject {
     }
     
     var longestStreak: Int {
-        notesViewModel.calculateLongestStreak()
+        guard !notesViewModel.notes.isEmpty else {
+            return 0
+        }
+        return notesViewModel.calculateLongestStreak()
     }
 }

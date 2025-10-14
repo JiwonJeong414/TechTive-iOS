@@ -2,7 +2,7 @@
 //  AuthViewModel.swift
 //  TechTive
 //
-//  Created by jiwon jeong on 11/25/24.
+//  Fixed logout navigation
 //
 
 import Alamofire
@@ -59,11 +59,13 @@ import SwiftUI
                     await authViewModel?.fetchUserInfo()
                     await MainActor.run {
                         authViewModel?.isAuthenticated = true
+                        authViewModel?.isSecondState = false
                         authViewModel?.isLoadingUserInfo = false
                     }
                 } else {
                     await MainActor.run {
                         authViewModel?.isAuthenticated = false
+                        authViewModel?.isSecondState = true
                     }
                 }
                 await MainActor.run {
@@ -108,6 +110,7 @@ import SwiftUI
                 self.currentUserEmail = email
                 self.isLoading = false
                 self.isAuthenticated = true
+                self.isSecondState = false
             }
         } catch {
             DispatchQueue.main.async {
@@ -163,6 +166,7 @@ import SwiftUI
             }
 
             self.isAuthenticated = true
+            self.isSecondState = false
         } catch {
             DispatchQueue.main.async {
                 self.isLoading = false
@@ -195,16 +199,21 @@ import SwiftUI
             // Clear UserSessionManager
             UserSessionManager.shared.logout()
             
+            // Update all state immediately
             self.isAuthenticated = false
             self.isSecondState = true
+            
             // Clear user data
             self.currentUserName = ""
             self.currentUserEmail = ""
             self.profilePictureURL = nil
             self.profileImage = nil
+            
+            print("✅ Signed out successfully")
         } catch {
             self.errorMessage = "Error signing out"
             self.showError = true
+            print("❌ Sign out error: \(error)")
         }
     }
 
@@ -261,6 +270,7 @@ import SwiftUI
             self.currentUserEmail = user.email ?? ""
             self.currentUserName = result.user.profile?.name ?? ""
             self.isAuthenticated = true
+            self.isSecondState = false
 
         } catch {
             self.errorMessage = error.localizedDescription
