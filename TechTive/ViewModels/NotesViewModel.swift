@@ -17,49 +17,86 @@ class NotesViewModel: ObservableObject {
     @Published var selectedNote: Note?
     @Published var showingEditor = false
     
+    // MARK: - Private Properties
+    
+    private var fetchTask: Task<Void, Never>?
+    
     // MARK: - Initialization
     
     init() {
         loadNotes()
-        if UserSessionManager.shared.accessToken != nil {
-            Task {
-                await fetchNotes()
-            }
-        }
+        // Remove automatic fetch from init - let views control when to fetch
+    }
+    
+    deinit {
+        // Cancel any ongoing fetch when view model is deallocated
+        fetchTask?.cancel()
     }
     
     // MARK: - Public Methods
     
     /// Fetches notes from the API
     func fetchNotes() async {
+        // Cancel any existing fetch task
+        fetchTask?.cancel()
+        
+        // Create new fetch task
+        fetchTask = Task {
+            await performFetch()
+        }
+        
+        await fetchTask?.value
+    }
+    
+    private func performFetch() async {
+        // Prevent duplicate fetches
+        guard !isLoading else { return }
+        
         await MainActor.run { isLoading = true }
         
         do {
             let response = try await NetworkManager.shared.getNotes()
             
+            // Check for cancellation after each async operation
+            try Task.checkCancellation()
+            
             var notesWithEmotions: [Note] = []
             
             for (index, note) in response.notes.enumerated() {
+                // Check for cancellation in loop
+                try Task.checkCancellation()
+                
                 print("🔄 Fetching emotional analysis for note \(index + 1)/\(response.notes.count)")
                 
                 do {
                     let fullNote = try await NetworkManager.shared.getNote(id: note.id)
                     notesWithEmotions.append(fullNote)
+                } catch is CancellationError {
+                    // Silently handle cancellation
+                    print("⚠️ Note fetch cancelled for note \(note.id)")
+                    throw CancellationError()
                 } catch {
                     print("Failed to fetch emotional analysis for note \(note.id): \(error.localizedDescription)")
                     notesWithEmotions.append(note)
                 }
             }
             
+            // Check for cancellation before updating UI
+            try Task.checkCancellation()
+            
             await MainActor.run {
                 notes = notesWithEmotions.sorted { $0.timestamp > $1.timestamp }
                 isLoading = false
                 objectWillChange.send()
             }
-        } catch {
-            if !error.localizedDescription.contains("cancelled") {
-                print("Failed to fetch notes: \(error.localizedDescription)")
+        } catch is CancellationError {
+            // Handle cancellation gracefully - don't treat as error
+            print("✅ Notes fetch cancelled successfully")
+            await MainActor.run {
+                isLoading = false
             }
+        } catch {
+            print("Failed to fetch notes: \(error.localizedDescription)")
             await MainActor.run {
                 self.error = error
                 isLoading = false

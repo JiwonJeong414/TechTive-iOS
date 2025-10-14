@@ -17,6 +17,7 @@ struct MainView: View {
     @StateObject private var viewModel = ViewModel()
     
     @State private var isRefreshing = false
+    @State private var hasLoadedInitialData = false
     
     // MARK: - UI
     
@@ -41,24 +42,36 @@ struct MainView: View {
                     .environmentObject(notesViewModel)
                     .environmentObject(authViewModel)
             }
+            .task(id: hasLoadedInitialData) {
+                guard !hasLoadedInitialData else { return }
+                
+                // Set token once
+                do {
+                    let token = try await authViewModel.getAuthToken()
+                    UserSessionManager.shared.accessToken = token
+                } catch {
+                    print("Failed to get auth token: \(error)")
+                    return
+                }
+                
+                // Fetch notes and quote in PARALLEL for faster loading
+                await withTaskGroup(of: Void.self) { group in
+                    group.addTask {
+                        await self.notesViewModel.fetchNotes()
+                    }
+                    group.addTask {
+                        await self.quoteViewModel.fetchQuoteFromAPI()
+                    }
+                }
+                
+                hasLoadedInitialData = true
+            }
             .onAppear {
                 Task {
                     await authViewModel.loadProfilePicture()
                 }
                 viewModel.startAnimations()
             }
-        }
-        .task {
-            // Set token once
-            do {
-                let token = try await authViewModel.getAuthToken()
-                UserSessionManager.shared.accessToken = token
-            } catch {
-                print("Failed to get auth token: \(error)")
-            }
-            
-            await notesViewModel.fetchNotes()
-            await quoteViewModel.fetchQuoteFromAPI()
         }
     }
     
@@ -159,21 +172,13 @@ struct MainView: View {
         
         try? await Task.sleep(nanoseconds: 500_000_000)
         
-        do {
-            await quoteViewModel.fetchQuoteFromAPI()
-        } catch {
-            if !error.localizedDescription.contains("cancelled") {
-                print("Error refreshing quote: \(error)")
+        // Fetch notes and quote in PARALLEL using withTaskGroup
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask {
+                await self.quoteViewModel.fetchQuoteFromAPI()
             }
-        }
-        
-        try? await Task.sleep(nanoseconds: 200_000_000)
-        
-        do {
-            await notesViewModel.fetchNotes()
-        } catch {
-            if !error.localizedDescription.contains("cancelled") {
-                print("Error refreshing notes: \(error)")
+            group.addTask {
+                await self.notesViewModel.fetchNotes()
             }
         }
         

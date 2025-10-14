@@ -37,11 +37,7 @@ struct NotesFeedSection: View {
                 await self.viewModel.refreshNotes()
             }
         }
-        .onAppear {
-            Task {
-                await self.notesViewModel.fetchNotes()
-            }
-        }
+        // REMOVED: onAppear fetchNotes - let parent view control this
     }
 
     private var notesStack: some View {
