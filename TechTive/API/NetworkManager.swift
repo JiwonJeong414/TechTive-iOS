@@ -114,7 +114,7 @@ class NetworkManager: APIClient {
     }
     
     // Quotes
-    func getRandomQuote() async throws -> Quote {
+    func getRandomQuote() async throws -> QuoteResponse {
         let url = try constructURL(endpoint: Constants.API.quotes)
         return try await get(url: url)
     }
