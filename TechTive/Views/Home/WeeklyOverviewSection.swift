@@ -43,7 +43,7 @@ struct WeeklyOverviewSection: View {
     @ViewBuilder private var contentSection: some View {
         if let adviceResponse = viewModel.weeklyAdvice {
             adviceText(adviceResponse)
-        } else if let error = viewModel.errorMessage {
+        } else if let error = viewModel.errorMessage, !is404Error(error) {
             errorView(error)
         } else {
             emptyStateView()
@@ -66,8 +66,8 @@ struct WeeklyOverviewSection: View {
         .frame(maxWidth: .infinity, alignment: .center)
     }
     
-    private func errorView(_: String) -> some View {
-        Text("Not Enough Notes")
+    private func errorView(_ errorMessage: String) -> some View {
+        Text(errorMessage)
             .font(Constants.Fonts.courierPrime17)
             .foregroundColor(Color(Constants.Colors.red))
             .padding()
@@ -87,6 +87,10 @@ struct WeeklyOverviewSection: View {
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
+    }
+    
+    private func is404Error(_ errorMessage: String) -> Bool {
+        return errorMessage == "No weekly advice available"
     }
 }
 
@@ -115,8 +119,10 @@ extension WeeklyOverviewSection {
             } catch {
                 print("Error fetching weekly advice: \(error)")
                 await MainActor.run {
-                    if (error as? ErrorResponse)?.httpCode == 404 {
-                        errorMessage = "Not enough notes for weekly advice"
+                    // Check for 404 errors (both ErrorResponse and NSURLErrorDomain)
+                    if (error as? ErrorResponse)?.httpCode == 404 || 
+                       (error as NSError).code == 404 {
+                        errorMessage = "No weekly advice available"
                     } else {
                         errorMessage = error.localizedDescription
                     }

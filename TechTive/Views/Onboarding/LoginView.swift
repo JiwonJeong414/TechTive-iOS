@@ -20,13 +20,11 @@ struct LoginView: View {
     // MARK: - UI
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                self.backgroundColor.ignoresSafeArea()
-                VStack(spacing: 30) {
-                    self.logoSection
-                    self.loginCard
-                }
+        ZStack {
+            self.backgroundColor.ignoresSafeArea()
+            VStack(spacing: 30) {
+                self.logoSection
+                self.loginCard
             }
         }
         .alert("Error", isPresented: self.$viewModel.showError) {
@@ -171,7 +169,7 @@ struct LoginView: View {
             Text("Don't have an account?")
                 .foregroundColor(Color(Constants.Colors.black))
 
-            NavigationLink(destination: SignUpView()) {
+            NavigationLink(destination: SignUpView().environmentObject(authViewModel)) {
                 Text("Sign up")
                     .foregroundColor(Color(self.accentColor))
             }

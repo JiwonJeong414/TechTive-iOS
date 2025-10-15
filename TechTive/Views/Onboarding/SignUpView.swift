@@ -11,6 +11,7 @@ struct SignUpView: View {
     // MARK: - Properties
 
     @StateObject private var viewModel = SignUpViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Environment(\.dismiss) var dismiss
 
     private let backgroundColor = Color(Constants.Colors.darkPurple)
@@ -20,23 +21,26 @@ struct SignUpView: View {
     // MARK: - UI
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                self.backgroundColor.ignoresSafeArea()
-                VStack(spacing: 30) {
-                    self.logoSection
-                    self.signUpCard
-                }
+        ZStack {
+            self.backgroundColor.ignoresSafeArea()
+            VStack(spacing: 30) {
+                self.logoSection
+                self.signUpCard
             }
         }
-        .alert("Error", isPresented: self.$viewModel.showError) {
+        .alert("Error", isPresented: self.$authViewModel.showError) {
             Button("OK", role: .cancel) {
-                self.viewModel.clearError()
+                self.authViewModel.showError = false
             }
         } message: {
-            Text(self.viewModel.errorMessage)
+            Text(self.authViewModel.errorMessage)
         }
         .navigationBarBackButtonHidden(true)
+        .onReceive(authViewModel.$isAuthenticated) { isAuth in
+            if isAuth {
+                dismiss()
+            }
+        }
     }
 
     // MARK: - UI Components
@@ -97,8 +101,8 @@ struct SignUpView: View {
 
     private var errorMessage: some View {
         Group {
-            if !self.viewModel.errorMessage.isEmpty {
-                Text(self.viewModel.errorMessage)
+            if !self.authViewModel.errorMessage.isEmpty {
+                Text(self.authViewModel.errorMessage)
                     .foregroundColor(.red)
                     .font(.system(size: 14))
                     .multilineTextAlignment(.center)
@@ -109,16 +113,64 @@ struct SignUpView: View {
     private var signUpButton: some View {
         Button(action: {
             Task {
-                await self.viewModel.signUp()
+                // Basic validation
+                guard !self.viewModel.name.isEmpty else {
+                    await MainActor.run {
+                        self.authViewModel.errorMessage = "Please enter your name"
+                        self.authViewModel.showError = true
+                    }
+                    return
+                }
+
+                guard !self.viewModel.email.isEmpty else {
+                    await MainActor.run {
+                        self.authViewModel.errorMessage = "Please enter your email"
+                        self.authViewModel.showError = true
+                    }
+                    return
+                }
+
+                guard !self.viewModel.password.isEmpty else {
+                    await MainActor.run {
+                        self.authViewModel.errorMessage = "Please enter your password"
+                        self.authViewModel.showError = true
+                    }
+                    return
+                }
+
+                guard self.viewModel.password == self.viewModel.confirmPassword else {
+                    await MainActor.run {
+                        self.authViewModel.errorMessage = "Passwords don't match"
+                        self.authViewModel.showError = true
+                    }
+                    return
+                }
+
+                // Email format validation
+                let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+                let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+                guard emailPredicate.evaluate(with: self.viewModel.email) else {
+                    await MainActor.run {
+                        self.authViewModel.errorMessage = "Please enter a valid email address"
+                        self.authViewModel.showError = true
+                    }
+                    return
+                }
+
+                await self.authViewModel.signUp(
+                    email: self.viewModel.email,
+                    password: self.viewModel.password,
+                    name: self.viewModel.name
+                )
             }
         }) {
             ZStack {
                 Text("Sign Up")
                     .font(.system(size: 17, weight: .semibold))
                     .foregroundColor(.white)
-                    .opacity(self.viewModel.isLoading ? 0 : 1)
+                    .opacity(self.authViewModel.isLoading ? 0 : 1)
 
-                if self.viewModel.isLoading {
+                if self.authViewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
@@ -128,7 +180,7 @@ struct SignUpView: View {
             .background(self.accentColor)
             .cornerRadius(25)
         }
-        .disabled(self.viewModel.isLoading)
+        .disabled(self.authViewModel.isLoading)
     }
 
     private var loginLink: some View {

@@ -20,10 +20,14 @@ struct ContentView: View {
                 .background(Color(Constants.Colors.backgroundColor))
             } else if self.authViewModel.isAuthenticated {
                 MainView()
-            } else if self.authViewModel.isSecondState {
-                LoginView()
             } else {
-                AuthenticationFlow()
+                NavigationView {
+                    if self.authViewModel.isSecondState {
+                        LoginView()
+                    } else {
+                        AuthenticationFlow()
+                    }
+                }
             }
         }
     }
