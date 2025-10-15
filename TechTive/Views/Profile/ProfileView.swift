@@ -289,7 +289,7 @@ struct ProfileView: View {
                         .foregroundColor(Color(Constants.Colors.gray))
                         .multilineTextAlignment(.center)
                     
-                    Text("Version 2.2.1")
+                    Text("Version 2.2.2")
                         .font(Constants.Fonts.poppinsRegular12)
                         .foregroundColor(Color(Constants.Colors.gray).opacity(0.7))
                 }
